@@ -33,6 +33,8 @@ class MessagesApi {
     required bool isRead,
   }) async {
     /// Save message
+    print(Timestamp.now());
+    print("Date " + DateTime.now().toString());
     await _firestore
         .collection(C_MESSAGES)
         .doc(senderId)
@@ -43,7 +45,8 @@ class MessagesApi {
       MESSAGE_TYPE: type,
       MESSAGE_TEXT: textMsg,
       MESSAGE_IMG_LINK: imgLink,
-      TIMESTAMP: DateTime.now(),
+      // TIMESTAMP: DateTime.now(),
+      TIMESTAMP: Timestamp.now(),
     });
 
     /// Save last conversation

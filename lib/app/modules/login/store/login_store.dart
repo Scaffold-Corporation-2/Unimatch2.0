@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -7,7 +8,6 @@ import 'package:mobx/mobx.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/models/app_model.dart';
 import 'package:uni_match/app/models/user_model.dart';
-import 'package:uni_match/constants/constants.dart';
 import 'package:uni_match/dialogs/progress_dialog.dart';
 import 'package:uni_match/widgets/image_source_sheet.dart';
 import 'package:uni_match/widgets/show_scaffold_msg.dart';
@@ -19,9 +19,6 @@ class LoginStore = _LoginStore with _$LoginStore;
 
 abstract class _LoginStore with Store{
   final AppController i18n = Modular.get();
-
-  //bug ?? talvez
-  final formKey = GlobalKey<FormState>();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final nameController = TextEditingController();
@@ -37,6 +34,12 @@ abstract class _LoginStore with Store{
   void _navegarPaginas(String nomeRota){
     Modular.to.navigate(nomeRota);
   }
+
+  //bug ?? talvez
+  @observable
+  GlobalKey<FormState>? formKey;
+
+  addForm() => formKey = GlobalKey<FormState>();
 
 //******************************************************************************
                           /// Login com Numéro ///
@@ -198,7 +201,8 @@ abstract class _LoginStore with Store{
       // Update the inicial date
       initialDateTime = date;
       // Set for label
-      birthday = date.toString().split(' ')[0];
+      // birthday = date.toString().split(' ')[0];
+      birthday = UtilData.obterDataDDMMAAAA(date);
       // User birthday info
       userBirthDay = date.day;
       userBirthMonth = date.month;
@@ -210,18 +214,9 @@ abstract class _LoginStore with Store{
     // Inicial value
     DateTimePickerLocale _locale = DateTimePickerLocale.pt_br;
 
-    // Handle your Supported Languages here
-    SUPPORTED_LOCALES.forEach((Locale locale) {
-      switch (locale.languageCode) {
-        case 'pt_br':
-          print(_locale);
-          _locale = DateTimePickerLocale.pt_br;
-          break;
-        case 'en': // Ingles
-          _locale = DateTimePickerLocale.en_us;
-          break;
-      }
-    });
+    if(i18n.locale.toString() == 'pt_br') _locale = DateTimePickerLocale.pt_br;
+    if(i18n.locale.toString() == 'en') _locale = DateTimePickerLocale.en_us;
+    else _locale = DateTimePickerLocale.pt_br;
 
     return _locale;
   }
@@ -317,10 +312,10 @@ abstract class _LoginStore with Store{
               "only_18_years_old_and_above_are_allowed_to_create_an_account")!,
           bgcolor: Colors.red);
 
-    } else if (!formKey.currentState!.validate()) {
+    } else if (!formKey!.currentState!.validate()) {
     } else {
       /// Call all input onSaved method
-      formKey.currentState!.save();
+      formKey!.currentState!.save();
       isLoading = true;
       /// Call sign up method
       UserModel().signUp(

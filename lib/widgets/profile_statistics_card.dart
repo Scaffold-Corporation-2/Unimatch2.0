@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/models/user_model.dart';
+import 'package:uni_match/app/modules/profile/view/profile_likes_screen.dart';
 import 'package:uni_match/widgets/default_card_border.dart';
 import 'package:uni_match/widgets/svg_icon.dart';
 
@@ -31,10 +32,10 @@ class ProfileStatisticsCard extends StatelessWidget {
             trailing: _counter(context, UserModel().user.userTotalLikes),
             onTap: () {
               /// Go to profile likes screen
-             Modular.to.pushNamed('/profile/likes');
-              // Navigator.of(context).push(
-              //     MaterialPageRoute(
-              //         builder: (context) => ProfileLikesScreen()));
+             // Modular.to.pushNamed('/profile/likes');
+              Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => ProfileLikesScreen()));
             },
           ),
           Divider(height: 0),
@@ -45,10 +46,7 @@ class ProfileStatisticsCard extends StatelessWidget {
             trailing: _counter(context, UserModel().user.userTotalVisits),
             onTap: () {
               /// Go to profile visits screen
-              Modular.to.pushNamed('/profile/likes');
-              // Navigator.of(context).push(
-              //     MaterialPageRoute(
-              //         builder: (context) => ProfileVisitsScreen()));
+              Modular.to.pushNamed('/profile/visits');
             },
           ),
           Divider(height: 0),

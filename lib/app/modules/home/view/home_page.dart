@@ -3,12 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:uni_match/app/app_controller.dart';
+import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/app/modules/home/store/home_store.dart';
 import 'package:uni_match/app/modules/home/view/botton_bar/discover_tab.dart';
 import 'package:uni_match/app/modules/home/view/botton_bar/matches_tab.dart';
 import 'package:uni_match/app/modules/home/view/botton_bar/conversations_tab.dart';
 import 'package:uni_match/app/modules/home/view/botton_bar/profile_tab.dart';
 import 'package:uni_match/constants/constants.dart';
+import 'package:uni_match/dialogs/vip_dialog.dart';
 import 'package:uni_match/widgets/notification_counter.dart';
 import 'package:uni_match/widgets/svg_icon.dart';
 
@@ -88,7 +90,14 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
                      icon: SvgIcon("assets/icons/airplane_icon.svg",
                        width: 33, height: 33, color: Colors.grey[600],),
                      onPressed: (){
-                       Modular.to.pushNamed('/profile/passaport');
+                       if (UserModel().userIsVip) {
+                         // Go to passport screen
+                         Modular.to.pushNamed('/profile/passaport');
+                       } else {
+                         /// Show VIP dialog
+                         showDialog(context: context,
+                             builder: (context) => VipDialog());
+                       }
                      }),
 
                  IconButton(
@@ -116,7 +125,7 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
                       color: _selectedIndex == 0
                           ? Theme.of(context).primaryColor
                           : null),
-                  label: _i18n.translate("discover")
+                  label: _i18n.translate("discover"),
               ),
 
               /// Matches Tab

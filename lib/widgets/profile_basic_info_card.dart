@@ -95,30 +95,44 @@ class ProfileBasicInfoCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(
-                    height: 30,
-                    child: OutlinedButton.icon(
-                        icon: Icon(Icons.remove_red_eye, color: Colors.white),
-                        label: Text(i18n.translate("view")!,
-                          style: TextStyle(color: Colors.white)),
-                        style: ButtonStyle(
-                        side: MaterialStateProperty.all<BorderSide>(
-                          BorderSide(color: Colors.white)
-                        ),
-                        shape: MaterialStateProperty.all<OutlinedBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(28),
-                          )
-                        )
-                      ),
-                        onPressed: () {
-                          /// Go to profile screen
-                          // Todo usando Navigator
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ProfileScreen(
-                                  user: UserModel().user, showButtons: false)));
-                        }),
+
+                  cicleButton(
+                    bgColor: Theme.of(context).accentColor,
+                    padding: 13,
+                    icon: Icon(Icons.remove_red_eye, color: Colors.white, size: 30,),
+                    onTap: () {
+                      // Todo Escolher XX
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ProfileScreen(
+                              user: UserModel().user, showButtons: false)));
+                    },
                   ),
+
+                  // Todo Escolher XX
+                  // SizedBox(
+                  //   height: 30,
+                  //   child: OutlinedButton.icon(
+                  //       icon: Icon(Icons.remove_red_eye, color: Colors.white),
+                  //       label: Text(i18n.translate("view")!,
+                  //         style: TextStyle(color: Colors.white)),
+                  //       style: ButtonStyle(
+                  //       side: MaterialStateProperty.all<BorderSide>(
+                  //         BorderSide(color: Colors.white)
+                  //       ),
+                  //       shape: MaterialStateProperty.all<OutlinedBorder>(
+                  //         RoundedRectangleBorder(
+                  //           borderRadius: BorderRadius.circular(28),
+                  //         )
+                  //       )
+                  //     ),
+                  //       onPressed: () {
+                  //         /// Go to profile screen
+                  //         // Todo usando Navigator
+                  //         Navigator.of(context).push(MaterialPageRoute(
+                  //             builder: (context) => ProfileScreen(
+                  //                 user: UserModel().user, showButtons: false)));
+                  //       }),
+                  // ),
                   cicleButton(
                     bgColor: Theme.of(context).accentColor,
                     padding: 13,
@@ -131,30 +145,43 @@ class ProfileBasicInfoCard extends StatelessWidget {
                       //     builder: (context) => SettingsScreen()));
                     },
                   ),
-                  SizedBox(
-                    height: 35,
-                    child: TextButton.icon(
-                        icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
-                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            Colors.white),
-                          shape: MaterialStateProperty.all<OutlinedBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(28),
-                            )
-                          )
-                        ),
-                        label: Text(i18n.translate("edit")!,
-                        style: TextStyle(color: Theme.of(context).primaryColor)),
-                        onPressed: () {
-                          /// Go to edit profile screen
-                          Modular.to.pushNamed('/profile/edit');
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (context) => EditProfileScreen()));
-                        }),
+
+                  //Todo Escolher YY
+                  cicleButton(
+                    bgColor: Theme.of(context).accentColor,
+                    padding: 13,
+                    icon:  Icon(Icons.edit, color: Colors.white, size: 30,),
+                    onTap: () {
+                      Modular.to.pushNamed('/profile/edit');
+                    },
                   ),
+
+                  //Todo Escolher YY
+                  // SizedBox(
+                  //   height: 35,
+                  //   child: TextButton.icon(
+                  //       icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
+                  //        style: ButtonStyle(
+                  //         backgroundColor: MaterialStateProperty.all<Color>(
+                  //           Colors.white),
+                  //         shape: MaterialStateProperty.all<OutlinedBorder>(
+                  //           RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(28),
+                  //           )
+                  //         )
+                  //       ),
+                  //       label: Text(i18n.translate("edit")!,
+                  //       style: TextStyle(color: Theme.of(context).primaryColor)),
+                  //       onPressed: () {
+                  //         /// Go to edit profile screen
+                  //         Modular.to.pushNamed('/profile/edit');
+                  //         // Navigator.of(context).push(MaterialPageRoute(
+                  //         //     builder: (context) => EditProfileScreen()));
+                  //       }),
+                  // ),
                 ],
               ),
+              SizedBox(height: 5.0,)
             ],
           ),
         ),

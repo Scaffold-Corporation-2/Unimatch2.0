@@ -336,6 +336,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   // Get message doc map
                   final Map<dynamic, dynamic> msg = messages[index].data()! as Map;
 
+
                   /// Variables
                   bool isUserSender;
                   String userPhotoLink;
@@ -343,7 +344,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   final String textMessage = msg[MESSAGE_TEXT];
                   final String? imageLink = msg[MESSAGE_IMG_LINK];
                   final String timeAgo =
-                  timeago.format(msg[TIMESTAMP].toDate());
+                  timeago.format(msg[TIMESTAMP].toDate(), locale: 'pt_BR');
 
                   /// Check user id to get info
                   if (msg[USER_ID] == UserModel().user.userId) {

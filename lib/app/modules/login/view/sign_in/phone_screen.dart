@@ -17,6 +17,11 @@ class PhoneNumberScreen extends StatefulWidget {
 
 class _PhoneNumberScreenState extends ModularState<PhoneNumberScreen, LoginStore> {
 
+  @override
+  void initState() {
+    controller.addForm();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +99,7 @@ class _PhoneNumberScreenState extends ModularState<PhoneNumberScreen, LoginStore
                                 style: TextStyle(fontSize: 18)),
                             onPressed: () async {
                               /// Validate form
-                              if (controller.formKey.currentState!.validate()) {
+                              if (controller.formKey!.currentState!.validate()) {
                                 /// Sign in
                                 controller.signIn(context, mounted);
                               }
