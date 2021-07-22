@@ -1,7 +1,12 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:swipe_to/swipe_to.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:uni_match/app/api/likes_api.dart';
 import 'package:uni_match/app/api/matches_api.dart';
@@ -10,6 +15,7 @@ import 'package:uni_match/app/api/notifications_api.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/datas/user.dart';
 import 'package:uni_match/app/models/user_model.dart';
+import 'package:uni_match/app/modules/chat/view/showMessages.dart';
 import 'package:uni_match/app/modules/profile/view/profile_screen.dart';
 import 'package:uni_match/constants/constants.dart';
 import 'package:uni_match/dialogs/common_dialogs.dart';
@@ -37,6 +43,27 @@ class _ChatScreenState extends State<ChatScreen> {
   final _matchesApi = MatchesApi();
   final _likesApi = LikesApi();
   final _notificationsApi = NotificationsApi();
+
+  //
+
+  late final VoidCallback onCancelReply;
+
+  final focusNode = FocusNode();
+
+  void dismissKeyboard(BuildContext context){
+   FocusScope.of(context).unfocus();
+  }
+
+  void showKeyboard(BuildContext context){
+
+    final focusScope = FocusScope.of(context);
+    focusScope.requestFocus(FocusNode());
+    Future.delayed(Duration.zero, ()=> focusScope.requestFocus(focusNode));
+  }
+
+  String replyMessage = '';
+
+  //
   late Stream<QuerySnapshot> _messages;
   bool _isComposing = false;
   AppController _i18n = Modular.get();
@@ -62,7 +89,6 @@ class _ChatScreenState extends State<ChatScreen> {
           },
         ));
   }
-
   // Send message
   Future<void> _sendMessage(
       {required String type, String? text, File? imgFile}) async {
@@ -128,7 +154,6 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _messages = _messagesApi.getMessages(widget.user.userId);
   }
-
   @override
   void dispose() {
     _messages.drain();
@@ -274,18 +299,24 @@ class _ChatScreenState extends State<ChatScreen> {
                       /// Update scroll
                       _scrollMessageList();
                     }),
-                title: TextField(
-                  controller: _textController,
-                  minLines: 1,
-                  maxLines: 4,
-                  decoration: InputDecoration(
-                      hintText: _i18n.translate("type_a_message"),
-                      border: InputBorder.none),
-                  onChanged: (text) {
-                    setState(() {
-                      _isComposing = text.isNotEmpty;
-                    });
-                  },
+                title: Column(
+                  children: [
+                    TextField(
+                      focusNode: focusNode,
+                      //autofocus: textFocus,
+                      controller: _textController,
+                      minLines: 1,
+                      maxLines: 4,
+                      decoration: InputDecoration(
+                          hintText: _i18n.translate("type_a_message"),
+                          border: InputBorder.none),
+                      onChanged: (text) {
+                        setState(() {
+                          _isComposing = text.isNotEmpty;
+                        });
+                      },
+                    ),
+                  ],
                 ),
                 trailing: IconButton(
                     icon: Icon(Icons.send,
@@ -318,7 +349,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   /// Build bubble message
   Widget _showMessages() {
-    return StreamBuilder<QuerySnapshot>(
+    return //showMessages( messages: _messages);
+    StreamBuilder<QuerySnapshot>(
         stream: _messages,
         builder: (context, snapshot) {
           // Check data
@@ -336,15 +368,17 @@ class _ChatScreenState extends State<ChatScreen> {
                   // Get message doc map
                   final Map<dynamic, dynamic> msg = messages[index].data()! as Map;
 
-
                   /// Variables
                   bool isUserSender;
                   String userPhotoLink;
+
                   final bool isImage = msg[MESSAGE_TYPE] == 'image';
                   final String textMessage = msg[MESSAGE_TEXT];
                   final String? imageLink = msg[MESSAGE_IMG_LINK];
                   final String timeAgo =
                   timeago.format(msg[TIMESTAMP].toDate(), locale: 'pt_BR');
+                  final ValueChanged<String> onSwipedMessage;
+
 
                   /// Check user id to get info
                   if (msg[USER_ID] == UserModel().user.userId) {
@@ -354,17 +388,39 @@ class _ChatScreenState extends State<ChatScreen> {
                     isUserSender = false;
                     userPhotoLink = widget.user.userProfilePhoto;
                   }
+
                   // Show chat bubble
-                  return ChatMessage(
-                    isUserSender: isUserSender,
-                    isImage: isImage,
-                    userPhotoLink: userPhotoLink,
-                    textMessage: textMessage,
-                    imageLink: imageLink,
-                    timeAgo: timeAgo,
+                  return SwipeTo(
+                    iconColor: Colors.transparent,
+                    offsetDx: 0.2,
+
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                      child:ChatMessage(
+                        isUserSender: isUserSender,
+                        isImage: isImage,
+                        userPhotoLink: userPhotoLink,
+                        textMessage: textMessage,
+                        imageLink: imageLink,
+                        timeAgo: timeAgo,
+                      ),
+                    ),
+                    onRightSwipe: (){
+                      print(textMessage);
+                      if(window.viewInsets.bottom <= 0.0 ){
+                        showKeyboard(context);
+                      }
+                      replyToMessage(textMessage);
+                      print("foco");
+                    },
                   );
                 });
           }
         });
+
+  }
+  void replyToMessage(String message){
+    replyMessage = message;
+    print(replyMessage);
   }
 }

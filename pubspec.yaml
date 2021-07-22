@@ -111,6 +111,8 @@ dependencies:
   brasil_fields: ^1.1.3
 
 
+  swipe_to: 0.1.0-nullsafety.1
+
   flutter_cupertino_datetime_picker: ^2.0.1
 
 dev_dependencies:
