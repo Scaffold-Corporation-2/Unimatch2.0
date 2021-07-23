@@ -66,13 +66,6 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          // title: Row(
-          //   children: [
-          //     Image.asset("assets/images/app_logo.png", width: 40, height: 40),
-          //     SizedBox(width: 5),
-          //     Text(APP_NAME),
-          //   ],
-          // ),
           actions: [
            Expanded(
              child: Row(
@@ -82,7 +75,7 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
                      icon: SvgIcon("assets/icons/beer_icon.svg",
                        width: 30, height: 30, color: Colors.grey[600],),
                      onPressed: (){
-                       // Modular.to.pushNamed('/home/notification');
+                       Modular.to.pushNamed('/party');
                      }),
 
 

@@ -26,7 +26,7 @@ class NotificationsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(i18n.translate("notifications")!),
+        title: Text(i18n.translate("notifications")!, style: TextStyle(fontSize: 20),),
         actions: [
           IconButton(
               icon: SvgIcon("assets/icons/trash_icon.svg"),

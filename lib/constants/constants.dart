@@ -17,7 +17,7 @@ const String IOS_MAPS_API_KEY = "YOUR IOS API KEY";
 // GOOGLE ADMOB INTERSTITIAL IDS
 //
 // For Android Platform
-const String ANDROID_INTERSTITIAL_ID = "ca-app-pub-2236562881766006~9666534352";
+const String ANDROID_INTERSTITIAL_ID = "ca-app-pub-2162183208526463/1129939918"; //ca-app-pub-3940256099942544/1033173712
 // For IOS Platform
 const String IOS_INTERSTITIAL_ID = "ca-app-pub-2236562881766006/4868383683";
 
@@ -53,6 +53,7 @@ const String C_VISITS = "Visitas";
 const String C_DISLIKES = "Dislikes";
 const String C_MESSAGES = "Mensagens";
 const String C_NOTIFICATIONS = "Notificacoes";
+const String C_PARTY = "Festas";
 
 /// NOME DE CAMPOS PARA AppInfo COLLECTION  ///
 ///
@@ -144,6 +145,23 @@ const String DISLIKED_BY_USER_ID = 'disliked_por_usuario_id';
 ///
 const String VISITED_USER_ID = 'visitado_usuario_id';
 const String VISITED_BY_USER_ID = 'visitado_por_usuario_id';
+
+/// DATABASE FIELDS FOR Parties COLLECTION
+///
+
+const String NAME_PARTY = "nome_festa";
+const String DATE_PARTY = "data_festa";
+const String TIME_PARTY = "hora_festa";
+const String LOCAL_PARTY = "nome_local";
+const String PARTY_GEO_POINT = "local_festa";
+const String IMAGES_PARTY = "images_festa";
+const String DESC_PARTY = "descricao_festa";
+const String COR_PARTY = "cor_festa";
+
+/// DATABASE FIELDS FOR Atletica COLLECTION
+///
+const String NAME_ATHLETIC  = "nome_atletica";
+const String IMAGE_ATHLETIC  = "nome_atletica";
 
 /// DATABASE SHARED FIELDS FOR COLLECTION
 ///

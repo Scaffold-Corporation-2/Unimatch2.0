@@ -12,6 +12,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends ModularState<SplashScreen, AuthStore> {
   @override
   void initState() {
+    controller.appController.buscarPreferencias();
     controller.getAppStoreVersion();
     super.initState();
   }

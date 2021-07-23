@@ -149,6 +149,8 @@
   "notifications": "Notifications",
   "all_notifications_will_be_deleted": "All notifications will be deleted!",
 
+  "parties": "Parties",
+
   "_ProfileLikesScreen": "*** ProfileLikes Screen Translations ***",
   "likes": "Likes",
   "users_who_liked_you": "Users who liked you",
@@ -212,6 +214,7 @@
   "no_match": "No Match",
   "no_conversation": "No Conversation",
   "no_notification": "No Notification",
+  "no_party": "No Party",
   "no_like": "No Like",
   "no_visit": "No Visit",
   "no_dislike": "No Dislike",

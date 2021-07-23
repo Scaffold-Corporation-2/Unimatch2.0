@@ -627,6 +627,7 @@ class UserModel extends Model {
   }
 
   // Filter the User Gender
+  //Todo filtro por genero
   Query filterUserGender(Query query) {
     // Get the opposite gender
     final String oppositeGender =

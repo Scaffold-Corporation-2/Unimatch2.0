@@ -76,7 +76,7 @@
        <!-- Sample AdMob App ID for test: ca-app-pub-3940256099942544~3347511713 -->
        <meta-data
            android:name="com.google.android.gms.ads.APPLICATION_ID"
-           android:value="ca-app-pub-2236562881766006~9666534352"/>
+           android:value="ca-app-pub-2162183208526463~6350191598"/>
 
        <!-- Config for place_picker plugin to use the Passport feature!
         // Add your Android API KEY for Google MAPS

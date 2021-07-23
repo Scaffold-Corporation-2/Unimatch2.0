@@ -1,8 +1,8 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:uni_match/app/modules/home/view/actions/notifications_screen.dart';
-import '../store/home_store.dart';
+import 'package:uni_match/app/modules/home/store/home_store.dart';
+import 'package:uni_match/app/modules/home/view/home_page.dart';
+import 'package:uni_match/app/modules/home/view/notifications_screen.dart';
 
-import '../view/home_page.dart';
  
 class HomeModule extends Module {
   @override
