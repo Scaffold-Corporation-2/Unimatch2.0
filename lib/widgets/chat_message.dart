@@ -8,6 +8,7 @@ class ChatMessage extends StatelessWidget {
   final String? imageLink;
   final String? textMessage;
   final String timeAgo;
+  final String replyMessage;
 
   ChatMessage(
       {required this.isUserSender,
@@ -15,7 +16,9 @@ class ChatMessage extends StatelessWidget {
       required this.timeAgo,
       this.isImage = false,
       this.imageLink,
-      this.textMessage});
+      this.textMessage,
+        required this.replyMessage,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +49,22 @@ class ChatMessage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: !isUserSender
-
-                          /// Color for receiver
-                          ? Colors.grey.withAlpha(70)
-
-                          /// Color for sender
-                          : Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(25)),
+                    //inserir o gradiente
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        isUserSender ? Colors.pinkAccent : Colors.blueGrey,
+                        isUserSender ? Colors.redAccent: Colors.grey,
+                      ],
+                    ),
+                      // color: !isUserSender
+                      //     /// Color for receiver
+                      //     ? Colors.grey.withAlpha(70)
+                      //     /// Color for sender
+                      //     :Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(25)
+                  ),
                   child: isImage
                       ? GestureDetector(
                           onTap: () {
@@ -82,14 +93,18 @@ class ChatMessage extends StatelessWidget {
                         )
 
                       /// Text message
-                      : Text(
-                          textMessage ?? "",
-                          style: TextStyle(
-                              fontSize: 18,
-                              color:
-                                  isUserSender ? Colors.white : Colors.black),
-                          textAlign: TextAlign.center,
-                        ),
+                      : Column(
+                        children: [
+                          Text(
+                              textMessage ?? "",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color:
+                                      isUserSender ? Colors.white : Colors.black),
+                              textAlign: TextAlign.center,
+                            ),
+                        ],
+                      ),
                 ),
 
                 SizedBox(height: 5),

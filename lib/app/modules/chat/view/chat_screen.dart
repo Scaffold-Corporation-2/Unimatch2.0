@@ -15,7 +15,7 @@ import 'package:uni_match/app/api/notifications_api.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/datas/user.dart';
 import 'package:uni_match/app/models/user_model.dart';
-import 'package:uni_match/app/modules/chat/view/showMessages.dart';
+import 'package:uni_match/app/modules/chat/widgets/reply_message_widget.dart';
 import 'package:uni_match/app/modules/profile/view/profile_screen.dart';
 import 'package:uni_match/constants/constants.dart';
 import 'package:uni_match/dialogs/common_dialogs.dart';
@@ -44,25 +44,21 @@ class _ChatScreenState extends State<ChatScreen> {
   final _likesApi = LikesApi();
   final _notificationsApi = NotificationsApi();
 
-  //
+  final focusNode = FocusNode();
+
+  void dismissKeyboard(BuildContext context) {
+    FocusScope.of(context).unfocus();
+  }
+
+  void showKeyboard(BuildContext context) {
+    final focusScope = FocusScope.of(context);
+    focusScope.requestFocus(FocusNode());
+    Future.delayed(Duration.zero, () => focusScope.requestFocus(focusNode));
+  }
 
   late final VoidCallback onCancelReply;
 
-  final focusNode = FocusNode();
-
-  void dismissKeyboard(BuildContext context){
-   FocusScope.of(context).unfocus();
-  }
-
-  void showKeyboard(BuildContext context){
-
-    final focusScope = FocusScope.of(context);
-    focusScope.requestFocus(FocusNode());
-    Future.delayed(Duration.zero, ()=> focusScope.requestFocus(focusNode));
-  }
-
   String replyMessage = '';
-
   //
   late Stream<QuerySnapshot> _messages;
   bool _isComposing = false;
@@ -80,15 +76,16 @@ class _ChatScreenState extends State<ChatScreen> {
     await showModalBottomSheet(
         context: context,
         builder: (context) => ImageSourceSheet(
-          onImageSelected: (image) async {
-            if (image != null) {
-              await _sendMessage(type: 'image', imgFile: image);
-              // close modal
-              Navigator.of(context).pop();
-            }
-          },
-        ));
+              onImageSelected: (image) async {
+                if (image != null) {
+                  await _sendMessage(type: 'image', imgFile: image);
+                  // close modal
+                  Navigator.of(context).pop();
+                }
+              },
+            ));
   }
+
   // Send message
   Future<void> _sendMessage(
       {required String type, String? text, File? imgFile}) async {
@@ -102,7 +99,7 @@ class _ChatScreenState extends State<ChatScreen> {
         break;
 
       case 'image':
-      // Show processing dialog
+        // Show processing dialog
         _pr.show(_i18n.translate("sending")!);
 
         /// Upload image file
@@ -137,7 +134,8 @@ class _ChatScreenState extends State<ChatScreen> {
         userFullName: UserModel().user.userFullname, // current user ful name
         textMsg: textMsg,
         imgLink: imageUrl,
-        isRead: false);
+        isRead: false
+    );
 
     /// Send push notification
     await _notificationsApi.sendPushNotification(
@@ -146,7 +144,8 @@ class _ChatScreenState extends State<ChatScreen> {
             '${_i18n.translate("sent_a_message_to_you")}',
         nType: 'message',
         nSenderId: UserModel().user.userId,
-        nUserDeviceToken: widget.user.userDeviceToken);
+        nUserDeviceToken: widget.user.userDeviceToken
+    );
   }
 
   @override
@@ -154,6 +153,7 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _messages = _messagesApi.getMessages(widget.user.userId);
   }
+
   @override
   void dispose() {
     _messages.drain();
@@ -168,6 +168,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _pr = ProgressDialog(context);
 
     return Scaffold(
+      ///AppBar.
       appBar: AppBar(
         // Show User profile info
         title: GestureDetector(
@@ -177,7 +178,7 @@ class _ChatScreenState extends State<ChatScreen> {
               backgroundImage: NetworkImage(widget.user.userProfilePhoto),
             ),
             title:
-            Text(widget.user.userFullname, style: TextStyle(fontSize: 18)),
+                Text(widget.user.userFullname, style: TextStyle(fontSize: 18)),
           ),
           onTap: () {
             /// Go to profile screen
@@ -222,7 +223,7 @@ class _ChatScreenState extends State<ChatScreen> {
               switch (val) {
                 case "delete_chat":
 
-                /// Delete chat
+                  /// Delete chat
                   confirmDialog(context,
                       title: _i18n.translate("delete_conversation"),
                       message: _i18n.translate("conversation_will_be_deleted")!,
@@ -240,7 +241,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
                         // Hide progress
                         await _pr.hide();
-
                       });
                   break;
 
@@ -248,7 +248,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   errorDialog(context,
                       title: _i18n.translate("delete_match"),
                       message:
-                      "${_i18n.translate("are_you_sure_you_want_to_delete_your_match_with")}: "
+                          "${_i18n.translate("are_you_sure_you_want_to_delete_your_match_with")}: "
                           "${widget.user.userFullname}?\n\n"
                           "${_i18n.translate("this_action_cannot_be_reversed")}",
                       positiveText: _i18n.translate("DELETE"),
@@ -280,147 +280,214 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
+
+      ///FimAppBar.
+
+      ///Column das mensagens.
       body: Column(
         children: <Widget>[
           /// how message list
           Expanded(child: _showMessages()),
 
           /// Text Composer
-          Container(
-            color: Colors.grey.withAlpha(50),
-            child: ListTile(
-                leading: IconButton(
-                    icon: SvgIcon("assets/icons/camera_icon.svg",
-                        width: 20, height: 20),
-                    onPressed: () async {
-                      /// Send image file
-                      await _getImage();
+          Column(
+            children: [
+              if (replyMessage != '') buildReply(),
+              ListTile(
+                  leading: Container(
+                    child: IconButton(
+                        icon: SvgIcon("assets/icons/camera_icon.svg",
+                            width: 20, height: 20),
+                        onPressed: () async {
+                          /// Send image file
+                          await _getImage();
 
-                      /// Update scroll
-                      _scrollMessageList();
-                    }),
-                title: Column(
-                  children: [
-                    TextField(
-                      focusNode: focusNode,
-                      //autofocus: textFocus,
-                      controller: _textController,
-                      minLines: 1,
-                      maxLines: 4,
-                      decoration: InputDecoration(
+                          /// Update scroll
+                          _scrollMessageList();
+                        }),
+                  ),
+                  title: Column(
+                    children: [
+                      TextField(
+                        focusNode: focusNode,
+                        controller: _textController,
+                        minLines: 1,
+                        maxLines: 4,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.grey[100],
                           hintText: _i18n.translate("type_a_message"),
-                          border: InputBorder.none),
-                      onChanged: (text) {
-                        setState(() {
-                          _isComposing = text.isNotEmpty;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                trailing: IconButton(
-                    icon: Icon(Icons.send,
-                        color: _isComposing
-                            ? Theme.of(context).primaryColor
-                            : Colors.grey),
-                    onPressed: _isComposing
-                        ? () async {
-                      /// Get text
-                      final text = _textController.text.trim();
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.only(
+                              topLeft: replyMessage != ''
+                                  ? Radius.zero
+                                  : Radius.circular(25),
+                              topRight: replyMessage != ''
+                                  ? Radius.zero
+                                  : Radius.circular(25),
+                              bottomLeft: Radius.circular(25),
+                              bottomRight: Radius.circular(25),
+                            ),
+                          ),
+                        ),
+                        onChanged: (text) {
+                          setState(() {
+                            _isComposing = text.isNotEmpty;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  trailing: Container(
+                    child: IconButton(
+                        icon: Icon(Icons.send,
+                            color: _isComposing
+                                ? Theme.of(context).primaryColor
+                                : Colors.grey),
+                        onPressed:
+                        _isComposing
+                            ? () async {
+                                /// Get text
+                                final text = _textController.text.trim();
 
-                      /// clear input text
-                      _textController.clear();
-                      setState(() {
-                        _isComposing = false;
-                      });
+                                /// clear input text
+                                _textController.clear();
+                                setState(() {
+                                  cancelReply();
+                                  _isComposing = false;
+                                });
 
-                      /// Send text message
-                      await _sendMessage(type: 'text', text: text);
+                                /// Send text message
+                                await _sendMessage(type: 'text', text: text);
+                                /// Update scroll
 
-                      /// Update scroll
-                      _scrollMessageList();
-                    }
-                        : null)),
+                                _scrollMessageList();
+                              }
+                            : null),
+                  )),
+            ],
           ),
         ],
       ),
+
+      ///Column das mensagens.
     );
   }
 
-  /// Build bubble message
+  /// Responder mensagem
+  late bool sendFor;
+  void replyToMessage(String message, bool user) {
+    setState(() {
+      replyMessage = message;
+      sendFor = user;
+      print(replyMessage);
+    });
+  }
+
+  void cancelReply() {
+    setState(() {
+      replyMessage = '';
+    });
+  }
+
+  comparacao() {
+    if (sendFor == true) {
+      return UserModel().user.userFullname;
+    } else
+      return widget.user.userFullname;
+  }
+
+  Widget buildReply() => Container(
+    width: MediaQuery.of(context).size.width*0.60,
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.2),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(14),
+            topRight: Radius.circular(14),
+          ),
+        ),
+        child: ReplyMessageWidget(
+          message: replyMessage,
+          otherUser: comparacao(),
+          onCancelReply: cancelReply,
+        ),
+      );
+
+  ///Responder Mensagem
+
+  /// _showMessages
   Widget _showMessages() {
     return //showMessages( messages: _messages);
-    StreamBuilder<QuerySnapshot>(
-        stream: _messages,
-        builder: (context, snapshot) {
-          // Check data
-          if (!snapshot.hasData)
-            return MyCircularProgress();
-          else {
-            return ListView.builder(
-                controller: _messagesController,
-                reverse: true,
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  // Get message list
-                  final List<DocumentSnapshot> messages =
-                  snapshot.data!.docs.reversed.toList();
-                  // Get message doc map
-                  final Map<dynamic, dynamic> msg = messages[index].data()! as Map;
+        StreamBuilder<QuerySnapshot>(
+            stream: _messages,
+            builder: (context, snapshot) {
+              // Check data
+              if (!snapshot.hasData)
+                return MyCircularProgress();
+              else {
+                return ListView.builder(
+                    controller: _messagesController,
+                    reverse: true,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      // Get message list
+                      final List<DocumentSnapshot> messages =
+                          snapshot.data!.docs.reversed.toList();
+                      // Get message doc map
+                      final Map<dynamic, dynamic> msg =
+                          messages[index].data()! as Map;
 
-                  /// Variables
-                  bool isUserSender;
-                  String userPhotoLink;
+                      /// Variables
+                      bool isUserSender;
+                      String userPhotoLink;
 
-                  final bool isImage = msg[MESSAGE_TYPE] == 'image';
-                  final String textMessage = msg[MESSAGE_TEXT];
-                  final String? imageLink = msg[MESSAGE_IMG_LINK];
-                  final String timeAgo =
-                  timeago.format(msg[TIMESTAMP].toDate(), locale: 'pt_BR');
-                  final ValueChanged<String> onSwipedMessage;
+                      final bool isImage = msg[MESSAGE_TYPE] == 'image';
+                      final String textMessage = msg[MESSAGE_TEXT];
+                      final String? imageLink = msg[MESSAGE_IMG_LINK];
+                      final String timeAgo = timeago
+                          .format(msg[TIMESTAMP].toDate(), locale: 'pt_BR');
 
-
-                  /// Check user id to get info
-                  if (msg[USER_ID] == UserModel().user.userId) {
-                    isUserSender = true;
-                    userPhotoLink = UserModel().user.userProfilePhoto;
-                  } else {
-                    isUserSender = false;
-                    userPhotoLink = widget.user.userProfilePhoto;
-                  }
-
-                  // Show chat bubble
-                  return SwipeTo(
-                    iconColor: Colors.transparent,
-                    offsetDx: 0.2,
-
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-                      child:ChatMessage(
-                        isUserSender: isUserSender,
-                        isImage: isImage,
-                        userPhotoLink: userPhotoLink,
-                        textMessage: textMessage,
-                        imageLink: imageLink,
-                        timeAgo: timeAgo,
-                      ),
-                    ),
-                    onRightSwipe: (){
-                      print(textMessage);
-                      if(window.viewInsets.bottom <= 0.0 ){
-                        showKeyboard(context);
+                      /// Check user id to get info
+                      if (msg[USER_ID] == UserModel().user.userId) {
+                        isUserSender = true;
+                        userPhotoLink = UserModel().user.userProfilePhoto;
+                      } else {
+                        isUserSender = false;
+                        userPhotoLink = widget.user.userProfilePhoto;
                       }
-                      replyToMessage(textMessage);
-                      print("foco");
-                    },
-                  );
-                });
-          }
-        });
 
+                      // Show chat bubble
+                      return SwipeTo(
+                        iconColor: Colors.transparent,
+                        offsetDx: 0.2,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 8.0),
+                          child: ChatMessage(
+                            isUserSender: isUserSender,
+                            isImage: isImage,
+                            userPhotoLink: userPhotoLink,
+                            textMessage: textMessage,
+                            imageLink: imageLink,
+                            timeAgo: timeAgo,
+                            replyMessage: replyMessage,
+                          ),
+                        ),
+                        onRightSwipe: () {
+                          print(textMessage);
+                          if (window.viewInsets.bottom <= 0.0) {
+                            showKeyboard(context);
+                          }
+                          replyToMessage(textMessage, isUserSender);
+                          print("foco");
+                        },
+                      );
+                    });
+              }
+            });
   }
-  void replyToMessage(String message){
-    replyMessage = message;
-    print(replyMessage);
-  }
+
+  /// showMessages
 }
