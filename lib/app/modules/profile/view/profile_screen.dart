@@ -165,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 color: Theme.of(context).primaryColor,
                                 width: 27,
                                 height: 27),
-                            title: widget.user.userJobTitle),
+                            title: widget.user.userOrientation),
 
                         SizedBox(height: 5),
 

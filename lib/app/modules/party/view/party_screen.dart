@@ -1,16 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:lottie/lottie.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/datas/party.dart';
 import 'package:uni_match/app/models/user_model.dart';
+import 'package:uni_match/app/modules/party/store/party_store.dart';
+import 'package:uni_match/app/modules/party/view/athletic_screen.dart';
 import 'package:uni_match/app/modules/party/view/maps_sheet.dart';
 import 'package:uni_match/widgets/cicle_button.dart';
 import 'package:uni_match/widgets/custom_animated_button.dart';
 import 'package:uni_match/widgets/default_card_border.dart';
 import 'package:uni_match/widgets/slimy_card.dart';
 import 'package:uni_match/widgets/svg_icon.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 
@@ -23,7 +28,7 @@ class PartyScreen extends StatefulWidget {
   _PartyScreenState createState() => _PartyScreenState();
 }
 
-class _PartyScreenState extends State<PartyScreen> {
+class _PartyScreenState extends ModularState<PartyScreen, PartyStore> {
   final AppController i18n = Modular.get();
 
   DirectionsMode directionsMode = DirectionsMode.driving;
@@ -31,6 +36,13 @@ class _PartyScreenState extends State<PartyScreen> {
   double originLatitude = UserModel().user.userGeoPoint.latitude;
   double originLongitude = UserModel().user.userGeoPoint.longitude;
   String originTitle = 'Posição atual';
+
+
+  @override
+  void initState() {
+    controller.dadosCache();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +66,7 @@ class _PartyScreenState extends State<PartyScreen> {
               shape: defaultCardBorder(),
               child: Container(
                 padding: const EdgeInsets.all(10.0),
-                width: MediaQuery.of(context).size.width * 0.85,
+                width: MediaQuery.of(context).size.width * 0.9,
                 height: MediaQuery.of(context).size.height * 0.2,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,21 +78,19 @@ class _PartyScreenState extends State<PartyScreen> {
                       child: CircleAvatar(
                         backgroundColor: Theme.of(context).primaryColor,
                         radius: 40,
-                        backgroundImage:
-                        NetworkImage(widget.party.imageAthletic),
+                        child: Image.network(widget.party.imagemAtletica, fit: BoxFit.cover,),
                       ),
                     ),
 
                     SizedBox(width: 10),
 
-                    /// Profile details
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${widget.party.partyName}",
+                            "${widget.party.siglaAtletica}",
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -88,7 +98,6 @@ class _PartyScreenState extends State<PartyScreen> {
                           ),
                           SizedBox(height: 5),
 
-                          /// Location
                           Row(
                             mainAxisAlignment:
                             MainAxisAlignment.spaceBetween,
@@ -106,15 +115,19 @@ class _PartyScreenState extends State<PartyScreen> {
                                     children: [
                                       // City
                                       Text(
-                                          widget.party.partyLocal.length <= 18
-                                              ? widget.party.partyLocal
-                                              : widget.party.partyLocal
+                                          widget.party.universidadeAtletica.length <= 18
+                                              ? widget.party.universidadeAtletica
+                                              : widget.party.universidadeAtletica
                                               .substring(0, 15) +
                                               "...",
                                           style: TextStyle(
                                               color: Colors.white)),
                                       // Country
-                                      Text("${widget.party.partyLocal}",
+                                      Text(widget.party.cidadeAtletica.length <= 18
+                                          ? widget.party.cidadeAtletica
+                                          : widget.party.cidadeAtletica
+                                          .substring(0, 15) +
+                                          "...",
                                           style: TextStyle(
                                               color: Colors.white)),
                                     ],
@@ -131,7 +144,14 @@ class _PartyScreenState extends State<PartyScreen> {
                                   color: Colors.white,
                                   size: 30,
                                 ),
-                                onTap: () {},
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AthleticParty(party: widget.party,);
+                                      }
+                                    );
+                                },
                               ),
                             ],
                           )
@@ -149,7 +169,7 @@ class _PartyScreenState extends State<PartyScreen> {
             color: widget.party.corFundo,
             topCardHeight: 250,
             bottomCardHeight: 125,
-            width: MediaQuery.of(context).size.width * 0.85,
+            width: MediaQuery.of(context).size.width * 0.9,
             topCardWidget: NotificationListener<OverscrollIndicatorNotification>(
               onNotification: (OverscrollIndicatorNotification overscroll) {
                 overscroll.disallowGlow();
@@ -160,11 +180,22 @@ class _PartyScreenState extends State<PartyScreen> {
                   topCardWidget(),
                   topCardWidget2(),
                 ],
+                onPageChanged: (val) async {
+                  if(val == 1 ) controller.mudarPreferencias("bool","tutorial", true);
+                },
               ),
             ),
             bottomCardWidget: bottomCardWidget(),
-            bottomCardFunction: (){
-              print(widget.party);
+            bottomCardFunction: () async {
+              if (await canLaunch(widget.party.partyUrlIngresso)) {
+                await launch(
+                  widget.party.partyUrlIngresso,
+                  forceSafariVC: false,
+                  forceWebView: false,
+                );
+              } else {
+                throw 'Could not launch ${widget.party.partyUrlIngresso}';
+              }
             },
           ),
 
@@ -177,7 +208,7 @@ class _PartyScreenState extends State<PartyScreen> {
                 iconText: true,
                 icon: Icons.send,
                 color: widget.party.corFundo,
-                widhtMultiply: 0.85,
+                widhtMultiply: 0.9,
                 height: 80,
                 text: "Ir para festa",
                 onTap: (){
@@ -301,15 +332,16 @@ class _PartyScreenState extends State<PartyScreen> {
                 SizedBox(
                   height: 30.0,
                 ),
-                // i18n.sharedPreferences.get("tutorial")  == null
-                    // ? Lottie.asset("assets/lottie/swipe_left.json", width: 150)
-                    // :
-                Icon(
-                        Icons.arrow_right_outlined,
-                      size: 35,
-                    ),
+                  Observer(
+                    builder:(_) => controller.valueShared == false
+                      ? Lottie.asset("assets/lottie/swipe_left.json", width: 150)
+                      : Icon(
+                    Icons.arrow_right_outlined,
+                    size: 35,
+                ),
+                  ),
               ],
-            )
+            ),
           ],
         ),
       ],
@@ -317,8 +349,6 @@ class _PartyScreenState extends State<PartyScreen> {
   }
 
   Widget topCardWidget2() {
-    setState(() => i18n.mudarPreferencias("bool", "tutorial", true));
-
     return Scaffold(
       backgroundColor: widget.party.corFundo,
       body: SafeArea(

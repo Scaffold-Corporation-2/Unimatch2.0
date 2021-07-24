@@ -8,15 +8,34 @@ import 'package:uni_match/app/datas/user.dart';
 import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/constants/constants.dart';
 import 'package:uni_match/dialogs/progress_dialog.dart';
+import 'package:uni_match/helpers/app_ad_helper.dart';
 import 'package:uni_match/widgets/badge.dart';
 import 'package:uni_match/widgets/build_title.dart';
 import 'package:uni_match/widgets/no_data.dart';
 import 'package:uni_match/widgets/processing.dart';
 
-class ConversationsTab extends StatelessWidget {
+class ConversationsTab extends StatefulWidget {
   // Variables
+  @override
+  _ConversationsTabState createState() => _ConversationsTabState();
+}
+
+class _ConversationsTabState extends State<ConversationsTab> {
   final AppController i18n = Modular.get();
+
   final _conversationsApi = ConversationsApi();
+
+  @override
+  void initState() {
+    super.initState();
+    AppAdHelper.showInterstitialAd();
+  }
+
+  @override
+  void dispose() {
+    AppAdHelper.disposeInterstitialAd();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +93,7 @@ class ConversationsTab extends StatelessWidget {
                           : Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                Icon(Icons.photo_camera, 
+                                Icon(Icons.photo_camera,
                                    color: Theme.of(context).primaryColor),
                                 SizedBox(width: 5),
                                 Text(i18n.translate("photo")!),

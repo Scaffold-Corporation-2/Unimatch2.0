@@ -37,7 +37,7 @@ class StoryPage extends StatelessWidget {
                         width: 32,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(party.imageAthletic),
+                            image: NetworkImage(party.imagemAtletica),
                             fit: BoxFit.cover,
                           ),
                           shape: BoxShape.circle,
@@ -47,7 +47,7 @@ class StoryPage extends StatelessWidget {
                         width: 8,
                       ),
                       Text(
-                        party.partyName,
+                        party.siglaAtletica,
                         style: TextStyle(
                           fontSize: 17,
                           color: Colors.white,

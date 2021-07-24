@@ -24,7 +24,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   //todo Mudar para Orientação
   final _jobController =
-      TextEditingController(text: UserModel().user.userJobTitle);
+      TextEditingController(text: UserModel().user.userOrientation);
 
   final _bioController = TextEditingController(text: UserModel().user.userBio);
   AppController _i18n = Modular.get();

@@ -11,7 +11,7 @@ const int IOS_APP_VERSION_NUMBER = 3; // App Store Version Number
 //
 // Add Google Maps - API KEY required for Passport feature
 //
-const String ANDROID_MAPS_API_KEY = "AIzaSyBlcVLVVlre07LtTyTeC_qv6OQt2k5ANUU";
+const String ANDROID_MAPS_API_KEY = "AIzaSyDQHbPVOqoBhcqhp6N5N_g7W5LmyjhW8pk"; //AIzaSyDQHbPVOqoBhcqhp6N5N_g7W5LmyjhW8pk
 const String IOS_MAPS_API_KEY = "YOUR IOS API KEY";
 //
 // GOOGLE ADMOB INTERSTITIAL IDS
@@ -54,6 +54,7 @@ const String C_DISLIKES = "Dislikes";
 const String C_MESSAGES = "Mensagens";
 const String C_NOTIFICATIONS = "Notificacoes";
 const String C_PARTY = "Festas";
+const String C_ATHLETIC = "Atleticas";
 
 /// NOME DE CAMPOS PARA AppInfo COLLECTION  ///
 ///
@@ -156,12 +157,17 @@ const String LOCAL_PARTY = "nome_local";
 const String PARTY_GEO_POINT = "local_festa";
 const String IMAGES_PARTY = "images_festa";
 const String DESC_PARTY = "descricao_festa";
+const String BUY_PARTY = "ingresso_festa";
 const String COR_PARTY = "cor_festa";
 
 /// DATABASE FIELDS FOR Atletica COLLECTION
 ///
-const String NAME_ATHLETIC  = "nome_atletica";
-const String IMAGE_ATHLETIC  = "nome_atletica";
+const String NOME_ATHLETIC   = "nome_atletica";
+const String SIGLA_ATHLETIC  = "sigla_atletica";
+const String IMAGE_ATHLETIC  = "imagem_atletica";
+const String CIDADE_ATHLETIC = "cidade_atletica";
+const String UNIVER_ATHLETIC = "universidade_atletica";
+const String CURSO_ATHLETIC  = "curso_atletica";
 
 /// DATABASE SHARED FIELDS FOR COLLECTION
 ///

@@ -80,7 +80,7 @@ dependencies:
   url_launcher: ^6.0.3
 
     # Used to get User location by GPS
-  geolocator: ^7.3.0
+  geolocator: ^7.3.1
 
     # Used to translate User latitude and longitude coordinates into a readable address
   geocoding: ^2.0.0

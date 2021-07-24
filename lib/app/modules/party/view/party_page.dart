@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:uni_match/app/datas/party.dart';
 import 'package:uni_match/app/modules/party/store/party_store.dart';
 import 'package:uni_match/app/modules/party/view/party_story.dart';
 import 'package:uni_match/constants/constants.dart';
+import 'package:uni_match/helpers/app_ad_helper.dart';
 import 'package:uni_match/widgets/default_card_border.dart';
 import 'package:uni_match/widgets/no_data.dart';
 import 'package:uni_match/widgets/processing.dart';
@@ -18,44 +20,56 @@ class PartyPage extends StatefulWidget {
 }
 
 class _PartyPageState extends ModularState<PartyPage, PartyStore> {
+
+  @override
+  void initState() {
+    super.initState();
+    controller.getParties();
+    AppAdHelper.showInterstitialAd();
+  }
+
+  @override
+  void dispose() {
+    AppAdHelper.disposeInterstitialAd();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          controller.i18n.translate("parties")!,
-          style: TextStyle(fontSize: 20),
+        appBar: AppBar(
+          title: Text(
+            controller.i18n.translate("parties")!,
+            style: TextStyle(fontSize: 20),
+          ),
         ),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-          stream: controller.getParties(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Processing(text: controller.i18n.translate("loading")!);
-            } else if (snapshot.data!.docs.isEmpty) {
-              return NoData(
-                  svgName: 'info_icon',
-                  text: controller.i18n.translate("no_party")!);
-            } else {
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: ((context, index) {
-                  /// Get notification DocumentSnapshot
-                  final List<QueryDocumentSnapshot> partiesAll =
-                      snapshot.data!.docs;
-                  final DocumentSnapshot parties = snapshot.data!.docs[index];
-                  List<String> listaStory = [];
-                  List<PartyModel> listaFestas = [];
+        body: Observer(
+          builder:(_) {
+            return controller.carregandoValores == true
+                ? Processing(text: controller.i18n.translate("loading")!)
+                : controller.listaFestas.isEmpty
+                ? NoData(
+                    svgName: 'info_icon',
+                    text: controller.i18n.translate("no_party")!)
+                : ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: controller.listaFestas.length,
+                  itemBuilder: ((context, index) {
+                    /// Get notification DocumentSnapshot
+                    final List partiesAll = controller.listaFestas;
+                    final DocumentSnapshot parties = controller.listaFestas[index];
+                    List<String> listaStory = [];
+                    List<PartyModel> listaFestas = [];
 
-                  for (var dadosFesta in partiesAll) {
-                    for (var images in dadosFesta[IMAGES_PARTY]) {
-                      listaStory.add(images);
+                    for (var dadosFesta in partiesAll) {
+                      for (var images in dadosFesta[IMAGES_PARTY]) {
+                        listaStory.add(images);
+                      }
+                      PartyModel party = PartyModel.fromDoc(dadosFesta, listaStory);
+                      listaFestas.add(party);
+                      listaStory = [];
                     }
-                    PartyModel party = PartyModel.fromDoc(dadosFesta, listaStory);
-                    listaFestas.add(party);
-                    listaStory = [];
-                  }
+
                   /// Show notification
                   return AnimationConfiguration.staggeredList(
                     position: index,
@@ -101,7 +115,7 @@ class _PartyPageState extends ModularState<PartyPage, PartyStore> {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Flexible(
                                         child: Text(
@@ -132,7 +146,8 @@ class _PartyPageState extends ModularState<PartyPage, PartyStore> {
                                                 fontSize: 16,
                                               ),
                                               maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
+                                              overflow:
+                                              TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ],
@@ -148,10 +163,11 @@ class _PartyPageState extends ModularState<PartyPage, PartyStore> {
                       ),
                     ),
                   );
-                }),
-              );
-            }
-          }),
+                }
+                )
+            );
+          }
+        )
     );
   }
 }

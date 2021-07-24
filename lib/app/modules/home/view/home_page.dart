@@ -72,6 +72,8 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
                mainAxisAlignment: MainAxisAlignment.spaceAround,
                children: [
                  IconButton(
+                     splashColor: Colors.transparent,
+                     highlightColor: Colors.transparent,
                      icon: SvgIcon("assets/icons/beer_icon.svg",
                        width: 30, height: 30, color: Colors.grey[600],),
                      onPressed: (){
@@ -80,12 +82,14 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
 
 
                  IconButton(
+                     splashColor: Colors.transparent,
+                     highlightColor: Colors.transparent,
                      icon: SvgIcon("assets/icons/airplane_icon.svg",
                        width: 33, height: 33, color: Colors.grey[600],),
                      onPressed: (){
                        if (UserModel().userIsVip) {
                          // Go to passport screen
-                         Modular.to.pushNamed('/profile/passaport');
+                         controller.goToPassportScreen(context);
                        } else {
                          /// Show VIP dialog
                          showDialog(context: context,
@@ -94,6 +98,8 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
                      }),
 
                  IconButton(
+                     splashColor: Colors.transparent,
+                     highlightColor: Colors.transparent,
                      icon: _getNotificationCounter(),
                      onPressed: () async {
                        // Go to Notifications Screen
@@ -108,6 +114,7 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
             type: BottomNavigationBarType.shifting,
             elevation: Platform.isIOS ? 0 : 8,
             currentIndex: _selectedIndex,
+            selectedItemColor: Colors.pinkAccent,
             onTap: (int index) => setState(() => _selectedIndex = index),
             items: [
               /// Discover Tab
@@ -155,7 +162,7 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
   /// Count unread notifications
   Widget _getNotificationCounter() {
     // Set icon
-    final icon = SvgIcon("assets/icons/bell_icon.svg", width: 30, height: 30);
+    final icon = SvgIcon("assets/icons/bell_icon.svg", width: 30, height: 30, color: Colors.grey[600],);
 
     /// Handle stream
     return  StreamBuilder<QuerySnapshot>(

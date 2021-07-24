@@ -104,6 +104,7 @@ class ProfileCard extends StatelessWidget {
                           ),
                         ],
                       ),
+                      SizedBox(height: 5,),
 
                       /// User education
                       Row(
@@ -126,7 +127,6 @@ class ProfileCard extends StatelessWidget {
                       ),
                       SizedBox(height: 3),
 
-                      /// User job title
                       Row(
                         children: [
                           SvgIcon("assets/icons/gender_icon.svg",
@@ -134,7 +134,7 @@ class ProfileCard extends StatelessWidget {
                           SizedBox(width: 5),
                           Expanded(
                             child: Text(
-                              user.userJobTitle,
+                              user.userOrientation,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -175,20 +175,23 @@ class ProfileCard extends StatelessWidget {
               : Container(width: 0, height: 0),
 
           /// Show message icon
-          this.page == 'matches'
-              ? Positioned(
-                  bottom: 5,
-                  right: 5,
-                  child: Container(
-                      padding: EdgeInsets.all(7),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: SvgIcon("assets/icons/message_icon.svg",
-                          color: Colors.white, width: 30, height: 30)),
-                )
-              : Container(width: 0, height: 0),
+          // Todo verificar se matem ou retira
+          /// icone de msg na TAB Matches
+          // this.page == 'matches'
+          //     ? Positioned(
+          //         bottom: 5,
+          //         right: 5,
+          //         child: Container(
+          //             padding: EdgeInsets.all(7),
+          //             decoration: BoxDecoration(
+          //               color: Theme.of(context).primaryColor,
+          //               shape: BoxShape.circle,
+          //             ),
+          //             child: SvgIcon("assets/icons/message_icon.svg",
+          //                 color: Colors.white, width: 30, height: 30)
+          //         ),
+          //       )
+          //     : Container(width: 0, height: 0),
 
           /// Show flag profile icon
           this.page == 'discover'

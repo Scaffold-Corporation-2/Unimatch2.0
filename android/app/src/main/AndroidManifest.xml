@@ -20,6 +20,15 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <!-- Url Launcher -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
    <application
         android:label="Uni Match"
         android:icon="@mipmap/ic_launcher">
@@ -83,7 +92,7 @@
         // Get your it from your Google Cloud Platform Developer Account
         // Link: https://console.cloud.google.com/apis/credentials -->
        <meta-data android:name="com.google.android.geo.API_KEY"
-           android:value="AIzaSyBlcVLVVlre07LtTyTeC_qv6OQt2k5ANUU"/>
+           android:value="AIzaSyDQHbPVOqoBhcqhp6N5N_g7W5LmyjhW8pk"/>
 
    </application>
 </manifest>

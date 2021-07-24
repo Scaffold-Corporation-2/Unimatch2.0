@@ -30,19 +30,4 @@ abstract class _AppController with Store{
     return localizedStrings![key] ==  null ? '' : localizedStrings![key];
   }
 
-  @observable
-  late SharedPreferences sharedPreferences;
-
-  @action
-  buscarPreferencias() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-  }
-
-  @action
-  mudarPreferencias(String tipo, String key, var value){
-    if(tipo == "bool") sharedPreferences.setBool(key, value);
-    if(tipo == "string") sharedPreferences.setString(key, value);
-    if(tipo == "int") sharedPreferences.setInt(key, value);
-    if(tipo == "double") sharedPreferences.setDouble(key, value);
-  }
 }
