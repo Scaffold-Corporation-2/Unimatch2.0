@@ -59,6 +59,9 @@ class _ChatScreenState extends State<ChatScreen> {
   late final VoidCallback onCancelReply;
 
   String replyMessage = '';
+
+  late bool sendFor;
+
   //
   late Stream<QuerySnapshot> _messages;
   bool _isComposing = false;
@@ -69,6 +72,36 @@ class _ChatScreenState extends State<ChatScreen> {
     /// Scroll to button
     _messagesController.animateTo(0.0,
         duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+  }
+
+  ///build of the ReplyMessage layout
+  Widget buildReply() => ReplyMessageWidget(
+    message: replyMessage,
+    otherUser: comparationWhoSendM(),
+    onCancelReply: cancelReply,
+  );
+
+  ///Comparação de quem enviou a mensagem
+  comparationWhoSendM() {
+    if (sendFor == true) {
+      return UserModel().user.userFullname;
+    } else
+      return widget.user.userFullname;
+  }
+
+  ///Função para deixar a variavel de resposta vazia
+  void cancelReply() {
+      setState(() {
+        replyMessage = '';
+      });
+    }
+  ///
+  void replyToMessage(String message, bool user) {
+    setState(() {
+      replyMessage = message;
+      sendFor = user;
+      print(replyMessage);
+    });
   }
 
   /// Get image from camera / gallery
@@ -370,52 +403,11 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
-
       ///Column das mensagens.
     );
   }
 
   /// Responder mensagem
-  late bool sendFor;
-  void replyToMessage(String message, bool user) {
-    setState(() {
-      replyMessage = message;
-      sendFor = user;
-      print(replyMessage);
-    });
-  }
-
-  void cancelReply() {
-    setState(() {
-      replyMessage = '';
-    });
-  }
-
-  comparacao() {
-    if (sendFor == true) {
-      return UserModel().user.userFullname;
-    } else
-      return widget.user.userFullname;
-  }
-
-  Widget buildReply() => Container(
-    width: MediaQuery.of(context).size.width*0.60,
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.2),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(14),
-            topRight: Radius.circular(14),
-          ),
-        ),
-        child: ReplyMessageWidget(
-          message: replyMessage,
-          otherUser: comparacao(),
-          onCancelReply: cancelReply,
-        ),
-      );
-
-  ///Responder Mensagem
 
   /// _showMessages
   Widget _showMessages() {
@@ -472,7 +464,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             textMessage: textMessage,
                             imageLink: imageLink,
                             timeAgo: timeAgo,
-                            replyMessage: replyMessage,
+                            replyMessage: "text",
                           ),
                         ),
                         onRightSwipe: () {

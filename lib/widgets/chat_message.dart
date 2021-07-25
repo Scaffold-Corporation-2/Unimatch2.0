@@ -54,7 +54,7 @@ class ChatMessage extends StatelessWidget {
                       begin: Alignment.topRight,
                       end: Alignment.bottomLeft,
                       colors: [
-                        isUserSender ? Colors.pinkAccent : Colors.blueGrey,
+                        isUserSender ? Colors.pinkAccent : Colors.black12,
                         isUserSender ? Colors.redAccent: Colors.grey,
                       ],
                     ),
@@ -95,6 +95,7 @@ class ChatMessage extends StatelessWidget {
                       /// Text message
                       : Column(
                         children: [
+
                           Text(
                               textMessage ?? "",
                               style: TextStyle(

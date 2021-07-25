@@ -14,15 +14,26 @@ class ReplyMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => IntrinsicHeight(
-    child: Row(
-      children: [
-        Container(
-          color: Colors.pinkAccent,
-          width: 4,
-        ),
-        const SizedBox(width: 8),
-        Expanded(child: buildReplyMessage()),
-      ],
+    child: Container(
+      width: MediaQuery.of(context).size.width*0.60,
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey.withOpacity(0.2),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(14),
+                topRight: Radius.circular(14),
+              ),
+            ),
+      child: Row(
+        children: [
+          Container(
+            color: Colors.pinkAccent,
+            width: 4,
+          ),
+          const SizedBox(width: 8),
+          Expanded(child: buildReplyMessage()),
+        ],
+      ),
     ),
   );
   Widget buildReplyMessage() => Column(
