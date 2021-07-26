@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uni_match/app/modules/chat/widgets/reply_message_widget.dart';
 
 class ChatMessage extends StatelessWidget {
   // Variables
@@ -19,6 +20,13 @@ class ChatMessage extends StatelessWidget {
       this.textMessage,
         required this.replyMessage,
       });
+  Widget buildReply() => ReplyMessageWidget(
+    message: replyMessage,
+    otherUser: '',
+    onCancelReply: (){} ,
+  );
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +66,6 @@ class ChatMessage extends StatelessWidget {
                         isUserSender ? Colors.redAccent: Colors.grey,
                       ],
                     ),
-                      // color: !isUserSender
-                      //     /// Color for receiver
-                      //     ? Colors.grey.withAlpha(70)
-                      //     /// Color for sender
-                      //     :Theme.of(context).primaryColor,
                       borderRadius: BorderRadius.circular(25)
                   ),
                   child: isImage
@@ -95,7 +98,7 @@ class ChatMessage extends StatelessWidget {
                       /// Text message
                       : Column(
                         children: [
-
+                          replyMessage.isNotEmpty? buildReply() : Container(),
                           Text(
                               textMessage ?? "",
                               style: TextStyle(

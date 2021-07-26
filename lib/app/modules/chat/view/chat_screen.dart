@@ -76,10 +76,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
   ///build of the ReplyMessage layout
   Widget buildReply() => ReplyMessageWidget(
-    message: replyMessage,
-    otherUser: comparationWhoSendM(),
-    onCancelReply: cancelReply,
-  );
+        message: replyMessage,
+        otherUser: comparationWhoSendM(),
+        onCancelReply: cancelReply,
+      );
 
   ///Comparação de quem enviou a mensagem
   comparationWhoSendM() {
@@ -91,10 +91,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
   ///Função para deixar a variavel de resposta vazia
   void cancelReply() {
-      setState(() {
-        replyMessage = '';
-      });
-    }
+    setState(() {
+      replyMessage = '';
+    });
+  }
+
   ///
   void replyToMessage(String message, bool user) {
     setState(() {
@@ -111,7 +112,8 @@ class _ChatScreenState extends State<ChatScreen> {
         builder: (context) => ImageSourceSheet(
               onImageSelected: (image) async {
                 if (image != null) {
-                  await _sendMessage(type: 'image', imgFile: image);
+                  await _sendMessage(
+                      type: 'image', imgFile: image, replyText: replyMessage);
                   // close modal
                   Navigator.of(context).pop();
                 }
@@ -121,7 +123,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
   // Send message
   Future<void> _sendMessage(
-      {required String type, String? text, File? imgFile}) async {
+      {required String type,
+      String? text,
+      File? imgFile,
+      required replyText}) async {
     String textMsg = '';
     String imageUrl = '';
 
@@ -155,6 +160,7 @@ class _ChatScreenState extends State<ChatScreen> {
         userFullName: widget.user.userFullname, // other user ful name
         textMsg: textMsg,
         imgLink: imageUrl,
+        replyMsg: replyText,
         isRead: true);
 
     /// Save copy message for receiver
@@ -166,9 +172,9 @@ class _ChatScreenState extends State<ChatScreen> {
         userPhotoLink: UserModel().user.userProfilePhoto, // current user photo
         userFullName: UserModel().user.userFullname, // current user ful name
         textMsg: textMsg,
+        replyMsg: replyText,
         imgLink: imageUrl,
-        isRead: false
-    );
+        isRead: false);
 
     /// Send push notification
     await _notificationsApi.sendPushNotification(
@@ -177,8 +183,7 @@ class _ChatScreenState extends State<ChatScreen> {
             '${_i18n.translate("sent_a_message_to_you")}',
         nType: 'message',
         nSenderId: UserModel().user.userId,
-        nUserDeviceToken: widget.user.userDeviceToken
-    );
+        nUserDeviceToken: widget.user.userDeviceToken);
   }
 
   @override
@@ -323,30 +328,46 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(child: _showMessages()),
 
           /// Text Composer
-          Column(
-            children: [
-              if (replyMessage != '') buildReply(),
-              ListTile(
-                  leading: Container(
-                    child: IconButton(
-                        icon: SvgIcon("assets/icons/camera_icon.svg",
-                            width: 20, height: 20),
-                        onPressed: () async {
-                          /// Send image file
-                          await _getImage();
-
-                          /// Update scroll
-                          _scrollMessageList();
-                        }),
-                  ),
-                  title: Column(
+          ListTile(
+            title: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Column(
                     children: [
+                      if (replyMessage != '') buildReply(),
                       TextField(
                         focusNode: focusNode,
                         controller: _textController,
                         minLines: 1,
                         maxLines: 4,
                         decoration: InputDecoration(
+                          prefixIcon: Padding(
+                            padding: const EdgeInsetsDirectional.only(bottom: 0),
+                            child: IconButton(
+                              iconSize: 30,
+                                icon: Icon(Icons.insert_emoticon),
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                color: Colors.grey,
+                                onPressed: () async {
+                                  /// Send image file
+                                  await _getImage();
+
+                                  /// Update scroll
+                                  _scrollMessageList();
+                                }),
+                          ),
+                          suffixIcon: IconButton(
+                              icon: SvgIcon("assets/icons/camera_icon.svg",
+                                  width: 20, height: 20),
+                              onPressed: () async {
+                                /// Send image file
+                                await _getImage();
+
+                                /// Update scroll
+                                _scrollMessageList();
+                              }),
                           filled: true,
                           fillColor: Colors.grey[100],
                           hintText: _i18n.translate("type_a_message"),
@@ -372,37 +393,45 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     ],
                   ),
-                  trailing: Container(
-                    child: IconButton(
-                        icon: Icon(Icons.send,
-                            color: _isComposing
-                                ? Theme.of(context).primaryColor
-                                : Colors.grey),
-                        onPressed:
-                        _isComposing
-                            ? () async {
-                                /// Get text
-                                final text = _textController.text.trim();
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: IconButton(
+                      icon: Icon(Icons.send,
+                          color: _isComposing
+                              ? Theme.of(context).primaryColor
+                              : Colors.grey),
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onPressed: _isComposing
+                          ? () async {
+                              /// Get text
+                              final text = _textController.text.trim();
+                              final replyText = replyMessage;
 
-                                /// clear input text
-                                _textController.clear();
-                                setState(() {
-                                  cancelReply();
-                                  _isComposing = false;
-                                });
+                              /// clear input text
+                              _textController.clear();
+                              setState(() {
+                                cancelReply();
+                                _isComposing = false;
+                              });
 
-                                /// Send text message
-                                await _sendMessage(type: 'text', text: text);
-                                /// Update scroll
+                              /// Send text message
+                              await _sendMessage(
+                                  type: 'text', text: text, replyText: replyText);
 
-                                _scrollMessageList();
-                              }
-                            : null),
-                  )),
-            ],
+                              /// Update scroll
+
+                              _scrollMessageList();
+                            }
+                          : null),
+                )
+              ],
+            ),
           ),
         ],
       ),
+
       ///Column das mensagens.
     );
   }
@@ -437,6 +466,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
                       final bool isImage = msg[MESSAGE_TYPE] == 'image';
                       final String textMessage = msg[MESSAGE_TEXT];
+                      final String replyMsg = msg[REPLY_TEXT];
                       final String? imageLink = msg[MESSAGE_IMG_LINK];
                       final String timeAgo = timeago
                           .format(msg[TIMESTAMP].toDate(), locale: 'pt_BR');
@@ -451,30 +481,34 @@ class _ChatScreenState extends State<ChatScreen> {
                       }
 
                       // Show chat bubble
-                      return SwipeTo(
-                        iconColor: Colors.transparent,
-                        offsetDx: 0.2,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 8.0),
-                          child: ChatMessage(
-                            isUserSender: isUserSender,
-                            isImage: isImage,
-                            userPhotoLink: userPhotoLink,
-                            textMessage: textMessage,
-                            imageLink: imageLink,
-                            timeAgo: timeAgo,
-                            replyMessage: "text",
-                          ),
-                        ),
-                        onRightSwipe: () {
-                          print(textMessage);
-                          if (window.viewInsets.bottom <= 0.0) {
-                            showKeyboard(context);
-                          }
-                          replyToMessage(textMessage, isUserSender);
-                          print("foco");
+                      return GestureDetector(
+                        onDoubleTap: () {
+                          print("curtiu");
                         },
+                        child: SwipeTo(
+                          iconColor: Colors.transparent,
+                          offsetDx: 0.2,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 8.0),
+                            child: ChatMessage(
+                              isUserSender: isUserSender,
+                              isImage: isImage,
+                              userPhotoLink: userPhotoLink,
+                              textMessage: textMessage,
+                              imageLink: imageLink,
+                              timeAgo: timeAgo,
+                              replyMessage: replyMsg,
+                            ),
+                          ),
+                          onRightSwipe: () {
+                            print(textMessage);
+                            if (window.viewInsets.bottom <= 0.0) {
+                              showKeyboard(context);
+                            }
+                            replyToMessage(textMessage, isUserSender);
+                          },
+                        ),
                       );
                     });
               }

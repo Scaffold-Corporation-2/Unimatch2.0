@@ -15,10 +15,11 @@ class ReplyMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IntrinsicHeight(
     child: Container(
-      width: MediaQuery.of(context).size.width*0.60,
+      // width: MediaQuery.of(context).size.width*0.60,
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: Colors.grey.withOpacity(0.2),
+              //color: Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(14),
                 topRight: Radius.circular(14),
@@ -54,7 +55,7 @@ class ReplyMessageWidget extends StatelessWidget {
         ],
       ),
       const SizedBox(height: 8),
-      Text(this.message, style: TextStyle(color: Colors.black54)),
+      Text(this.message, style: TextStyle(color: Colors.black)),
     ],
   );
 }

@@ -17,6 +17,7 @@ class ConversationsApi {
     required String userFullName,
     required String textMsg,
     required bool isRead,
+    required String replyMsg,
   }) async {
     await _firestore
         .collection(C_CONNECTIONS)
@@ -29,6 +30,7 @@ class ConversationsApi {
       USER_FULLNAME: userFullName,
       MESSAGE_TYPE: type,
       LAST_MESSAGE: textMsg,
+      REPLY_TEXT: replyMsg,
       MESSAGE_READ: isRead,
       TIMESTAMP: DateTime.now(),
     }).then((value) {
