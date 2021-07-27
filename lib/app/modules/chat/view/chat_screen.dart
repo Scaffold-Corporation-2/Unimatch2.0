@@ -325,7 +325,11 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(
         children: <Widget>[
           /// how message list
-          Expanded(child: _showMessages()),
+          Expanded(
+
+              child: Container(
+                  color: Colors.white10,
+                  child: _showMessages())),
 
           /// Text Composer
           ListTile(
@@ -466,7 +470,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
                       final bool isImage = msg[MESSAGE_TYPE] == 'image';
                       final String textMessage = msg[MESSAGE_TEXT];
-                      final String replyMsg = msg[REPLY_TEXT];
+                      final String replyMsg = msg[REPLY_TEXT] == null ?'' : msg[REPLY_TEXT];
                       final String? imageLink = msg[MESSAGE_IMG_LINK];
                       final String timeAgo = timeago
                           .format(msg[TIMESTAMP].toDate(), locale: 'pt_BR');
@@ -499,6 +503,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               imageLink: imageLink,
                               timeAgo: timeAgo,
                               replyMessage: replyMsg,
+                              otheUser: widget.user.userFullname,
                             ),
                           ),
                           onRightSwipe: () {

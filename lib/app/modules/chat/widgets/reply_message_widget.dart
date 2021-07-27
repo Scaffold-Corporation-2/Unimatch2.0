@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:uni_match/app/models/user_model.dart';
-import 'package:uni_match/app/datas/user.dart';
-import 'package:uni_match/app/models/user_model.dart';
 class ReplyMessageWidget extends StatelessWidget {
   final String message;
   final String otherUser;
@@ -15,11 +12,9 @@ class ReplyMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IntrinsicHeight(
     child: Container(
-      // width: MediaQuery.of(context).size.width*0.60,
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: Colors.grey.withOpacity(0.2),
-              //color: Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(14),
                 topRight: Radius.circular(14),
@@ -44,8 +39,10 @@ class ReplyMessageWidget extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              '${otherUser}',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              otherUser,
+              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,
+              ),
+              textAlign: TextAlign.start,
             ),
           ),
             GestureDetector(
@@ -55,7 +52,10 @@ class ReplyMessageWidget extends StatelessWidget {
         ],
       ),
       const SizedBox(height: 8),
-      Text(this.message, style: TextStyle(color: Colors.black)),
+      Text(this.message, style: TextStyle(color: Colors.black,
+      fontSize: 18),
+      textAlign: TextAlign.start,
+      ),
     ],
   );
 }

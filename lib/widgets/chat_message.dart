@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:uni_match/app/api/matches_api.dart';
+import 'package:uni_match/app/models/user_model.dart';
+import 'package:uni_match/app/modules/chat/widgets/reply_conversation_widget.dart';
 import 'package:uni_match/app/modules/chat/widgets/reply_message_widget.dart';
 
 class ChatMessage extends StatelessWidget {
@@ -10,6 +13,7 @@ class ChatMessage extends StatelessWidget {
   final String? textMessage;
   final String timeAgo;
   final String replyMessage;
+  final String otheUser;
 
   ChatMessage(
       {required this.isUserSender,
@@ -19,11 +23,12 @@ class ChatMessage extends StatelessWidget {
       this.imageLink,
       this.textMessage,
         required this.replyMessage,
+        required this.otheUser,
       });
-  Widget buildReply() => ReplyMessageWidget(
+  Widget buildReply() => ReplyConversationWidget(
     message: replyMessage,
-    otherUser: '',
-    onCancelReply: (){} ,
+    otherUser: otheUser,
+    userSend: isUserSender,
   );
 
 
@@ -97,8 +102,10 @@ class ChatMessage extends StatelessWidget {
 
                       /// Text message
                       : Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+
                         children: [
-                          replyMessage.isNotEmpty? buildReply() : Container(),
+                          replyMessage.isNotEmpty? buildReply() : Container(width: 0,),
                           Text(
                               textMessage ?? "",
                               style: TextStyle(
