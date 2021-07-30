@@ -67,8 +67,8 @@ class ChatMessage extends StatelessWidget {
                       begin: Alignment.topRight,
                       end: Alignment.bottomLeft,
                       colors: [
-                        isUserSender ? Colors.pinkAccent : Colors.black12,
-                        isUserSender ? Colors.redAccent: Colors.grey,
+                        isUserSender ? Colors.pinkAccent : Colors.grey,
+                        isUserSender ? Colors.redAccent: Colors.black12,
                       ],
                     ),
                       borderRadius: BorderRadius.circular(25)

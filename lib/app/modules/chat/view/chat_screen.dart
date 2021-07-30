@@ -2,9 +2,8 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
+
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -473,7 +472,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       String userPhotoLink;
 
                       final bool isImage = msg[MESSAGE_TYPE] == 'image';
-                      final String textMessage = msg[MESSAGE_TEXT];
+                      final String textMessage = msg[MESSAGE_TEXT] == null ? '' :msg[MESSAGE_TEXT];
                       final String replyMsg = msg[REPLY_TEXT] == null ?'' : msg[REPLY_TEXT];
                       final String userReply = msg[USER_REPLY_TEXT] == null ?'' : msg[USER_REPLY_TEXT];
                       final String? imageLink = msg[MESSAGE_IMG_LINK];

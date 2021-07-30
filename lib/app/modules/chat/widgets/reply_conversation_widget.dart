@@ -1,7 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:uni_match/app/models/user_model.dart';
+
 class ReplyConversationWidget extends StatelessWidget {
   final String message;
   final String userName;
@@ -20,13 +18,13 @@ class ReplyConversationWidget extends StatelessWidget {
     child: Container(
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: userName.isEmpty ?Colors.white60  :Colors.white24,
+        color: userSend ?Colors.white70  :Colors.white54,
         borderRadius: BorderRadius.all(Radius.circular(14)),
       ),
       child: Row(
         children: [
           Container(
-            color: userName.isEmpty ?Colors.pinkAccent  :Colors.white60,
+            color: userSend ?Colors.pinkAccent  :Colors.black26,
             width: 4,
           ),
           const SizedBox(width: 8),
