@@ -30,6 +30,7 @@ class MessagesApi {
     required String userFullName,
     required String textMsg,
     required String replyMsg,
+    required String userReplyMsg,
     required String imgLink,
     required bool isRead,
   }) async {
@@ -47,6 +48,7 @@ class MessagesApi {
       MESSAGE_TEXT: textMsg,
       REPLY_TEXT: replyMsg,
       MESSAGE_IMG_LINK: imgLink,
+      USER_REPLY_TEXT: userReplyMsg,
       // TIMESTAMP: DateTime.now(),
       TIMESTAMP: Timestamp.now(),
     });
@@ -60,6 +62,7 @@ class MessagesApi {
         userFullName: userFullName,
         textMsg: textMsg,
         replyMsg: replyMsg,
+        userReplyMsg: userReplyMsg,
         isRead: isRead);
   }
 

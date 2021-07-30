@@ -60,7 +60,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   String replyMessage = '';
 
-  late bool sendFor;
+  late bool sendFor = false;
 
   //
   late Stream<QuerySnapshot> _messages;
@@ -86,7 +86,8 @@ class _ChatScreenState extends State<ChatScreen> {
     if (sendFor == true) {
       return UserModel().user.userFullname;
     } else
-      return widget.user.userFullname;
+      return
+        widget.user.userFullname;
   }
 
   ///Função para deixar a variavel de resposta vazia
@@ -113,7 +114,7 @@ class _ChatScreenState extends State<ChatScreen> {
               onImageSelected: (image) async {
                 if (image != null) {
                   await _sendMessage(
-                      type: 'image', imgFile: image, replyText: replyMessage);
+                      type: 'image', imgFile: image, replyText: replyMessage,userReplyMsg: comparationWhoSendM());
                   // close modal
                   Navigator.of(context).pop();
                 }
@@ -126,7 +127,8 @@ class _ChatScreenState extends State<ChatScreen> {
       {required String type,
       String? text,
       File? imgFile,
-      required replyText}) async {
+      required replyText,
+      required userReplyMsg}) async {
     String textMsg = '';
     String imageUrl = '';
 
@@ -161,6 +163,7 @@ class _ChatScreenState extends State<ChatScreen> {
         textMsg: textMsg,
         imgLink: imageUrl,
         replyMsg: replyText,
+        userReplyMsg: userReplyMsg,
         isRead: true);
 
     /// Save copy message for receiver
@@ -174,6 +177,7 @@ class _ChatScreenState extends State<ChatScreen> {
         textMsg: textMsg,
         replyMsg: replyText,
         imgLink: imageUrl,
+        userReplyMsg:userReplyMsg,
         isRead: false);
 
     /// Send push notification
@@ -422,7 +426,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
                               /// Send text message
                               await _sendMessage(
-                                  type: 'text', text: text, replyText: replyText);
+                                  type: 'text', text: text, replyText: replyText,userReplyMsg: comparationWhoSendM());
 
                               /// Update scroll
 
@@ -471,6 +475,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       final bool isImage = msg[MESSAGE_TYPE] == 'image';
                       final String textMessage = msg[MESSAGE_TEXT];
                       final String replyMsg = msg[REPLY_TEXT] == null ?'' : msg[REPLY_TEXT];
+                      final String userReply = msg[USER_REPLY_TEXT] == null ?'' : msg[USER_REPLY_TEXT];
                       final String? imageLink = msg[MESSAGE_IMG_LINK];
                       final String timeAgo = timeago
                           .format(msg[TIMESTAMP].toDate(), locale: 'pt_BR');
@@ -503,7 +508,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               imageLink: imageLink,
                               timeAgo: timeAgo,
                               replyMessage: replyMsg,
-                              otheUser: widget.user.userFullname,
+                              userReply: userReply,
                             ),
                           ),
                           onRightSwipe: () {

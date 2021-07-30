@@ -115,6 +115,7 @@ const String FLAGGED_BY_USER_ID = "sinalizado_por_usuario_id";
 ///
 const String MESSAGE_TEXT = "mensagem_texto";
 const String REPLY_TEXT = "resposta_mensagem";
+const String USER_REPLY_TEXT = "name_user_resposta_mensagem";
 const String MESSAGE_TYPE = "mensagem_tipo";
 const String MESSAGE_IMG_LINK = "mensagem_img_link";
 const String MESSAGE_READ = "mensagem_lida";

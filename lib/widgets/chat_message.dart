@@ -13,7 +13,7 @@ class ChatMessage extends StatelessWidget {
   final String? textMessage;
   final String timeAgo;
   final String replyMessage;
-  final String otheUser;
+  final String userReply;
 
   ChatMessage(
       {required this.isUserSender,
@@ -23,11 +23,11 @@ class ChatMessage extends StatelessWidget {
       this.imageLink,
       this.textMessage,
         required this.replyMessage,
-        required this.otheUser,
+        required this.userReply,
       });
   Widget buildReply() => ReplyConversationWidget(
     message: replyMessage,
-    otherUser: otheUser,
+    userName: userReply,
     userSend: isUserSender,
   );
 
@@ -101,20 +101,28 @@ class ChatMessage extends StatelessWidget {
                         )
 
                       /// Text message
-                      : Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                      : Container(
+                    width:replyMessage.isNotEmpty?
+                    MediaQuery.of(context).size.width*0.7:
+                    null,
+                    child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
-                        children: [
-                          replyMessage.isNotEmpty? buildReply() : Container(width: 0,),
-                          Text(
-                              textMessage ?? "",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color:
-                                      isUserSender ? Colors.white : Colors.black),
-                              textAlign: TextAlign.center,
+                          children: [
+                            replyMessage.isNotEmpty? Container(child: buildReply()) : Container(width: 0,),
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Text(
+                                  textMessage ?? "",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color:
+                                          isUserSender ? Colors.white : Colors.black),
+                                  textAlign: TextAlign.start,
+                                ),
                             ),
-                        ],
+                          ],
+                        ),
                       ),
                 ),
 

@@ -61,6 +61,7 @@ class ConversationsTab extends StatelessWidget {
                           : null,
                       child: ListTile(
                         leading: CircleAvatar(
+                          radius: 30,
                           backgroundColor: Theme.of(context).primaryColor,
                           backgroundImage:
                               NetworkImage(conversation[USER_PROFILE_PHOTO]),
