@@ -1,9 +1,12 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:uni_match/app/modules/chat/store/chat_store.dart';
 import 'package:uni_match/app/modules/chat/view/chat_screen.dart';
 
 class ChatModule extends Module{
   @override
-  List<Bind> get binds => [];
+  List<Bind> get binds => [
+    Bind.lazySingleton((i) => ChatStore()),
+  ];
 
   @override
   List<ModularRoute> get routes => [

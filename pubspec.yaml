@@ -138,6 +138,7 @@ flutter:
      - assets/images/
      - assets/icons/
      - assets/lang/
+     - assets/fonts/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -169,3 +170,17 @@ flutter_icons:
   ios: true
   remove_alpha_ios: true
   image_path: "assets/images/app_logo.png"
+
+fonts:
+  - family: Eczar
+    fonts:
+      - asset: assets/fonts/Eczar-SemiBold.ttf
+          weight:300
+      - asset: assets/fonts/Eczar-Bold.ttf
+          weight:400
+      - asset: assets/fonts/Eczar-ExtraBold.ttf
+          weight:500
+      - asset: assets/fonts/Eczar-ExtraMedium.ttf
+          weight:600
+      - asset: assets/fonts/Eczar-ExtraRegular.ttf
+          weight:700

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:swipe_to/swipe_to.dart';
@@ -14,6 +15,7 @@ import 'package:uni_match/app/api/notifications_api.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/datas/user.dart';
 import 'package:uni_match/app/models/user_model.dart';
+import 'package:uni_match/app/modules/chat/store/chat_store.dart';
 import 'package:uni_match/app/modules/chat/widgets/reply_message_widget.dart';
 import 'package:uni_match/app/modules/profile/view/profile_screen.dart';
 import 'package:uni_match/constants/constants.dart';
@@ -34,7 +36,7 @@ class ChatScreen extends StatefulWidget {
   _ChatScreenState createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
   // Variables
   final _textController = TextEditingController();
   final _messagesController = ScrollController();
@@ -44,6 +46,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final _notificationsApi = NotificationsApi();
 
   final focusNode = FocusNode();
+  final String replyMessage = '';
 
   void dismissKeyboard(BuildContext context) {
     FocusScope.of(context).unfocus();
@@ -56,8 +59,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   late final VoidCallback onCancelReply;
-
-  String replyMessage = '';
 
   late bool sendFor = false;
 
@@ -75,35 +76,33 @@ class _ChatScreenState extends State<ChatScreen> {
 
   ///build of the ReplyMessage layout
   Widget buildReply() => ReplyMessageWidget(
-        message: replyMessage,
-        otherUser: comparationWhoSendM(),
-        onCancelReply: cancelReply,
+        message: controller.replyMessage,
+        otherUser: controller.comparationWhoSendM(
+            UserModel().user.userFullname, widget.user.userFullname),
+        onCancelReply: controller.cancelReply,
       );
 
   ///Comparação de quem enviou a mensagem
-  comparationWhoSendM() {
-    if (sendFor == true) {
-      return UserModel().user.userFullname;
-    } else
-      return
-        widget.user.userFullname;
-  }
-
+  // comparationWhoSendM(String userFullname) {
+  //   if (controller.userSend == true) {
+  //     return UserModel().user.userFullname;
+  //   } else
+  //     return
+  //       widget.user.userFullname;
+  // }
   ///Função para deixar a variavel de resposta vazia
-  void cancelReply() {
-    setState(() {
-      replyMessage = '';
-    });
-  }
+  // void cancelReply() {
+  //     controller.replyMessage = '';
+  // }
 
   ///
-  void replyToMessage(String message, bool user) {
-    setState(() {
-      replyMessage = message;
-      sendFor = user;
-      print(replyMessage);
-    });
-  }
+  // void replyToMessage(String message, bool user) {
+  //   setState(() {
+  //     controller.replyMessage = message;
+  //     sendFor = user;
+  //     print(replyMessage);
+  //   });
+  // }
 
   /// Get image from camera / gallery
   Future<void> _getImage() async {
@@ -113,7 +112,12 @@ class _ChatScreenState extends State<ChatScreen> {
               onImageSelected: (image) async {
                 if (image != null) {
                   await _sendMessage(
-                      type: 'image', imgFile: image, replyText: replyMessage,userReplyMsg: comparationWhoSendM());
+                      type: 'image',
+                      imgFile: image,
+                      replyText: controller.replyMessage,
+                      userReplyMsg: controller.comparationWhoSendM(
+                          UserModel().user.userFullname,
+                          widget.user.userFullname));
                   // close modal
                   Navigator.of(context).pop();
                 }
@@ -176,7 +180,7 @@ class _ChatScreenState extends State<ChatScreen> {
         textMsg: textMsg,
         replyMsg: replyText,
         imgLink: imageUrl,
-        userReplyMsg:userReplyMsg,
+        userReplyMsg: userReplyMsg,
         isRead: false);
 
     /// Send push notification
@@ -329,34 +333,44 @@ class _ChatScreenState extends State<ChatScreen> {
         children: <Widget>[
           /// how message list
           Expanded(
-
-              child: Container(
-                  color: Colors.white10,
-                  child: _showMessages())),
+              child: Container(color: Colors.white10, child: _showMessages())),
 
           /// Text Composer
-          ListTile(
-            title: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      if (replyMessage != '') buildReply(),
-                      TextField(
-                        focusNode: focusNode,
-                        controller: _textController,
-                        minLines: 1,
-                        maxLines: 4,
-                        decoration: InputDecoration(
-                          prefixIcon: Padding(
-                            padding: const EdgeInsetsDirectional.only(bottom: 0),
-                            child: IconButton(
-                              iconSize: 30,
-                                icon: Icon(Icons.insert_emoticon),
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                color: Colors.grey,
+          Observer(
+            builder: (_) => ListTile(
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        if (controller.replyMessage != '') buildReply(),
+                        TextField(
+                          focusNode: focusNode,
+                          controller: _textController,
+                          minLines: 1,
+                          maxLines: 4,
+                          decoration: InputDecoration(
+                            prefixIcon: Padding(
+                              padding:
+                                  const EdgeInsetsDirectional.only(bottom: 0),
+                              child: IconButton(
+                                  iconSize: 30,
+                                  icon: Icon(Icons.insert_emoticon),
+                                  splashColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  color: Colors.grey,
+                                  onPressed: () async {
+                                    /// Send image file
+                                    await _getImage();
+
+                                    /// Update scroll
+                                    _scrollMessageList();
+                                  }),
+                            ),
+                            suffixIcon: IconButton(
+                                icon: SvgIcon("assets/icons/camera_icon.svg",
+                                    width: 20, height: 20),
                                 onPressed: () async {
                                   /// Send image file
                                   await _getImage();
@@ -364,76 +378,72 @@ class _ChatScreenState extends State<ChatScreen> {
                                   /// Update scroll
                                   _scrollMessageList();
                                 }),
-                          ),
-                          suffixIcon: IconButton(
-                              icon: SvgIcon("assets/icons/camera_icon.svg",
-                                  width: 20, height: 20),
-                              onPressed: () async {
-                                /// Send image file
-                                await _getImage();
-
-                                /// Update scroll
-                                _scrollMessageList();
-                              }),
-                          filled: true,
-                          fillColor: Colors.grey[100],
-                          hintText: _i18n.translate("type_a_message"),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.only(
-                              topLeft: replyMessage != ''
-                                  ? Radius.zero
-                                  : Radius.circular(25),
-                              topRight: replyMessage != ''
-                                  ? Radius.zero
-                                  : Radius.circular(25),
-                              bottomLeft: Radius.circular(25),
-                              bottomRight: Radius.circular(25),
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                            hintText: _i18n.translate("type_a_message"),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.only(
+                                topLeft: controller.replyMessage != ''
+                                    ? Radius.zero
+                                    : Radius.circular(25),
+                                topRight: controller.replyMessage != ''
+                                    ? Radius.zero
+                                    : Radius.circular(25),
+                                bottomLeft: Radius.circular(25),
+                                bottomRight: Radius.circular(25),
+                              ),
                             ),
                           ),
+                          onChanged: (text) {
+                            setState(() {
+                              _isComposing = text.isNotEmpty;
+                            });
+                          },
                         ),
-                        onChanged: (text) {
-                          setState(() {
-                            _isComposing = text.isNotEmpty;
-                          });
-                        },
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
-                  child: IconButton(
-                      icon: Icon(Icons.send,
-                          color: _isComposing
-                              ? Theme.of(context).primaryColor
-                              : Colors.grey),
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      onPressed: _isComposing
-                          ? () async {
-                              /// Get text
-                              final text = _textController.text.trim();
-                              final replyText = replyMessage;
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: IconButton(
+                        icon: Icon(Icons.send,
+                            color: _isComposing
+                                ? Theme.of(context).primaryColor
+                                : Colors.grey),
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onPressed: _isComposing
+                            ? () async {
+                                /// Get text
+                                final text = _textController.text.trim();
+                                final replyText = controller.replyMessage;
 
-                              /// clear input text
-                              _textController.clear();
-                              setState(() {
-                                cancelReply();
-                                _isComposing = false;
-                              });
+                                /// clear input text
+                                _textController.clear();
+                                setState(() {
+                                  controller.cancelReply();
+                                  _isComposing = false;
+                                });
 
-                              /// Send text message
-                              await _sendMessage(
-                                  type: 'text', text: text, replyText: replyText,userReplyMsg: comparationWhoSendM());
+                                /// Send text message
+                                await _sendMessage(
+                                    type: 'text',
+                                    text: text,
+                                    replyText: replyText,
+                                    userReplyMsg:
+                                        controller.comparationWhoSendM(
+                                            UserModel().user.userFullname,
+                                            widget.user.userFullname));
 
-                              /// Update scroll
+                                /// Update scroll
 
-                              _scrollMessageList();
-                            }
-                          : null),
-                )
-              ],
+                                _scrollMessageList();
+                              }
+                            : null),
+                  )
+                ],
+              ),
             ),
           ),
         ],
@@ -456,70 +466,75 @@ class _ChatScreenState extends State<ChatScreen> {
                 return MyCircularProgress();
               else {
                 return ListView.builder(
-                    controller: _messagesController,
-                    reverse: true,
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      // Get message list
-                      final List<DocumentSnapshot> messages =
-                          snapshot.data!.docs.reversed.toList();
-                      // Get message doc map
-                      final Map<dynamic, dynamic> msg =
-                          messages[index].data()! as Map;
+                  controller: _messagesController,
+                  reverse: true,
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    // Get message list
+                    final List<DocumentSnapshot> messages =
+                        snapshot.data!.docs.reversed.toList();
+                    // Get message doc map
+                    final Map<dynamic, dynamic> msg =
+                        messages[index].data()! as Map;
 
-                      /// Variables
-                      bool isUserSender;
-                      String userPhotoLink;
+                    /// Variables
+                    bool isUserSender;
+                    String userPhotoLink;
 
-                      final bool isImage = msg[MESSAGE_TYPE] == 'image';
-                      final String textMessage = msg[MESSAGE_TEXT] == null ? '' :msg[MESSAGE_TEXT];
-                      final String replyMsg = msg[REPLY_TEXT] == null ?'' : msg[REPLY_TEXT];
-                      final String userReply = msg[USER_REPLY_TEXT] == null ?'' : msg[USER_REPLY_TEXT];
-                      final String? imageLink = msg[MESSAGE_IMG_LINK];
-                      final String timeAgo = timeago
-                          .format(msg[TIMESTAMP].toDate(), locale: 'pt_BR');
+                    final bool isImage = msg[MESSAGE_TYPE] == 'image';
+                    final String textMessage =
+                        msg[MESSAGE_TEXT] == null ? '' : msg[MESSAGE_TEXT];
+                    final String replyMsg =
+                        msg[REPLY_TEXT] == null ? '' : msg[REPLY_TEXT];
+                    final String userReply = msg[USER_REPLY_TEXT] == null
+                        ? ''
+                        : msg[USER_REPLY_TEXT];
+                    final String? imageLink = msg[MESSAGE_IMG_LINK];
+                    final String timeAgo = timeago
+                        .format(msg[TIMESTAMP].toDate(), locale: 'pt_BR');
 
-                      /// Check user id to get info
-                      if (msg[USER_ID] == UserModel().user.userId) {
-                        isUserSender = true;
-                        userPhotoLink = UserModel().user.userProfilePhoto;
-                      } else {
-                        isUserSender = false;
-                        userPhotoLink = widget.user.userProfilePhoto;
-                      }
+                    /// Check user id to get info
+                    if (msg[USER_ID] == UserModel().user.userId) {
+                      isUserSender = true;
+                      userPhotoLink = UserModel().user.userProfilePhoto;
+                    } else {
+                      isUserSender = false;
+                      userPhotoLink = widget.user.userProfilePhoto;
+                    }
 
-                      // Show chat bubble
-                      return GestureDetector(
-                        onDoubleTap: () {
-                          print("curtiu");
-                        },
-                        child: SwipeTo(
-                          iconColor: Colors.transparent,
-                          offsetDx: 0.2,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10.0, horizontal: 8.0),
-                            child: ChatMessage(
-                              isUserSender: isUserSender,
-                              isImage: isImage,
-                              userPhotoLink: userPhotoLink,
-                              textMessage: textMessage,
-                              imageLink: imageLink,
-                              timeAgo: timeAgo,
-                              replyMessage: replyMsg,
-                              userReply: userReply,
-                            ),
+                    // Show chat bubble
+                    return GestureDetector(
+                      onDoubleTap: () {
+                        print("curtiu");
+                      },
+                      child: SwipeTo(
+                        iconColor: Colors.transparent,
+                        offsetDx: 0.2,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 8.0),
+                          child: ChatMessage(
+                            isUserSender: isUserSender,
+                            isImage: isImage,
+                            userPhotoLink: userPhotoLink,
+                            textMessage: textMessage,
+                            imageLink: imageLink,
+                            timeAgo: timeAgo,
+                            replyMessage: replyMsg,
+                            userReply: userReply,
                           ),
-                          onRightSwipe: () {
-                            print(textMessage);
-                            if (window.viewInsets.bottom <= 0.0) {
-                              showKeyboard(context);
-                            }
-                            replyToMessage(textMessage, isUserSender);
-                          },
                         ),
-                      );
-                    });
+                        onRightSwipe: () {
+                          print(textMessage);
+                          if (window.viewInsets.bottom <= 0.0) {
+                            showKeyboard(context);
+                          }
+                          controller.replyToMessage(textMessage, isUserSender);
+                        },
+                      ),
+                    );
+                  },
+                );
               }
             });
   }

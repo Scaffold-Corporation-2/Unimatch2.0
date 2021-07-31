@@ -24,7 +24,7 @@ class ReplyConversationWidget extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            color: userSend ?Colors.pinkAccent  :Colors.black26,
+            color: userSend ?Colors.pinkAccent  :Color (0xFF871F78),
             width: 4,
           ),
           const SizedBox(width: 8),
@@ -50,8 +50,9 @@ class ReplyConversationWidget extends StatelessWidget {
         ],
       ),
       const SizedBox(height: 8),
-      Text(this.message, style: TextStyle(color: Colors.black,
-      fontSize: 17,
+      Text(this.message,
+        style: TextStyle(color: Colors.black,
+          fontWeight: FontWeight.bold,
       ),
         textAlign: TextAlign.start,
       ),
