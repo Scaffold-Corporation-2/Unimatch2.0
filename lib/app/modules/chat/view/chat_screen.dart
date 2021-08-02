@@ -58,10 +58,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
     Future.delayed(Duration.zero, () => focusScope.requestFocus(focusNode));
   }
 
-  late final VoidCallback onCancelReply;
-
-  late bool sendFor = false;
-
   //
   late Stream<QuerySnapshot> _messages;
   bool _isComposing = false;
@@ -80,29 +76,9 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
         otherUser: controller.comparationWhoSendM(
             UserModel().user.userFullname, widget.user.userFullname),
         onCancelReply: controller.cancelReply,
+    imageReply: controller.replyImage,
+      isImage: controller.isImage,
       );
-
-  ///Comparação de quem enviou a mensagem
-  // comparationWhoSendM(String userFullname) {
-  //   if (controller.userSend == true) {
-  //     return UserModel().user.userFullname;
-  //   } else
-  //     return
-  //       widget.user.userFullname;
-  // }
-  ///Função para deixar a variavel de resposta vazia
-  // void cancelReply() {
-  //     controller.replyMessage = '';
-  // }
-
-  ///
-  // void replyToMessage(String message, bool user) {
-  //   setState(() {
-  //     controller.replyMessage = message;
-  //     sendFor = user;
-  //     print(replyMessage);
-  //   });
-  // }
 
   /// Get image from camera / gallery
   Future<void> _getImage() async {
@@ -529,7 +505,8 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                           if (window.viewInsets.bottom <= 0.0) {
                             showKeyboard(context);
                           }
-                          controller.replyToMessage(textMessage, isUserSender);
+                          controller.replyToMessage(
+                              textMessage, isUserSender, imageLink!, isImage);
                         },
                       ),
                     );

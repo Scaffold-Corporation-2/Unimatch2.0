@@ -12,10 +12,25 @@ abstract class _ChatStore  with Store {
   @observable
   bool userSend = false;
 
+  @observable
+  String? replyImage = '';
+
+  @observable
+  bool isImage = false;
+
 @action
-  void replyToMessage(String message, bool user) {
+  void replyToMessage(String message, bool user,String? image, bool imageBool) {
+  isImage = imageBool;
+  if(imageBool == true){
+    replyMessage = image.toString();
+    replyImage = image;
+    userSend = user;
+  }else{
     replyMessage = message;
     userSend = user;
+  }
+
+
     print(replyMessage);
 }
 @action

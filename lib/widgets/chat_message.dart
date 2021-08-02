@@ -1,8 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:uni_match/app/api/matches_api.dart';
-import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/app/modules/chat/widgets/reply_conversation_widget.dart';
-import 'package:uni_match/app/modules/chat/widgets/reply_message_widget.dart';
 
 class ChatMessage extends StatelessWidget {
   // Variables
@@ -29,6 +28,7 @@ class ChatMessage extends StatelessWidget {
     message: replyMessage,
     userName: userReply,
     userSend: isUserSender,
+    isImage: isImage,
   );
 
 
@@ -115,7 +115,9 @@ class ChatMessage extends StatelessWidget {
                               child: Text(
                                   textMessage ?? "",
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 15,
+                                      fontFamily: 'Times',
+                                      fontWeight: FontWeight.bold,
                                       color:
                                           isUserSender ? Colors.white : Colors.white),
                                   textAlign: TextAlign.start,

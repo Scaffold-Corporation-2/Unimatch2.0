@@ -39,14 +39,45 @@ mixin _$ChatStore on _ChatStore, Store {
     });
   }
 
+  final _$replyImageAtom = Atom(name: '_ChatStore.replyImage');
+
+  @override
+  String? get replyImage {
+    _$replyImageAtom.reportRead();
+    return super.replyImage;
+  }
+
+  @override
+  set replyImage(String? value) {
+    _$replyImageAtom.reportWrite(value, super.replyImage, () {
+      super.replyImage = value;
+    });
+  }
+
+  final _$isImageAtom = Atom(name: '_ChatStore.isImage');
+
+  @override
+  bool get isImage {
+    _$isImageAtom.reportRead();
+    return super.isImage;
+  }
+
+  @override
+  set isImage(bool value) {
+    _$isImageAtom.reportWrite(value, super.isImage, () {
+      super.isImage = value;
+    });
+  }
+
   final _$_ChatStoreActionController = ActionController(name: '_ChatStore');
 
   @override
-  void replyToMessage(String message, bool user) {
+  void replyToMessage(
+      String message, bool user, String? image, bool imageBool) {
     final _$actionInfo = _$_ChatStoreActionController.startAction(
         name: '_ChatStore.replyToMessage');
     try {
-      return super.replyToMessage(message, user);
+      return super.replyToMessage(message, user, image, imageBool);
     } finally {
       _$_ChatStoreActionController.endAction(_$actionInfo);
     }
@@ -64,10 +95,23 @@ mixin _$ChatStore on _ChatStore, Store {
   }
 
   @override
+  dynamic comparationWhoSendM(String user, String otheruser) {
+    final _$actionInfo = _$_ChatStoreActionController.startAction(
+        name: '_ChatStore.comparationWhoSendM');
+    try {
+      return super.comparationWhoSendM(user, otheruser);
+    } finally {
+      _$_ChatStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 replyMessage: ${replyMessage},
-userSend: ${userSend}
+userSend: ${userSend},
+replyImage: ${replyImage},
+isImage: ${isImage}
     ''';
   }
 }

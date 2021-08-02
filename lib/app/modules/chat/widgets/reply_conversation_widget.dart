@@ -4,11 +4,12 @@ class ReplyConversationWidget extends StatelessWidget {
   final String message;
   final String userName;
   final bool userSend;
-
+  final bool isImage;
   const ReplyConversationWidget({
     required this.message,
     required this.userName,
     required this.userSend,
+    required this.isImage,
 
   });
   @override
@@ -50,12 +51,12 @@ class ReplyConversationWidget extends StatelessWidget {
         ],
       ),
       const SizedBox(height: 8),
-      Text(this.message,
+    Text(this.message+'teste',
         style: TextStyle(color: Colors.black,
           fontWeight: FontWeight.bold,
       ),
         textAlign: TextAlign.start,
-      ),
+      )
     ],
   );
 }

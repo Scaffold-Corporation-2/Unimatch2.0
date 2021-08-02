@@ -151,6 +151,16 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: Eczar
+      fonts:
+        - asset: assets/fonts/EczarBold.ttf
+          weight: 500
+        - asset: assets/fonts/EczarExtraBold.ttf
+        - asset: assets/fonts/Medium.ttf
+        - asset: assets/fonts/Regular.ttf
+        - asset: assets/fonts/SemiBold.ttf
+
   # fonts:
   #   - family: Schyler
   #     fonts:
@@ -170,17 +180,3 @@ flutter_icons:
   ios: true
   remove_alpha_ios: true
   image_path: "assets/images/app_logo.png"
-
-fonts:
-  - family: Eczar
-    fonts:
-      - asset: assets/fonts/Eczar-SemiBold.ttf
-          weight:300
-      - asset: assets/fonts/Eczar-Bold.ttf
-          weight:400
-      - asset: assets/fonts/Eczar-ExtraBold.ttf
-          weight:500
-      - asset: assets/fonts/Eczar-ExtraMedium.ttf
-          weight:600
-      - asset: assets/fonts/Eczar-ExtraRegular.ttf
-          weight:700
