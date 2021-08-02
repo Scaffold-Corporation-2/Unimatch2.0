@@ -76,7 +76,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
         otherUser: controller.comparationWhoSendM(
             UserModel().user.userFullname, widget.user.userFullname),
         onCancelReply: controller.cancelReply,
-    imageReply: controller.replyImage,
       isImage: controller.isImage,
       );
 
@@ -91,6 +90,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                       type: 'image',
                       imgFile: image,
                       replyText: controller.replyMessage,
+                      replyType: controller.isImage? 'image':'text',
                       userReplyMsg: controller.comparationWhoSendM(
                           UserModel().user.userFullname,
                           widget.user.userFullname));
@@ -107,7 +107,8 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
       String? text,
       File? imgFile,
       required replyText,
-      required userReplyMsg}) async {
+      required String replyType,
+      required userReplyMsg,}) async {
     String textMsg = '';
     String imageUrl = '';
 
@@ -130,10 +131,11 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
         _pr.hide();
         break;
     }
-
+    print('safe'+replyType);
     /// Save message for current user
     await _messagesApi.saveMessage(
         type: type,
+        replyType: replyType,
         fromUserId: UserModel().user.userId,
         senderId: UserModel().user.userId,
         receiverId: widget.user.userId,
@@ -148,6 +150,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
     /// Save copy message for receiver
     await _messagesApi.saveMessage(
         type: type,
+        replyType: replyType,
         fromUserId: UserModel().user.userId,
         senderId: widget.user.userId,
         receiverId: UserModel().user.userId,
@@ -394,7 +397,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                 /// Get text
                                 final text = _textController.text.trim();
                                 final replyText = controller.replyMessage;
-
+                                final replyType = controller.isImage ? 'image':'text';
                                 /// clear input text
                                 _textController.clear();
                                 setState(() {
@@ -406,6 +409,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                 await _sendMessage(
                                     type: 'text',
                                     text: text,
+                                    replyType: replyType,
                                     replyText: replyText,
                                     userReplyMsg:
                                         controller.comparationWhoSendM(
@@ -458,6 +462,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                     String userPhotoLink;
 
                     final bool isImage = msg[MESSAGE_TYPE] == 'image';
+                    final bool isReplyImage = msg[REPLY_TYPE] == 'image';
                     final String textMessage =
                         msg[MESSAGE_TEXT] == null ? '' : msg[MESSAGE_TEXT];
                     final String replyMsg =
@@ -492,6 +497,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                           child: ChatMessage(
                             isUserSender: isUserSender,
                             isImage: isImage,
+                            isReplyImage: isReplyImage,
                             userPhotoLink: userPhotoLink,
                             textMessage: textMessage,
                             imageLink: imageLink,
@@ -501,7 +507,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                           ),
                         ),
                         onRightSwipe: () {
-                          print(textMessage);
                           if (window.viewInsets.bottom <= 0.0) {
                             showKeyboard(context);
                           }

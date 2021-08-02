@@ -23,6 +23,7 @@ class MessagesApi {
   /// Save chat message
   Future<void> saveMessage({
     required String type,
+    required String replyType,
     required String senderId,
     required String receiverId,
     required String fromUserId,
@@ -35,7 +36,6 @@ class MessagesApi {
     required bool isRead,
   }) async {
     /// Save message
-    print(Timestamp.now());
     print("Date " + DateTime.now().toString());
     await _firestore
         .collection(C_MESSAGES)
@@ -49,6 +49,7 @@ class MessagesApi {
       REPLY_TEXT: replyMsg,
       MESSAGE_IMG_LINK: imgLink,
       USER_REPLY_TEXT: userReplyMsg,
+      REPLY_TYPE:replyType,
       // TIMESTAMP: DateTime.now(),
       TIMESTAMP: Timestamp.now(),
     });
@@ -62,6 +63,7 @@ class MessagesApi {
         userFullName: userFullName,
         textMsg: textMsg,
         replyMsg: replyMsg,
+        replyType:replyType,
         userReplyMsg: userReplyMsg,
         isRead: isRead);
   }

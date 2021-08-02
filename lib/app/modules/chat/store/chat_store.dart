@@ -29,8 +29,6 @@ abstract class _ChatStore  with Store {
     replyMessage = message;
     userSend = user;
   }
-
-
     print(replyMessage);
 }
 @action
@@ -41,7 +39,8 @@ abstract class _ChatStore  with Store {
   @action
   comparationWhoSendM(String user, String otheruser) {
     if (userSend == true) {
-      return user;
+      return
+        user;
     } else
       return
         otheruser;

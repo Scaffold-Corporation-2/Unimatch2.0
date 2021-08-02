@@ -13,22 +13,26 @@ class ChatMessage extends StatelessWidget {
   final String timeAgo;
   final String replyMessage;
   final String userReply;
+  final bool isReplyImage;
 
   ChatMessage(
       {required this.isUserSender,
       required this.userPhotoLink,
       required this.timeAgo,
-      this.isImage = false,
+      required this.isImage,
       this.imageLink,
       this.textMessage,
         required this.replyMessage,
         required this.userReply,
+        required this.isReplyImage,
       });
+
   Widget buildReply() => ReplyConversationWidget(
     message: replyMessage,
     userName: userReply,
     userSend: isUserSender,
-    isImage: isImage,
+    isImage: isReplyImage,
+    imageLink: imageLink!,
   );
 
 
@@ -73,59 +77,65 @@ class ChatMessage extends StatelessWidget {
                     ),
                       borderRadius: BorderRadius.circular(25)
                   ),
-                  child: isImage
-                      ? GestureDetector(
-                          onTap: () {
-                            // Show full image
-                            Navigator.of(context).push(
-                              new MaterialPageRoute(
-                                builder: (context) => _ShowFullImage(imageLink!))
-                            );
-                          },
-                          child: Card(
-                            /// Image
-                            semanticContainer: true,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            margin: const EdgeInsets.all(0),
-                            color: Colors.grey.withAlpha(70),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Container(
-                                width: 200,
-                                height: 200,
-                                child: Hero(
-                                  tag: imageLink!,
-                                  child: Image.network(imageLink!))),
-                          ),
-                        )
+                  child: Column(
+                    children: [
+                      replyMessage.isNotEmpty? Container(child: buildReply()) : Container(width: 0,),
 
-                      /// Text message
-                      : Container(
-                    width:replyMessage.isNotEmpty?
-                    MediaQuery.of(context).size.width*0.7:
-                    null,
-                    child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-
-                          children: [
-                            replyMessage.isNotEmpty? Container(child: buildReply()) : Container(width: 0,),
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Text(
-                                  textMessage ?? "",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: 'Times',
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          isUserSender ? Colors.white : Colors.white),
-                                  textAlign: TextAlign.start,
+                      isImage
+                          ? GestureDetector(
+                              onTap: () {
+                                // Show full image
+                                Navigator.of(context).push(
+                                  new MaterialPageRoute(
+                                    builder: (context) => _ShowFullImage(imageLink!))
+                                );
+                              },
+                              child: Card(
+                                /// Image
+                                semanticContainer: true,
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                margin: const EdgeInsets.all(0),
+                                color: Colors.grey.withAlpha(70),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
+                                child: Container(
+                                    width: 200,
+                                    height: 200,
+                                    child: Hero(
+                                      tag: imageLink!,
+                                      child: Image.network(imageLink!))),
+                              ),
+                            )
+
+                          /// Text message
+                          :
+                      //TODO verificar NULL NO container.
+                      Container(
+                        width:replyMessage.isNotEmpty?
+                        MediaQuery.of(context).size.width*0.7:
+                        null,
+                        child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Text(
+                                      textMessage ?? "",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontFamily: 'Times',
+                                          fontWeight: FontWeight.bold,
+                                          color:
+                                              isUserSender ? Colors.white : Colors.white),
+                                      textAlign: TextAlign.start,
+                                    ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
+                          ),
+                    ],
+                  ),
                 ),
 
                 SizedBox(height: 5),

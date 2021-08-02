@@ -5,12 +5,13 @@ class ReplyConversationWidget extends StatelessWidget {
   final String userName;
   final bool userSend;
   final bool isImage;
+  final String imageLink;
   const ReplyConversationWidget({
     required this.message,
     required this.userName,
     required this.userSend,
     required this.isImage,
-
+    required this.imageLink,
   });
   @override
   Widget build(BuildContext context) =>
@@ -51,12 +52,28 @@ class ReplyConversationWidget extends StatelessWidget {
         ],
       ),
       const SizedBox(height: 8),
-    Text(this.message+'teste',
-        style: TextStyle(color: Colors.black,
-          fontWeight: FontWeight.bold,
+    //this.message.substring(0,5) == 'https'?
+      this.isImage?
+      Card(
+      /// Image
+        semanticContainer: true,
+        margin: const EdgeInsets.all(0),
+        color: Colors.grey.withAlpha(70),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Container(
+            width: 70,
+            height: 70,
+            child: Hero(
+                tag: Image,
+                child: Image.network(message)))):
+    Text(this.message,
+      style: TextStyle(color: Colors.black,
+        fontWeight: FontWeight.bold,
       ),
-        textAlign: TextAlign.start,
-      )
+      textAlign: TextAlign.start,
+    )
     ],
   );
 }

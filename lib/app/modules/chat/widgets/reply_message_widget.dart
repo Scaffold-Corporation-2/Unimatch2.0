@@ -3,13 +3,11 @@ class ReplyMessageWidget extends StatelessWidget {
   final String message;
   final String otherUser;
   final VoidCallback onCancelReply;
-  final String? imageReply;
   final bool isImage;
   const ReplyMessageWidget({
     required this.message,
     required this.otherUser,
     required  this.onCancelReply,
-    required this.imageReply,
     required this.isImage,
   });
 
@@ -74,7 +72,7 @@ class ReplyMessageWidget extends StatelessWidget {
             height: 70,
             child: Hero(
                 tag: Image,
-                child: Image.network(imageReply.toString())))),
+                child: Image.network(message)))),
     ],
   );
 }
