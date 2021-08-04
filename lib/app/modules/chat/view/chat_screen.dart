@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -311,7 +310,9 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
         children: <Widget>[
           /// how message list
           Expanded(
-              child: _showMessages()),
+              child: Container(
+                  color: Colors.pink.shade100,
+                  child: _showMessages())),
 
           /// Text Composer
           Observer(
@@ -322,7 +323,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                   Expanded(
                     child: Column(
                       children: [
-                        if (controller.replyMessage != '') buildReply(),
+                        if (controller.replyMessage != '') Container(child: buildReply()),
                         TextField(
                           focusNode: focusNode,
                           controller: _textController,
@@ -332,7 +333,9 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                             prefixIcon: Padding(
                               padding:
                                   const EdgeInsetsDirectional.only(bottom: 0),
-                              child: IconButton(
+                              child:
+                                //EmojiPicker(),
+                              IconButton(
                                   iconSize: 30,
                                   icon: Icon(Icons.insert_emoticon),
                                   splashColor: Colors.transparent,

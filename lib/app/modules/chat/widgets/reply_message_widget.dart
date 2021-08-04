@@ -57,6 +57,7 @@ class ReplyMessageWidget extends StatelessWidget {
       isImage == false  ?
       Text(this.message, style: TextStyle(color: Colors.black,
       fontSize: 18),
+      maxLines: 5,
       textAlign: TextAlign.start,
       ):
       Card(

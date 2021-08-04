@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:uni_match/app/modules/chat/widgets/reply_conversation_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uni_match/widgets/default_card_border.dart';
 
 class ChatMessage extends StatelessWidget {
   // Variables
@@ -76,10 +77,14 @@ class ChatMessage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25)),
                   child: Column(
                     children: [
-                      // replyMessage.isNotEmpty? Container(child: buildReply()) : Container(width: 0,),
-
+                       replyMessage.isNotEmpty? Container(
+                           width: replyMessage.isNotEmpty
+                               ? MediaQuery.of(context).size.width * 0.7
+                               : null,
+                           child: buildReply()) : Container(width: 0,),
                       isImage
-                          ? GestureDetector(
+                          ? Container(
+                            child: GestureDetector(
                               onTap: () {
                                 // Show full image
                                 Navigator.of(context).push(
@@ -103,29 +108,27 @@ class ChatMessage extends StatelessWidget {
                                         tag: imageLink!,
                                         child: Image.network(imageLink!))),
                               ),
-                            )
+                            ),
+                          )
 
                           /// Text message
                           :
                           //TODO verificar NULL NO container.
                           Container(
+
                               width: replyMessage.isNotEmpty
                                   ? MediaQuery.of(context).size.width * 0.7
                                   : null,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  replyMessage.isNotEmpty
-                                      ? Container(child: buildReply())
-                                      : Container(
-                                          width: 0,
-                                        ),
                                   Padding(
-                                    padding: const EdgeInsets.all(5),
+                                    padding: const EdgeInsets.only(left: 5),
                                     child: Text(
                                       textMessage ?? "",
                                       style: GoogleFonts.eczar(
-                                          fontSize: 18,
+                                         height: 1.3,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                           color: isUserSender
                                               ? Colors.white

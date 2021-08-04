@@ -116,6 +116,9 @@ dependencies:
     #Biblioteca de arrastar pro lado
   swipe_to: 0.1.0-nullsafety.1
 
+    #Biblioteca de emoji_picker_flutter:
+  emoji_picker_flutter: ^1.0.6
+
   flutter_cupertino_datetime_picker: ^2.0.1
 
 

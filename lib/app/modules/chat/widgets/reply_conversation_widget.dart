@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:uni_match/app/models/user_model.dart';
 
 class ReplyConversationWidget extends StatelessWidget {
@@ -44,15 +45,15 @@ class ReplyConversationWidget extends StatelessWidget {
         children: [
           Text(
             userName == UserModel().user.userFullname ? 'Você':userName,
-            style: TextStyle(
+            style: GoogleFonts.eczar(
             color: Colors.black,
-            fontSize: 15,
+            fontSize:17,
             fontWeight: FontWeight.bold),
             textAlign: TextAlign.start,
           ),
         ],
       ),
-      const SizedBox(height: 8),
+      // const SizedBox(height: 2),
     //this.message.substring(0,5) == 'https'?
       this.isImage?
       Card(
@@ -66,15 +67,15 @@ class ReplyConversationWidget extends StatelessWidget {
         child: Container(
             width: 70,
             height: 70,
-            child: Hero(
-                tag: Image,
-                child: Image.network(message))))
+            child: Image.network(message)))
           : Text(this.message,
-      style: TextStyle(color: Colors.black,
+      style: GoogleFonts.eczar(color: Colors.black,
+        fontSize: 15,
+        height: 1.1,
         fontWeight: FontWeight.bold,
       ),
       textAlign: TextAlign.start,
-    )
+      )
     ],
   );
 }
