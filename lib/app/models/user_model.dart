@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:place_picker/entities/location_result.dart';
 import 'package:place_picker/place_picker.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -24,6 +26,7 @@ class UserModel extends Model {
   final _firestore = FirebaseFirestore.instance;
   final _storageRef = FirebaseStorage.instance;
   final _fcm = FirebaseMessaging.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn.standard(scopes: ['email']);
   final _appHelper = AppHelper();
 
   /// Initialize geoflutterfire instance
@@ -39,10 +42,13 @@ class UserModel extends Model {
   /// Create Singleton factory for [UserModel]
   ///
   static final UserModel _userModel = new UserModel._internal();
+
   factory UserModel() {
     return _userModel;
   }
+
   UserModel._internal();
+
   // End
 
   ///*** FirebaseAuth and Firestore Methods ***///
@@ -143,6 +149,44 @@ class UserModel extends Model {
     return age;
   }
 
+  Future<UserCredential> signInWithCredential(AuthCredential credential) =>
+      _firebaseAuth.signInWithCredential(credential);
+
+  Future<void> authGoogleAccount() async {
+    try {
+      final GoogleSignInAccount? googleAccount = await _googleSignIn.signIn();
+      final GoogleSignInAuthentication googleAuth =
+          await googleAccount!.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
+      );
+
+      await signInWithCredential(credential).then((value) {
+        print('Logado com sucesso!');
+      });
+    } catch (error) {
+      print('O seguinte erro ocorreu: ' + error.toString());
+    }
+
+    //   await signInWithCredential(credential).then((currentUser) async {
+    //     // await _firestore.collection('usuarios').doc(currentUser.user.uid).set({
+    //     //   'nomeUsuario': currentUser.user!.displayName == null
+    //     //       ? ''
+    //     //       : currentUser.user!.displayName,
+    //     //   'emailUsuario':
+    //     //       currentUser.user!.email == null ? '' : currentUser.user!.email,
+    //     //   'imagemUsuario': currentUser.user!.photoURL == null
+    //     //       ? ''
+    //     //       : currentUser.user!.photoURL,
+    //     // });
+    //   });
+    // } catch (error) {
+    //   print('O seguinte erro ocorreu: ' + error.toString());
+    // }
+  }
+
+  Future<void> authEmailAccount() async {}
 
   /// Authenticate User Account
   Future<void> authUserAccount({
@@ -167,7 +211,7 @@ class UserModel extends Model {
             blockedScreen!();
           } else {
             // Update UserModel for current user
-            updateUserObject(userDoc.data()!  as Map);
+            updateUserObject(userDoc.data()! as Map);
             // Update user device token and subscribe to fcm topic
             updateUserDeviceToken();
             // Go to home screen
@@ -205,6 +249,7 @@ class UserModel extends Model {
     phoneNumber = phoneNumber.replaceAll("-", "");
 
     debugPrint('Telefone limpo: $phoneNumber');
+
     /// **** CallBack functions **** ///
 
     // Auto validate SMS code and return AuthResult to get user.
@@ -260,14 +305,14 @@ class UserModel extends Model {
   /// Sign In with OPT sent to user device
   Future<void> signInWithOTP(
       {required String verificationId,
-        required String otp,
-        // Callback functions
-        required Function() checkUserAccount,
-        required VoidCallback onError}) async {
+      required String otp,
+      // Callback functions
+      required Function() checkUserAccount,
+      required VoidCallback onError}) async {
     /// Get AuthCredential
     final fireAuth.AuthCredential credential =
-    fireAuth.PhoneAuthProvider.credential(
-        verificationId: verificationId, smsCode: otp);
+        fireAuth.PhoneAuthProvider.credential(
+            verificationId: verificationId, smsCode: otp);
 
     /// Try to sign in with provided credential
     await _firebaseAuth
@@ -313,7 +358,7 @@ class UserModel extends Model {
 
     /// Get User location from formatted address
     final Placemark place =
-    await _appHelper.getUserAddress(position.latitude, position.longitude);
+        await _appHelper.getUserAddress(position.latitude, position.longitude);
     // Get User Country, City or Locality
     country = place.country ?? '';
     locality = place.locality != '' // Check value
@@ -321,8 +366,8 @@ class UserModel extends Model {
         : place.administrativeArea ?? '';
 
     /// Set Geolocation point
-    final GeoFirePoint geoPoint = _geo.point(
-        latitude: position.latitude, longitude: position.longitude);
+    final GeoFirePoint geoPoint =
+        _geo.point(latitude: position.latitude, longitude: position.longitude);
 
     /// Get user device token for push notifications
     final userDeviceToken = await _fcm.getToken();
@@ -373,7 +418,7 @@ class UserModel extends Model {
       final DocumentSnapshot userDoc = await getUser(getFirebaseUser!.uid);
 
       /// Update UserModel for current user
-      updateUserObject(userDoc.data()!  as Map);
+      updateUserObject(userDoc.data()! as Map);
 
       /// Update loading status
       isLoading = false;
@@ -519,7 +564,7 @@ class UserModel extends Model {
   /// avoids the error in the Slider located at lib/settings_screen.dart
   Future<void> checkUserMaxDistance() async {
     final double userMaxDistance =
-    this.user.userSettings![USER_MAX_DISTANCE].toDouble();
+        this.user.userSettings![USER_MAX_DISTANCE].toDouble();
     final double freeMaxDistance = AppModel().appInfo.freeAccountMaxDistance;
     // Check to reset
     if (userMaxDistance > freeMaxDistance) {
@@ -527,7 +572,8 @@ class UserModel extends Model {
       await this.updateUserData(
           userId: this.user.userId,
           data: {'$USER_SETTINGS.$USER_MAX_DISTANCE': freeMaxDistance});
-      debugPrint('verifique a distância máxima do usuário -> Atualizado com sucesso');
+      debugPrint(
+          'verifique a distância máxima do usuário -> Atualizado com sucesso');
     } else {
       debugPrint("verifique a distância máxima do usuário -> é válido");
     }
@@ -556,9 +602,9 @@ class UserModel extends Model {
   /// Add / Update profile image and gallery
   Future<void> updateProfileImage(
       {required File imageFile,
-        String? oldImageUrl,
-        required String path,
-        int? index}) async {
+      String? oldImageUrl,
+      required String path,
+      int? index}) async {
     // Variables
     String uploadPath;
 
@@ -630,7 +676,7 @@ class UserModel extends Model {
   Query filterUserGender(Query query) {
     // Get the opposite gender
     final String oppositeGender =
-    this.user.userGender == "Male" ? "Female" : "Male";
+        this.user.userGender == "Male" ? "Female" : "Male";
 
     /// Get user settings
     final Map<String, dynamic>? settings = this.user.userSettings;
@@ -650,7 +696,7 @@ class UserModel extends Model {
             query = query.where(USER_GENDER, isEqualTo: 'Female');
             break;
           case 'everyone':
-          // Do nothing - app will get everyone
+            // Do nothing - app will get everyone
             break;
         }
       } else {
