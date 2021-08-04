@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:uni_match/app/modules/chat/widgets/reply_conversation_widget.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ChatMessage extends StatelessWidget {
   // Variables
@@ -15,27 +16,25 @@ class ChatMessage extends StatelessWidget {
   final String userReply;
   final bool isReplyImage;
 
-  ChatMessage(
-      {required this.isUserSender,
-      required this.userPhotoLink,
-      required this.timeAgo,
-      required this.isImage,
-      this.imageLink,
-      this.textMessage,
-        required this.replyMessage,
-        required this.userReply,
-        required this.isReplyImage,
-      });
+  ChatMessage({
+    required this.isUserSender,
+    required this.userPhotoLink,
+    required this.timeAgo,
+    required this.isImage,
+    this.imageLink,
+    this.textMessage,
+    required this.replyMessage,
+    required this.userReply,
+    required this.isReplyImage,
+  });
 
   Widget buildReply() => ReplyConversationWidget(
-    message: replyMessage,
-    userName: userReply,
-    userSend: isUserSender,
-    isImage: isReplyImage,
-    imageLink: imageLink!,
-  );
-
-
+        message: replyMessage,
+        userName: userReply,
+        userSend: isUserSender,
+        isImage: isReplyImage,
+        imageLink: imageLink!,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +45,7 @@ class ChatMessage extends StatelessWidget {
     );
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
       child: Row(
         children: <Widget>[
           /// User receiver photo Left
@@ -64,37 +63,35 @@ class ChatMessage extends StatelessWidget {
               children: <Widget>[
                 /// Message container
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(7),
                   decoration: BoxDecoration(
-                    //inserir o gradiente
-                    gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        isUserSender ? Colors.pinkAccent: Color (0xFF871F78),
-                        isUserSender ? Colors.pinkAccent: Color (0xFF871F78),
-                      ],
-                    ),
-                      borderRadius: BorderRadius.circular(25)
-                  ),
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          isUserSender ? Colors.pinkAccent : Color(0xFF871F78),
+                          isUserSender ? Colors.pinkAccent : Color(0xFF871F78),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(25)),
                   child: Column(
                     children: [
-                      replyMessage.isNotEmpty? Container(child: buildReply()) : Container(width: 0,),
+                      // replyMessage.isNotEmpty? Container(child: buildReply()) : Container(width: 0,),
 
                       isImage
                           ? GestureDetector(
                               onTap: () {
                                 // Show full image
                                 Navigator.of(context).push(
-                                  new MaterialPageRoute(
-                                    builder: (context) => _ShowFullImage(imageLink!))
-                                );
+                                    new MaterialPageRoute(
+                                        builder: (context) =>
+                                            _ShowFullImage(imageLink!)));
                               },
                               child: Card(
                                 /// Image
                                 semanticContainer: true,
                                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                                margin: const EdgeInsets.all(0),
+                                margin: const EdgeInsets.all(2),
                                 color: Colors.grey.withAlpha(70),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
@@ -103,37 +100,42 @@ class ChatMessage extends StatelessWidget {
                                     width: 200,
                                     height: 200,
                                     child: Hero(
-                                      tag: imageLink!,
-                                      child: Image.network(imageLink!))),
+                                        tag: imageLink!,
+                                        child: Image.network(imageLink!))),
                               ),
                             )
 
                           /// Text message
                           :
-                      //TODO verificar NULL NO container.
-                      Container(
-                        width:replyMessage.isNotEmpty?
-                        MediaQuery.of(context).size.width*0.7:
-                        null,
-                        child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Text(
+                          //TODO verificar NULL NO container.
+                          Container(
+                              width: replyMessage.isNotEmpty
+                                  ? MediaQuery.of(context).size.width * 0.7
+                                  : null,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  replyMessage.isNotEmpty
+                                      ? Container(child: buildReply())
+                                      : Container(
+                                          width: 0,
+                                        ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(5),
+                                    child: Text(
                                       textMessage ?? "",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontFamily: 'Times',
-                                          fontWeight: FontWeight.bold,
-                                          color:
-                                              isUserSender ? Colors.white : Colors.white),
+                                      style: GoogleFonts.eczar(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                          color: isUserSender
+                                              ? Colors.white
+                                              : Colors.white),
                                       textAlign: TextAlign.start,
                                     ),
-                                ),
-                              ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
                     ],
                   ),
                 ),
@@ -147,7 +149,7 @@ class ChatMessage extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: 1),
 
           /// Current User photo right
           isUserSender ? _userProfilePhoto : Container(width: 0, height: 0),
@@ -168,7 +170,9 @@ class _ShowFullImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: SingleChildScrollView(
+      body: Container(
+        color: Colors.grey.shade200,
+        margin: EdgeInsets.only(bottom: 50),
         child: Center(
           child: Hero(
             tag: imageUrl,

@@ -110,10 +110,14 @@ dependencies:
     #Biblioteca de tipos de Formatters
   brasil_fields: ^1.1.3
 
+    #Biblioteca de fontes
+  google_fonts: ^2.1.0
 
+    #Biblioteca de arrastar pro lado
   swipe_to: 0.1.0-nullsafety.1
 
   flutter_cupertino_datetime_picker: ^2.0.1
+
 
 dev_dependencies:
   flutter_modular_test: ^1.0.1

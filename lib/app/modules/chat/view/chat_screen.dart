@@ -86,6 +86,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
         builder: (context) => ImageSourceSheet(
               onImageSelected: (image) async {
                 if (image != null) {
+                  Navigator.of(context).pop();
                   await _sendMessage(
                       type: 'image',
                       imgFile: image,
@@ -95,7 +96,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                           UserModel().user.userFullname,
                           widget.user.userFullname));
                   // close modal
-                  Navigator.of(context).pop();
                 }
               },
             ));
@@ -131,7 +131,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
         _pr.hide();
         break;
     }
-    print('safe'+replyType);
     /// Save message for current user
     await _messagesApi.saveMessage(
         type: type,
@@ -312,7 +311,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
         children: <Widget>[
           /// how message list
           Expanded(
-              child: Container(color: Colors.white10, child: _showMessages())),
+              child: _showMessages()),
 
           /// Text Composer
           Observer(
@@ -327,8 +326,8 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                         TextField(
                           focusNode: focusNode,
                           controller: _textController,
-                          minLines: 1,
                           maxLines: 4,
+                          minLines: 1,
                           decoration: InputDecoration(
                             prefixIcon: Padding(
                               padding:
@@ -353,7 +352,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                 onPressed: () async {
                                   /// Send image file
                                   await _getImage();
-
+                                  controller.cancelReply();
                                   /// Update scroll
                                   _scrollMessageList();
                                 }),
@@ -376,7 +375,10 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                           ),
                           onChanged: (text) {
                             setState(() {
-                              _isComposing = text.isNotEmpty;
+                              if( text.length == 1 && text ==' '){
+                                _textController.clear();
+                              }
+                              _isComposing = text.isNotEmpty && text != ' ';
                             });
                           },
                         ),
@@ -438,87 +440,89 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
   /// _showMessages
   Widget _showMessages() {
     return //showMessages( messages: _messages);
-        StreamBuilder<QuerySnapshot>(
-            stream: _messages,
-            builder: (context, snapshot) {
-              // Check data
-              if (!snapshot.hasData)
-                return MyCircularProgress();
-              else {
-                return ListView.builder(
-                  controller: _messagesController,
-                  reverse: true,
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    // Get message list
-                    final List<DocumentSnapshot> messages =
-                        snapshot.data!.docs.reversed.toList();
-                    // Get message doc map
-                    final Map<dynamic, dynamic> msg =
-                        messages[index].data()! as Map;
+        Container(
+          child: StreamBuilder<QuerySnapshot>(
+              stream: _messages,
+              builder: (context, snapshot) {
+                // Check data
+                if (!snapshot.hasData)
+                  return MyCircularProgress();
+                else {
+                  return ListView.builder(
+                    controller: _messagesController,
+                    reverse: true,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      // Get message list
+                      final List<DocumentSnapshot> messages =
+                          snapshot.data!.docs.reversed.toList();
+                      // Get message doc map
+                      final Map<dynamic, dynamic> msg =
+                          messages[index].data()! as Map;
 
-                    /// Variables
-                    bool isUserSender;
-                    String userPhotoLink;
+                      /// Variables
+                      bool isUserSender;
+                      String userPhotoLink;
 
-                    final bool isImage = msg[MESSAGE_TYPE] == 'image';
-                    final bool isReplyImage = msg[REPLY_TYPE] == 'image';
-                    final String textMessage =
-                        msg[MESSAGE_TEXT] == null ? '' : msg[MESSAGE_TEXT];
-                    final String replyMsg =
-                        msg[REPLY_TEXT] == null ? '' : msg[REPLY_TEXT];
-                    final String userReply = msg[USER_REPLY_TEXT] == null
-                        ? ''
-                        : msg[USER_REPLY_TEXT];
-                    final String? imageLink = msg[MESSAGE_IMG_LINK];
-                    final String timeAgo = timeago
-                        .format(msg[TIMESTAMP].toDate(), locale: 'pt_BR');
+                      final bool isImage = msg[MESSAGE_TYPE] == 'image';
+                      final bool isReplyImage = msg[REPLY_TYPE] == 'image';
+                      final String textMessage =
+                          msg[MESSAGE_TEXT] == null ? '' : msg[MESSAGE_TEXT];
+                      final String replyMsg =
+                          msg[REPLY_TEXT] == null ? '' : msg[REPLY_TEXT];
+                      final String userReply = msg[USER_REPLY_TEXT] == null
+                          ? ''
+                          : msg[USER_REPLY_TEXT];
+                      final String? imageLink = msg[MESSAGE_IMG_LINK];
+                      final String timeAgo = timeago
+                          .format(msg[TIMESTAMP].toDate(), locale: 'pt_BR');
 
-                    /// Check user id to get info
-                    if (msg[USER_ID] == UserModel().user.userId) {
-                      isUserSender = true;
-                      userPhotoLink = UserModel().user.userProfilePhoto;
-                    } else {
-                      isUserSender = false;
-                      userPhotoLink = widget.user.userProfilePhoto;
-                    }
+                      /// Check user id to get info
+                      if (msg[USER_ID] == UserModel().user.userId) {
+                        isUserSender = true;
+                        userPhotoLink = UserModel().user.userProfilePhoto;
+                      } else {
+                        isUserSender = false;
+                        userPhotoLink = widget.user.userProfilePhoto;
+                      }
 
-                    // Show chat bubble
-                    return GestureDetector(
-                      onDoubleTap: () {
-                        print("curtiu");
-                      },
-                      child: SwipeTo(
-                        iconColor: Colors.transparent,
-                        offsetDx: 0.2,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 8.0),
-                          child: ChatMessage(
-                            isUserSender: isUserSender,
-                            isImage: isImage,
-                            isReplyImage: isReplyImage,
-                            userPhotoLink: userPhotoLink,
-                            textMessage: textMessage,
-                            imageLink: imageLink,
-                            timeAgo: timeAgo,
-                            replyMessage: replyMsg,
-                            userReply: userReply,
-                          ),
-                        ),
-                        onRightSwipe: () {
-                          if (window.viewInsets.bottom <= 0.0) {
-                            showKeyboard(context);
-                          }
-                          controller.replyToMessage(
-                              textMessage, isUserSender, imageLink!, isImage);
+                      // Show chat bubble
+                      return GestureDetector(
+                        onDoubleTap: () {
+                          print("curtiu");
                         },
-                      ),
-                    );
-                  },
-                );
-              }
-            });
+                        child: SwipeTo(
+                          iconColor: Colors.transparent,
+                          offsetDx: 0.2,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 8.0),
+                            child: ChatMessage(
+                              isUserSender: isUserSender,
+                              isImage: isImage,
+                              isReplyImage: isReplyImage,
+                              userPhotoLink: userPhotoLink,
+                              textMessage: textMessage,
+                              imageLink: imageLink,
+                              timeAgo: timeAgo,
+                              replyMessage: replyMsg,
+                              userReply: userReply,
+                            ),
+                          ),
+                          onRightSwipe: () {
+                            if (window.viewInsets.bottom <= 0.0) {
+                              showKeyboard(context);
+                            }
+                            controller.replyToMessage(
+                                textMessage, isUserSender, imageLink!, isImage);
+                          },
+                        ),
+                      );
+                    },
+                  );
+                }
+              }),
+        );
   }
 
   /// showMessages

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uni_match/app/models/user_model.dart';
 
 class ReplyConversationWidget extends StatelessWidget {
   final String message;
@@ -42,7 +43,7 @@ class ReplyConversationWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
-            userName,
+            userName == UserModel().user.userFullname ? 'Você':userName,
             style: TextStyle(
             color: Colors.black,
             fontSize: 15,
@@ -67,8 +68,8 @@ class ReplyConversationWidget extends StatelessWidget {
             height: 70,
             child: Hero(
                 tag: Image,
-                child: Image.network(message)))):
-    Text(this.message,
+                child: Image.network(message))))
+          : Text(this.message,
       style: TextStyle(color: Colors.black,
         fontWeight: FontWeight.bold,
       ),
