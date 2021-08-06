@@ -70,8 +70,8 @@ class ChatMessage extends StatelessWidget {
                         begin: Alignment.topRight,
                         end: Alignment.bottomLeft,
                         colors: [
-                          isUserSender ? Colors.pinkAccent : Color(0xFF871F78),
-                          isUserSender ? Colors.pinkAccent : Color(0xFF871F78),
+                          isUserSender ? Colors.pinkAccent.shade100: Colors.purple.shade100,
+                          isUserSender ? Colors.pinkAccent.shade100 : Color(0xFF871F78),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(25)),
@@ -123,12 +123,12 @@ class ChatMessage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 5),
+                                    padding: const EdgeInsets.only(left:4,top: 3),
                                     child: Text(
                                       textMessage ?? "",
                                       style: GoogleFonts.eczar(
                                          height: 1.3,
-                                          fontSize: 16,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.w500,
                                           color: isUserSender
                                               ? Colors.white

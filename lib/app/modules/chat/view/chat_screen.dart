@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:uni_match/app/api/likes_api.dart';
@@ -43,9 +46,9 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
   final _matchesApi = MatchesApi();
   final _likesApi = LikesApi();
   final _notificationsApi = NotificationsApi();
-
   final focusNode = FocusNode();
   final String replyMessage = '';
+
 
   void dismissKeyboard(BuildContext context) {
     FocusScope.of(context).unfocus();
@@ -55,8 +58,28 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
     final focusScope = FocusScope.of(context);
     focusScope.requestFocus(FocusNode());
     Future.delayed(Duration.zero, () => focusScope.requestFocus(focusNode));
+
   }
 
+  _onEmojiSelected(Emoji emoji) {
+  _textController.text  = _textController.text + emoji.emoji;
+  }
+  _onBackspacePressed() {
+    if(_textController.text.length == 1){
+      _textController.text =_textController.text.length != 0 ? _textController.text.substring(0, _textController.text.length -1): _textController.text;
+    }
+    if(_textController.text.length == 3){
+      _textController.text =_textController.text.length != 0 ? _textController.text.substring(0, _textController.text.length -3): _textController.text;
+    }
+    if(_textController.text.length == 2 || _textController.text.length > 3){
+    _textController.text =_textController.text.length != 0 ? _textController.text.substring(0, _textController.text.length -2): _textController.text;
+    }
+    if(_textController.text.length == 0){
+      setState(() {
+        _isComposing = false;
+      });
+    }
+  }
   //
   late Stream<QuerySnapshot> _messages;
   bool _isComposing = false;
@@ -75,7 +98,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
         otherUser: controller.comparationWhoSendM(
             UserModel().user.userFullname, widget.user.userFullname),
         onCancelReply: controller.cancelReply,
-      isImage: controller.isImage,
+        isImage: controller.isImage,
       );
 
   /// Get image from camera / gallery
@@ -90,7 +113,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                       type: 'image',
                       imgFile: image,
                       replyText: controller.replyMessage,
-                      replyType: controller.isImage? 'image':'text',
+                      replyType: controller.isImage ? 'image' : 'text',
                       userReplyMsg: controller.comparationWhoSendM(
                           UserModel().user.userFullname,
                           widget.user.userFullname));
@@ -101,13 +124,14 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
   }
 
   // Send message
-  Future<void> _sendMessage(
-      {required String type,
-      String? text,
-      File? imgFile,
-      required replyText,
-      required String replyType,
-      required userReplyMsg,}) async {
+  Future<void> _sendMessage({
+    required String type,
+    String? text,
+    File? imgFile,
+    required replyText,
+    required String replyType,
+    required userReplyMsg,
+  }) async {
     String textMsg = '';
     String imageUrl = '';
 
@@ -130,6 +154,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
         _pr.hide();
         break;
     }
+
     /// Save message for current user
     await _messagesApi.saveMessage(
         type: type,
@@ -311,121 +336,187 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
           /// how message list
           Expanded(
               child: Container(
-                  color: Colors.pink.shade100,
-                  child: _showMessages())),
+                  color: Colors.white54, child: _showMessages())),
 
           /// Text Composer
           Observer(
             builder: (_) => ListTile(
-              title: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
+              title: Column(
                 children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        if (controller.replyMessage != '') Container(child: buildReply()),
-                        TextField(
-                          focusNode: focusNode,
-                          controller: _textController,
-                          maxLines: 4,
-                          minLines: 1,
-                          decoration: InputDecoration(
-                            prefixIcon: Padding(
-                              padding:
-                                  const EdgeInsetsDirectional.only(bottom: 0),
-                              child:
-                                //EmojiPicker(),
-                              IconButton(
-                                  iconSize: 30,
-                                  icon: Icon(Icons.insert_emoticon),
-                                  splashColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  color: Colors.grey,
-                                  onPressed: () async {
-                                    /// Send image file
-                                    await _getImage();
-
-                                    /// Update scroll
-                                    _scrollMessageList();
-                                  }),
-                            ),
-                            suffixIcon: IconButton(
-                                icon: SvgIcon("assets/icons/camera_icon.svg",
-                                    width: 20, height: 20),
-                                onPressed: () async {
-                                  /// Send image file
-                                  await _getImage();
-                                  controller.cancelReply();
-                                  /// Update scroll
-                                  _scrollMessageList();
-                                }),
-                            filled: true,
-                            fillColor: Colors.grey[100],
-                            hintText: _i18n.translate("type_a_message"),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.only(
-                                topLeft: controller.replyMessage != ''
-                                    ? Radius.zero
-                                    : Radius.circular(25),
-                                topRight: controller.replyMessage != ''
-                                    ? Radius.zero
-                                    : Radius.circular(25),
-                                bottomLeft: Radius.circular(25),
-                                bottomRight: Radius.circular(25),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child:
+                        Column(
+                          children: [
+                            if (controller.replyMessage != '')
+                              Container(child: buildReply()),
+                            AnimatedContainer(
+                              duration: Duration(
+                                seconds: 5,
+                              ),
+                              curve:Curves.elasticInOut,
+                              child: TextField(
+                                onTap: (){
+                                  controller.showEmojiKeyboard();
+                                  controller.showEmoji = true;
+                                },
+                                focusNode: focusNode,
+                                cursorColor: Colors.pinkAccent.shade200,
+                               cursorWidth: 2,
+                                autocorrect: false,
+                                controller: _textController,
+                                maxLines: 4,
+                                minLines: 1,
+                                decoration: InputDecoration(
+                                  prefixIcon: Padding(
+                                    padding:
+                                        const EdgeInsetsDirectional.only(bottom: 0),
+                                    child: IconButton(
+                                      iconSize: 30,
+                                      icon: Icon(
+                                          Icons.insert_emoticon,
+                                      ),
+                                      splashColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      color: Colors.grey,
+                                      onPressed: () {
+                                        focusNode.unfocus();
+                                        controller.showEmojiKeyboard();
+                                      }
+                                    ),
+                                  ),
+                                  suffixIcon: IconButton(
+                                      icon: SvgIcon("assets/icons/camera_icon.svg",
+                                          width: 20, height: 20),
+                                      onPressed: () async {
+                                        /// Send image file
+                                        await _getImage();
+                                        //controller.cancelReply();
+                                        focusNode.hasFocus;
+                                        /// Update scroll
+                                        _scrollMessageList();
+                                      }),
+                                  filled: true,
+                                  fillColor: Colors.grey[100],
+                                  hintText: _i18n.translate("type_a_message"),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: controller.replyMessage != ''
+                                          ? Radius.zero
+                                          : Radius.circular(25),
+                                      topRight: controller.replyMessage != ''
+                                          ? Radius.zero
+                                          : Radius.circular(25),
+                                      bottomLeft: Radius.circular(25),
+                                      bottomRight: Radius.circular(25),
+                                    ),
+                                  ),
+                                ),
+                                onChanged: (text) {
+                                  setState(() {
+                                    if (text ==' ') {
+                                      _textController.clear();
+                                    }
+                                    _isComposing = text.isNotEmpty && text != ' ';
+                                  });
+                                },
                               ),
                             ),
-                          ),
-                          onChanged: (text) {
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child:
+                        IconButton(
+                            icon: Icon(Icons.send,
+                                color: _isComposing
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey),
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onPressed: _isComposing
+                                ? () async {
+                                    /// Get text
+                                    final text = _textController.text.trim();
+                                    final replyText = controller.replyMessage;
+                                    final replyType =
+                                        controller.isImage ? 'image' : 'text';
+
+                                    /// clear input text
+                                    _textController.clear();
+                                    setState(() {
+                                      controller.cancelReply();
+                                      _isComposing = false;
+                                    });
+
+                                    /// Send text message
+                                    await _sendMessage(
+                                        type: 'text',
+                                        text: text,
+                                        replyType: replyType,
+                                        replyText: replyText,
+                                        userReplyMsg:
+                                            controller.comparationWhoSendM(
+                                                UserModel().user.userFullname,
+                                                widget.user.userFullname));
+                                    /// Update scroll
+
+                                    _scrollMessageList();
+                                  }
+                                : null),
+                      ),
+
+                    ],
+                  ),
+                  AnimatedContainer(
+                    duration: Duration(
+                      seconds: 5,
+                    ),
+                    curve:Curves.easeIn,
+                    child: Observer(
+                      builder:(_)=> controller.showEmoji == true && !focusNode.hasFocus ?  Container(
+                        height: 230,
+                        child: EmojiPicker(
+                          onEmojiSelected: (category, emoji) {
+                            _onEmojiSelected(emoji);
                             setState(() {
-                              if( text.length == 1 && text ==' '){
-                                _textController.clear();
+                              if(_textController.text !='') {
+                                _isComposing = true ;
                               }
-                              _isComposing = text.isNotEmpty && text != ' ';
                             });
                           },
+                          onBackspacePressed: () {
+                            _onBackspacePressed();
+                          },
+                          config: Config(
+                              columns: 7,
+                              emojiSizeMax: 35.0,
+                              verticalSpacing: 0,
+                              horizontalSpacing: 0,
+                              initCategory: Category.RECENT,
+                              bgColor: Colors.white54,
+                              indicatorColor: Colors.pinkAccent,
+                              iconColor:Colors.pink.shade100,
+                              iconColorSelected: Colors.pink,
+                              progressIndicatorColor: Colors.pink.shade100,
+                              showRecentsTab: true,
+                              backspaceColor: Colors.pink,
+                              recentsLimit: 28,
+                              noRecentsText: "Nada recente",
+                              noRecentsStyle:
+                              const TextStyle(fontSize: 20,
+                                color: Colors.pink,
+                              ),
+                              categoryIcons: const CategoryIcons(),
+                              buttonMode: ButtonMode.MATERIAL
+                          ),
                         ),
-                      ],
+                      ):SizedBox(),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: IconButton(
-                        icon: Icon(Icons.send,
-                            color: _isComposing
-                                ? Theme.of(context).primaryColor
-                                : Colors.grey),
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onPressed: _isComposing
-                            ? () async {
-                                /// Get text
-                                final text = _textController.text.trim();
-                                final replyText = controller.replyMessage;
-                                final replyType = controller.isImage ? 'image':'text';
-                                /// clear input text
-                                _textController.clear();
-                                setState(() {
-                                  controller.cancelReply();
-                                  _isComposing = false;
-                                });
-
-                                /// Send text message
-                                await _sendMessage(
-                                    type: 'text',
-                                    text: text,
-                                    replyType: replyType,
-                                    replyText: replyText,
-                                    userReplyMsg:
-                                        controller.comparationWhoSendM(
-                                            UserModel().user.userFullname,
-                                            widget.user.userFullname));
-
-                                /// Update scroll
-
-                                _scrollMessageList();
-                              }
-                            : null),
                   )
                 ],
               ),
@@ -444,89 +535,88 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
   Widget _showMessages() {
     return //showMessages( messages: _messages);
         Container(
-          child: StreamBuilder<QuerySnapshot>(
-              stream: _messages,
-              builder: (context, snapshot) {
-                // Check data
-                if (!snapshot.hasData)
-                  return MyCircularProgress();
-                else {
-                  return ListView.builder(
-                    controller: _messagesController,
-                    reverse: true,
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      // Get message list
-                      final List<DocumentSnapshot> messages =
-                          snapshot.data!.docs.reversed.toList();
-                      // Get message doc map
-                      final Map<dynamic, dynamic> msg =
-                          messages[index].data()! as Map;
+      child: StreamBuilder<QuerySnapshot>(
+          stream: _messages,
+          builder: (context, snapshot) {
+            // Check data
+            if (!snapshot.hasData)
+              return MyCircularProgress();
+            else {
+              return ListView.builder(
+                controller: _messagesController,
+                reverse: true,
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  // Get message list
+                  final List<DocumentSnapshot> messages =
+                      snapshot.data!.docs.reversed.toList();
+                  // Get message doc map
+                  final Map<dynamic, dynamic> msg =
+                      messages[index].data()! as Map;
 
-                      /// Variables
-                      bool isUserSender;
-                      String userPhotoLink;
+                  /// Variables
+                  bool isUserSender;
+                  String userPhotoLink;
 
-                      final bool isImage = msg[MESSAGE_TYPE] == 'image';
-                      final bool isReplyImage = msg[REPLY_TYPE] == 'image';
-                      final String textMessage =
-                          msg[MESSAGE_TEXT] == null ? '' : msg[MESSAGE_TEXT];
-                      final String replyMsg =
-                          msg[REPLY_TEXT] == null ? '' : msg[REPLY_TEXT];
-                      final String userReply = msg[USER_REPLY_TEXT] == null
-                          ? ''
-                          : msg[USER_REPLY_TEXT];
-                      final String? imageLink = msg[MESSAGE_IMG_LINK];
-                      final String timeAgo = timeago
-                          .format(msg[TIMESTAMP].toDate(), locale: 'pt_BR');
+                  final bool isImage = msg[MESSAGE_TYPE] == 'image';
+                  final bool isReplyImage = msg[REPLY_TYPE] == 'image';
+                  final String textMessage =
+                      msg[MESSAGE_TEXT] == null ? '' : msg[MESSAGE_TEXT];
+                  final String replyMsg =
+                      msg[REPLY_TEXT] == null ? '' : msg[REPLY_TEXT];
+                  final String userReply =
+                      msg[USER_REPLY_TEXT] == null ? '' : msg[USER_REPLY_TEXT];
+                  final String? imageLink = msg[MESSAGE_IMG_LINK];
+                  final String timeAgo =
+                      timeago.format(msg[TIMESTAMP].toDate(), locale: 'pt_BR');
 
-                      /// Check user id to get info
-                      if (msg[USER_ID] == UserModel().user.userId) {
-                        isUserSender = true;
-                        userPhotoLink = UserModel().user.userProfilePhoto;
-                      } else {
-                        isUserSender = false;
-                        userPhotoLink = widget.user.userProfilePhoto;
-                      }
+                  /// Check user id to get info
+                  if (msg[USER_ID] == UserModel().user.userId) {
+                    isUserSender = true;
+                    userPhotoLink = UserModel().user.userProfilePhoto;
+                  } else {
+                    isUserSender = false;
+                    userPhotoLink = widget.user.userProfilePhoto;
+                  }
 
-                      // Show chat bubble
-                      return GestureDetector(
-                        onDoubleTap: () {
-                          print("curtiu");
-                        },
-                        child: SwipeTo(
-                          iconColor: Colors.transparent,
-                          offsetDx: 0.2,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10.0, horizontal: 8.0),
-                            child: ChatMessage(
-                              isUserSender: isUserSender,
-                              isImage: isImage,
-                              isReplyImage: isReplyImage,
-                              userPhotoLink: userPhotoLink,
-                              textMessage: textMessage,
-                              imageLink: imageLink,
-                              timeAgo: timeAgo,
-                              replyMessage: replyMsg,
-                              userReply: userReply,
-                            ),
-                          ),
-                          onRightSwipe: () {
-                            if (window.viewInsets.bottom <= 0.0) {
-                              showKeyboard(context);
-                            }
-                            controller.replyToMessage(
-                                textMessage, isUserSender, imageLink!, isImage);
-                          },
-                        ),
-                      );
+                  // Show chat bubble
+                  return GestureDetector(
+                    onDoubleTap: () {
+                      print("curtiu");
                     },
+                    child: SwipeTo(
+                      iconColor: Colors.transparent,
+                      offsetDx: 0.2,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 8.0),
+                        child: ChatMessage(
+                          isUserSender: isUserSender,
+                          isImage: isImage,
+                          isReplyImage: isReplyImage,
+                          userPhotoLink: userPhotoLink,
+                          textMessage: textMessage,
+                          imageLink: imageLink,
+                          timeAgo: timeAgo,
+                          replyMessage: replyMsg,
+                          userReply: userReply,
+                        ),
+                      ),
+                      onRightSwipe: () {
+                        controller.showEmoji=false;
+                        if (window.viewInsets.bottom <= 0.0) {
+                          showKeyboard(context);
+                        }
+                        controller.replyToMessage(
+                            textMessage, isUserSender, imageLink!, isImage);
+                      },
+                    ),
                   );
-                }
-              }),
-        );
+                },
+              );
+            }
+          }),
+    );
   }
-
   /// showMessages
 }

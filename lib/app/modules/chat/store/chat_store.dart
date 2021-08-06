@@ -18,6 +18,10 @@ abstract class _ChatStore  with Store {
   @observable
   bool isImage = false;
 
+  @observable
+  bool showEmoji = false;
+
+
 @action
   void replyToMessage(String message, bool user,String? image, bool imageBool) {
   isImage = imageBool;
@@ -44,5 +48,10 @@ abstract class _ChatStore  with Store {
     } else
       return
         otheruser;
+  }
+
+  @action
+  showEmojiKeyboard(){
+  return showEmoji = !showEmoji;
   }
 }

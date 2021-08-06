@@ -69,6 +69,21 @@ mixin _$ChatStore on _ChatStore, Store {
     });
   }
 
+  final _$showEmojiAtom = Atom(name: '_ChatStore.showEmoji');
+
+  @override
+  bool get showEmoji {
+    _$showEmojiAtom.reportRead();
+    return super.showEmoji;
+  }
+
+  @override
+  set showEmoji(bool value) {
+    _$showEmojiAtom.reportWrite(value, super.showEmoji, () {
+      super.showEmoji = value;
+    });
+  }
+
   final _$_ChatStoreActionController = ActionController(name: '_ChatStore');
 
   @override
@@ -106,12 +121,24 @@ mixin _$ChatStore on _ChatStore, Store {
   }
 
   @override
+  dynamic showEmojiKeyboard() {
+    final _$actionInfo = _$_ChatStoreActionController.startAction(
+        name: '_ChatStore.showEmojiKeyboard');
+    try {
+      return super.showEmojiKeyboard();
+    } finally {
+      _$_ChatStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 replyMessage: ${replyMessage},
 userSend: ${userSend},
 replyImage: ${replyImage},
-isImage: ${isImage}
+isImage: ${isImage},
+showEmoji: ${showEmoji}
     ''';
   }
 }
