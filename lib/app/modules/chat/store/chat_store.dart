@@ -1,3 +1,5 @@
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 
 part 'chat_store.g.dart';
@@ -5,6 +7,8 @@ part 'chat_store.g.dart';
 class ChatStore = _ChatStore  with _$ChatStore;
 
 abstract class _ChatStore  with Store {
+
+  final focusNode = FocusNode();
 
   @observable
   String replyMessage = '';
@@ -40,8 +44,7 @@ abstract class _ChatStore  with Store {
     replyMessage = '';
   }
 
-  @action
-  comparationWhoSendM(String user, String otheruser) {
+  String comparationWhoSendM(String user, String otheruser) {
     if (userSend == true) {
       return
         user;
@@ -49,9 +52,31 @@ abstract class _ChatStore  with Store {
       return
         otheruser;
   }
+  //EMOJIS
+
+
+  final textController = TextEditingController();
 
   @action
-  showEmojiKeyboard(){
-  return showEmoji = !showEmoji;
+  onEmojiSelected(Emoji emoji) {
+    textController.text = textController.text + emoji.emoji;
   }
+  @override
+  void onInit(){
+    focusNode.addListener(() {
+      if(focusNode.hasFocus){
+        showEmoji = false;
+      }
+    });
+  }
+  @action
+  showEmojiKeyboard(){
+    showEmoji = !showEmoji;
+  }
+
+  @action
+  changedEmojiState(bool state) {
+    showEmoji = state;
+  }
+
 }

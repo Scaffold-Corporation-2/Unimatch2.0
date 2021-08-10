@@ -120,6 +120,9 @@ dependencies:
   emoji_picker_flutter: ^1.0.6
   flutter_keyboard_visibility: ^5.0.3
 
+    #Biblioteca de animação
+  animate_do: ^2.0.0
+
   flutter_cupertino_datetime_picker: ^2.0.1
 
 

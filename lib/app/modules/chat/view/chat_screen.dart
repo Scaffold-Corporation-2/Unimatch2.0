@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:uni_match/app/api/likes_api.dart';
@@ -40,15 +39,12 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
   // Variables
-  final _textController = TextEditingController();
   final _messagesController = ScrollController();
   final _messagesApi = MessagesApi();
   final _matchesApi = MatchesApi();
   final _likesApi = LikesApi();
   final _notificationsApi = NotificationsApi();
-  final focusNode = FocusNode();
   final String replyMessage = '';
-
 
   void dismissKeyboard(BuildContext context) {
     FocusScope.of(context).unfocus();
@@ -57,30 +53,10 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
   void showKeyboard(BuildContext context) {
     final focusScope = FocusScope.of(context);
     focusScope.requestFocus(FocusNode());
-    Future.delayed(Duration.zero, () => focusScope.requestFocus(focusNode));
-
+    Future.delayed(
+        Duration.zero, () => focusScope.requestFocus(controller.focusNode));
   }
 
-  _onEmojiSelected(Emoji emoji) {
-  _textController.text  = _textController.text + emoji.emoji;
-  }
-  _onBackspacePressed() {
-    if(_textController.text.length == 1){
-      _textController.text =_textController.text.length != 0 ? _textController.text.substring(0, _textController.text.length -1): _textController.text;
-    }
-    if(_textController.text.length == 3){
-      _textController.text =_textController.text.length != 0 ? _textController.text.substring(0, _textController.text.length -3): _textController.text;
-    }
-    if(_textController.text.length == 2 || _textController.text.length > 3){
-    _textController.text =_textController.text.length != 0 ? _textController.text.substring(0, _textController.text.length -2): _textController.text;
-    }
-    if(_textController.text.length == 0){
-      setState(() {
-        _isComposing = false;
-      });
-    }
-  }
-  //
   late Stream<QuerySnapshot> _messages;
   bool _isComposing = false;
   AppController _i18n = Modular.get();
@@ -199,12 +175,19 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
   void initState() {
     super.initState();
     _messages = _messagesApi.getMessages(widget.user.userId);
+
+    controller.focusNode.addListener(() {
+      controller.textController.text = controller.textController.text;
+      if (controller.focusNode.hasFocus) {
+        controller.showEmoji = false;
+      }
+    });
   }
 
   @override
   void dispose() {
     _messages.drain();
-    _textController.dispose();
+    controller.textController.dispose();
     _messagesController.dispose();
     super.dispose();
   }
@@ -331,198 +314,200 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
       ///FimAppBar.
 
       ///Column das mensagens.
-      body: Column(
-        children: <Widget>[
-          /// how message list
-          Expanded(
-              child: Container(
-                  color: Colors.white54, child: _showMessages())),
+      body: WillPopScope(
+        onWillPop: () {
+          if(controller.showEmoji == true){
+            controller.showEmoji= false;
+          }else{
+            Navigator.pop(context);
+          }
+          return Future.value(false);
+        },
+        child: Column(
+          children: <Widget>[
+            /// how message list
+            Expanded(
+                child: Container(color: Colors.white54, child: _showMessages())),
 
-          /// Text Composer
-          Observer(
-            builder: (_) => ListTile(
-              title: Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+            /// Text Composer
+            Observer(
+              builder: (_) => FadeInUp(
+                child: ListTile(
+                  title: Column(
                     children: [
-                      Expanded(
-                        child:
-                        Column(
-                          children: [
-                            if (controller.replyMessage != '')
-                              Container(child: buildReply()),
-                            AnimatedContainer(
-                              duration: Duration(
-                                seconds: 5,
-                              ),
-                              curve:Curves.elasticInOut,
-                              child: TextField(
-                                onTap: (){
-                                  controller.showEmojiKeyboard();
-                                  controller.showEmoji = true;
-                                },
-                                focusNode: focusNode,
-                                cursorColor: Colors.pinkAccent.shade200,
-                               cursorWidth: 2,
-                                autocorrect: false,
-                                controller: _textController,
-                                maxLines: 4,
-                                minLines: 1,
-                                decoration: InputDecoration(
-                                  prefixIcon: Padding(
-                                    padding:
-                                        const EdgeInsetsDirectional.only(bottom: 0),
-                                    child: IconButton(
-                                      iconSize: 30,
-                                      icon: Icon(
-                                          Icons.insert_emoticon,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              children: [
+                                if (controller.replyMessage != '')
+                                  Container(child: buildReply()),
+                                TextFormField(
+                                  focusNode: controller.focusNode,
+                                  cursorColor: Colors.pinkAccent.shade200,
+                                  cursorWidth: 2,
+                                  controller: controller.textController,
+                                  maxLines: 4,
+                                  minLines: 1,
+                                  autocorrect: false,
+                                  decoration: InputDecoration(
+                                    prefixIcon: Padding(
+                                      padding: const EdgeInsetsDirectional.only(
+                                          bottom: 0),
+                                      child: IconButton(
+                                          iconSize: 30,
+                                          icon: Icon(controller.showEmoji == true
+                                              ? Icons.keyboard
+                                              : Icons.insert_emoticon),
+                                          splashColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          color: Colors.grey,
+                                          onPressed: () {
+                                            controller.focusNode.unfocus();
+                                            controller.showEmojiKeyboard();
+
+                                          }),
+                                    ),
+                                    suffixIcon: IconButton(
+                                        icon: SvgIcon(
+                                            "assets/icons/camera_icon.svg",
+                                            width: 20,
+                                            height: 20),
+                                        onPressed: () async {
+                                          /// Send image file
+                                          await _getImage();
+                                          //controller.cancelReply();
+                                          controller.focusNode.hasFocus;
+
+                                          /// Update scroll
+                                          _scrollMessageList();
+                                        }),
+                                    filled: true,
+                                    fillColor: Colors.grey[100],
+                                    hintText: _i18n.translate("type_a_message"),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: controller.replyMessage != ''
+                                            ? Radius.zero
+                                            : Radius.circular(25),
+                                        topRight: controller.replyMessage != ''
+                                            ? Radius.zero
+                                            : Radius.circular(25),
+                                        bottomLeft: Radius.circular(25),
+                                        bottomRight: Radius.circular(25),
                                       ),
-                                      splashColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      color: Colors.grey,
-                                      onPressed: () {
-                                        focusNode.unfocus();
-                                        controller.showEmojiKeyboard();
-                                      }
                                     ),
                                   ),
-                                  suffixIcon: IconButton(
-                                      icon: SvgIcon("assets/icons/camera_icon.svg",
-                                          width: 20, height: 20),
-                                      onPressed: () async {
-                                        /// Send image file
-                                        await _getImage();
-                                        //controller.cancelReply();
-                                        focusNode.hasFocus;
-                                        /// Update scroll
-                                        _scrollMessageList();
-                                      }),
-                                  filled: true,
-                                  fillColor: Colors.grey[100],
-                                  hintText: _i18n.translate("type_a_message"),
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: controller.replyMessage != ''
-                                          ? Radius.zero
-                                          : Radius.circular(25),
-                                      topRight: controller.replyMessage != ''
-                                          ? Radius.zero
-                                          : Radius.circular(25),
-                                      bottomLeft: Radius.circular(25),
-                                      bottomRight: Radius.circular(25),
-                                    ),
-                                  ),
-                                ),
-                                onChanged: (text) {
-                                  setState(() {
-                                    if (text ==' ') {
-                                      _textController.clear();
-                                    }
-                                    _isComposing = text.isNotEmpty && text != ' ';
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child:
-                        IconButton(
-                            icon: Icon(Icons.send,
-                                color: _isComposing
-                                    ? Theme.of(context).primaryColor
-                                    : Colors.grey),
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            onPressed: _isComposing
-                                ? () async {
-                                    /// Get text
-                                    final text = _textController.text.trim();
-                                    final replyText = controller.replyMessage;
-                                    final replyType =
-                                        controller.isImage ? 'image' : 'text';
-
-                                    /// clear input text
-                                    _textController.clear();
+                                  onChanged: (text) {
                                     setState(() {
-                                      controller.cancelReply();
-                                      _isComposing = false;
+                                      if (text == ' ') {
+                                        controller.textController.clear();
+                                      }
+                                      _isComposing =
+                                          text.isNotEmpty && text != ' ';
                                     });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: IconButton(
+                                icon: Icon(Icons.send,
+                                    color: _isComposing
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.grey),
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                onPressed: _isComposing
+                                    ? () async {
+                                        /// Get text
+                                        final text =
+                                            controller.textController.text.trim();
+                                        final replyText = controller.replyMessage;
+                                        final replyType =
+                                            controller.isImage ? 'image' : 'text';
 
-                                    /// Send text message
-                                    await _sendMessage(
-                                        type: 'text',
-                                        text: text,
-                                        replyType: replyType,
-                                        replyText: replyText,
-                                        userReplyMsg:
-                                            controller.comparationWhoSendM(
-                                                UserModel().user.userFullname,
-                                                widget.user.userFullname));
-                                    /// Update scroll
+                                        /// clear input text
+                                        controller.textController.clear();
+                                        setState(() {
+                                          controller.cancelReply();
+                                          _isComposing = false;
+                                        });
 
-                                    _scrollMessageList();
-                                  }
-                                : null),
+                                        /// Send text message
+                                        await _sendMessage(
+                                            type: 'text',
+                                            text: text,
+                                            replyType: replyType,
+                                            replyText: replyText,
+                                            userReplyMsg:
+                                                controller.comparationWhoSendM(
+                                                    UserModel().user.userFullname,
+                                                    widget.user.userFullname));
+
+                                        /// Update scroll
+
+                                        _scrollMessageList();
+                                      }
+                                    : null),
+                          ),
+                        ],
                       ),
-
                     ],
                   ),
-                  AnimatedContainer(
-                    duration: Duration(
-                      seconds: 5,
-                    ),
-                    curve:Curves.easeIn,
-                    child: Observer(
-                      builder:(_)=> controller.showEmoji == true && !focusNode.hasFocus ?  Container(
-                        height: 230,
-                        child: EmojiPicker(
-                          onEmojiSelected: (category, emoji) {
-                            _onEmojiSelected(emoji);
-                            setState(() {
-                              if(_textController.text !='') {
-                                _isComposing = true ;
-                              }
-                            });
-                          },
-                          onBackspacePressed: () {
-                            _onBackspacePressed();
-                          },
-                          config: Config(
-                              columns: 7,
-                              emojiSizeMax: 35.0,
-                              verticalSpacing: 0,
-                              horizontalSpacing: 0,
-                              initCategory: Category.RECENT,
-                              bgColor: Colors.white54,
-                              indicatorColor: Colors.pinkAccent,
-                              iconColor:Colors.pink.shade100,
-                              iconColorSelected: Colors.pink,
-                              progressIndicatorColor: Colors.pink.shade100,
-                              showRecentsTab: true,
-                              backspaceColor: Colors.pink,
-                              recentsLimit: 28,
-                              noRecentsText: "Nada recente",
-                              noRecentsStyle:
-                              const TextStyle(fontSize: 20,
-                                color: Colors.pink,
-                              ),
-                              categoryIcons: const CategoryIcons(),
-                              buttonMode: ButtonMode.MATERIAL
-                          ),
-                        ),
-                      ):SizedBox(),
-                    ),
-                  )
-                ],
+                ),
               ),
             ),
-          ),
-        ],
+            Observer(
+              builder: (_) => controller.showEmoji == true
+                  ? FadeInDown(
+                child: Container(
+                  height: 280,
+                  child:
+                  EmojiPicker(
+                    onEmojiSelected: (category, emoji) {
+                      controller.onEmojiSelected(emoji);
+                      setState(() {
+                        if (controller.textController.text !=
+                            '') {
+                          _isComposing = true;
+                        }
+                      });
+                    },
+                    config: Config(
+                      columns: 7,
+                      emojiSizeMax: 35.0,
+                      verticalSpacing: 0,
+                      horizontalSpacing: 0,
+                      initCategory: Category.RECENT,
+                      bgColor: Colors.white54,
+                      indicatorColor: Colors.pinkAccent,
+                      iconColor: Colors.pink.shade100,
+                      iconColorSelected: Colors.pink,
+                      progressIndicatorColor:
+                      Colors.pink.shade100,
+                      showRecentsTab: true,
+                      backspaceColor: Colors.pink,
+                      recentsLimit: 28,
+                      noRecentsText: "Nada recente",
+                      noRecentsStyle: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.pink,
+                      ),
+                      categoryIcons: const CategoryIcons(),
+                      buttonMode: ButtonMode.MATERIAL,
+                    ),
+                  ),
+                ),
+              )
+                  : FadeInDownBig(child: SizedBox()),
+            ),
+          ],
+        ),
       ),
 
       ///Column das mensagens.
@@ -603,7 +588,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                         ),
                       ),
                       onRightSwipe: () {
-                        controller.showEmoji=false;
+                        controller.showEmoji = false;
                         if (window.viewInsets.bottom <= 0.0) {
                           showKeyboard(context);
                         }
@@ -618,5 +603,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
           }),
     );
   }
+
   /// showMessages
 }

@@ -69,7 +69,8 @@ class ReplyConversationWidget extends StatelessWidget {
             height: 70,
             child: Image.network(message)))
           : Text(this.message,
-      style: GoogleFonts.eczar(color: Colors.black,
+      style: GoogleFonts.eczar(
+        color: Colors.black,
         fontSize: 15,
         height: 1.1,
         fontWeight: FontWeight.bold,

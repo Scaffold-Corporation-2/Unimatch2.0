@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:uni_match/app/modules/chat/widgets/reply_conversation_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uni_match/widgets/default_card_border.dart';
 
 class ChatMessage extends StatelessWidget {
   // Variables
@@ -70,8 +69,8 @@ class ChatMessage extends StatelessWidget {
                         begin: Alignment.topRight,
                         end: Alignment.bottomLeft,
                         colors: [
-                          isUserSender ? Colors.pinkAccent.shade100: Colors.purple.shade100,
-                          isUserSender ? Colors.pinkAccent.shade100 : Color(0xFF871F78),
+                          isUserSender ? Colors.pink.shade800: Colors.purple.shade900,
+                          isUserSender ? Colors.pink.shade600 : Color(0xFF871F78),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(25)),
@@ -79,7 +78,7 @@ class ChatMessage extends StatelessWidget {
                     children: [
                        replyMessage.isNotEmpty? Container(
                            width: replyMessage.isNotEmpty
-                               ? MediaQuery.of(context).size.width * 0.7
+                               ? MediaQuery.of(context).size.width * 0.65
                                : null,
                            child: buildReply()) : Container(width: 0,),
                       isImage
@@ -115,9 +114,8 @@ class ChatMessage extends StatelessWidget {
                           :
                           //TODO verificar NULL NO container.
                           Container(
-
                               width: replyMessage.isNotEmpty
-                                  ? MediaQuery.of(context).size.width * 0.7
+                                  ? MediaQuery.of(context).size.width * 0.65
                                   : null,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
