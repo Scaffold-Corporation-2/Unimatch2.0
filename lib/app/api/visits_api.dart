@@ -109,7 +109,8 @@ class VisitsApi {
           await doc.reference.delete();
         });
         debugPrint('deleteVisitedUsers() -> deleted');
-      }
+      } else
+        debugPrint('deleteVisitedUsers() -> not deleted');
     });
   }
 }

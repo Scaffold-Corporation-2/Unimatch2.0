@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:uni_match/app/models/app_model.dart';
 import 'package:uni_match/app/models/user_model.dart';
@@ -75,7 +76,7 @@ class NotificationsApi {
         await doc.reference.delete();
       }
 
-      print('deleteUserNotifications() -> deleted');
+      debugPrint('deleteUserNotifications() -> deleted');
     });
   }
 
@@ -92,7 +93,7 @@ class NotificationsApi {
       for (DocumentSnapshot doc in snapshot.docs) {
         await doc.reference.delete();
       }
-      print('deleteUserSentNotifications() -> deleted');
+      debugPrint('deleteUserSentNotifications() -> deleted');
     });
   }
 
@@ -109,7 +110,9 @@ class NotificationsApi {
     // Variables
     final Uri url = Uri.parse('https://fcm.googleapis.com/fcm/send');
 
-    await http.post(url,
+    await http
+        .post(
+      url,
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': 'key=${AppModel().appInfo.firebaseServerKey}',
@@ -133,7 +136,8 @@ class NotificationsApi {
           'to': nUserDeviceToken,
         },
       ),
-    ).then((http.Response response) {
+    )
+        .then((http.Response response) {
       if (response.statusCode == 200) {
         print('sendPushNotification() -> success');
       }

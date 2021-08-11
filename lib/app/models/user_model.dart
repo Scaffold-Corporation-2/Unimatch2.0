@@ -149,6 +149,7 @@ class UserModel extends Model {
     return age;
   }
 
+  /// Login com Google
   Future<UserCredential> signInWithCredential(AuthCredential credential) =>
       _firebaseAuth.signInWithCredential(credential);
 
@@ -168,25 +169,54 @@ class UserModel extends Model {
     } catch (error) {
       print('O seguinte erro ocorreu: ' + error.toString());
     }
-
-    //   await signInWithCredential(credential).then((currentUser) async {
-    //     // await _firestore.collection('usuarios').doc(currentUser.user.uid).set({
-    //     //   'nomeUsuario': currentUser.user!.displayName == null
-    //     //       ? ''
-    //     //       : currentUser.user!.displayName,
-    //     //   'emailUsuario':
-    //     //       currentUser.user!.email == null ? '' : currentUser.user!.email,
-    //     //   'imagemUsuario': currentUser.user!.photoURL == null
-    //     //       ? ''
-    //     //       : currentUser.user!.photoURL,
-    //     // });
-    //   });
-    // } catch (error) {
-    //   print('O seguinte erro ocorreu: ' + error.toString());
-    // }
   }
 
-  Future<void> authEmailAccount() async {}
+  /// Login com E-mail e Senha
+  Future authEmailAccount(String userEmail, String password) async {
+    try {
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: userEmail,
+        password: password,
+      );
+      return true;
+    } catch (error) {
+      var errorMessage;
+
+      switch (error) {
+        case "invalid-email":
+          errorMessage = "Email inválido";
+          return errorMessage;
+
+        case "wrong-password":
+          errorMessage = "Senha incorreta";
+          return errorMessage;
+
+        case "user-not-found":
+          errorMessage = "Usuário não encontrado";
+
+          return errorMessage;
+        case "user-disable":
+          errorMessage = "Usuário bloqueado ou inativo";
+          return errorMessage;
+
+        case "too-many-requests":
+          errorMessage = "Muitas tentativas. Tente novamente mais tarde";
+          return errorMessage;
+
+        case "operation-not-allowed":
+          errorMessage = "Login desabilitado.";
+          return errorMessage;
+
+        case "email-already-in-use":
+          errorMessage = "O e-mail fornecido já está em uso por outro usuário";
+          return errorMessage;
+
+        default:
+          errorMessage = "Ocorreu um erro desconhecido";
+          return errorMessage;
+      }
+    }
+  }
 
   /// Authenticate User Account
   Future<void> authUserAccount({

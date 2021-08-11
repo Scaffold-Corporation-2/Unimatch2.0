@@ -6,24 +6,26 @@ import 'package:google_fonts/google_fonts.dart';
 class CustomGenericTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
-  final double fontSize;
+  final double textFontSize;
+  final double captionFontSize;
   final Color fillColor;
   final Color borderColor;
   final Color fontColor;
   final TextInputType type;
   final Function validation;
 
-  CustomGenericTextFormField(
-      {Key key,
-      this.controller,
-      this.labelText,
-      this.fontSize = 3,
-      this.borderColor,
-      this.fontColor,
-      this.fillColor,
-      this.type,
-      this.validation,})
-      : super(key: key);
+  CustomGenericTextFormField({
+    Key? key,
+    required this.controller,
+    required this.labelText,
+    this.textFontSize = 15,
+    this.captionFontSize = 15,
+    required this.borderColor,
+    required this.fontColor,
+    required this.fillColor,
+    required this.type,
+    required this.validation,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,17 +33,18 @@ class CustomGenericTextFormField extends StatelessWidget {
       keyboardType: type,
       textAlign: TextAlign.start,
       controller: controller,
+      autocorrect: false,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (value) => validation(value),
       style: GoogleFonts.rhodiumLibre(
         color: fontColor,
-        fontSize: fontSize,
+        fontSize: textFontSize,
       ),
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: GoogleFonts.rhodiumLibre(
+        labelStyle: GoogleFonts.eczar(
           color: fontColor,
-          fontSize: fontSize - 2,
+          fontSize: captionFontSize,
         ),
         filled: true,
         border: OutlineInputBorder(
@@ -49,6 +52,14 @@ class CustomGenericTextFormField extends StatelessWidget {
           borderSide: BorderSide(color: borderColor),
         ),
         focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25),
+          borderSide: BorderSide(color: borderColor),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25),
+          borderSide: BorderSide(color: borderColor),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25),
           borderSide: BorderSide(color: borderColor),
         ),

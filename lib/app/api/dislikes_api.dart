@@ -22,7 +22,8 @@ class DislikesApi {
   }
 
   Future<void> dislikeUser(
-      {required String dislikedUserId, required Function(bool) onDislikeResult}) async {
+      {required String dislikedUserId,
+      required Function(bool) onDislikeResult}) async {
     /// Check if current user already disliked profile
     _firestore
         .collection(C_DISLIKES)
@@ -67,7 +68,6 @@ class DislikesApi {
     if (withLimit) {
       usersQuery = usersQuery.limit(20);
     }
-
 
     final QuerySnapshot querySnapshot = await usersQuery.get().catchError((e) {
       print('getDislikedUsers() -> error: $e');
@@ -118,7 +118,8 @@ class DislikesApi {
           await doc.reference.delete();
         });
         debugPrint('deleteDislikedUsers() -> deleted');
-      }
+      } else
+        debugPrint('deleteDislikedUsers() -> not deleted');
     });
   }
 
@@ -135,7 +136,8 @@ class DislikesApi {
           await doc.reference.delete();
         });
         debugPrint('deleteDislikedMeUsers() -> deleted');
-      }
+      } else
+        debugPrint('deleteDislikedMeUsers() -> not deleted');
     });
   }
 }

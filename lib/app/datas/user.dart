@@ -83,8 +83,12 @@ class Usuario {
       userStatus: doc[USER_STATUS],
       userIsVerified: doc[USER_IS_VERIFIED] ?? false,
       userLevel: doc[USER_LEVEL],
-      userRegDate: doc[USER_REG_DATE].toDate(), // Firestore Timestamp
-      userLastLogin: doc[USER_LAST_LOGIN].toDate(), // Firestore Timestamp
+      userRegDate: doc[USER_REG_DATE].toDate() == null
+          ? Timestamp.now()
+          : doc[USER_REG_DATE].toDate(), // Firestore Timestamp
+      userLastLogin: doc[USER_LAST_LOGIN].toDate() == null
+          ? Timestamp.now()
+          : doc[USER_LAST_LOGIN].toDate(), // Firestore Timestamp
       userDeviceToken: doc[USER_DEVICE_TOKEN],
       userTotalLikes: doc[USER_TOTAL_LIKES] ?? 0,
       userTotalVisits: doc[USER_TOTAL_VISITS] ?? 0,

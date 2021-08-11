@@ -13,6 +13,7 @@ import 'package:uni_match/widgets/image_source_sheet.dart';
 import 'package:uni_match/widgets/show_scaffold_msg.dart';
 import 'package:uni_match/dialogs/common_dialogs.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 part 'login_store.g.dart';
 
 class LoginStore = _LoginStore with _$LoginStore;
@@ -42,7 +43,7 @@ abstract class _LoginStore with Store {
   addForm() => formKey = GlobalKey<FormState>();
 
 //******************************************************************************
-  /// Login com Numéro ///
+  /// Login com Número ///
   ///
   progress(context) {
     pr = ProgressDialog(context, isDismissible: false);
@@ -136,20 +137,18 @@ abstract class _LoginStore with Store {
 
   //******************************************************************************
   /// Login Email ///
-  // @action
-  // Future<void> firebaseLogin(String userEmail, String userPassword) async {
-  //   User currentUser;
-  //
-  //   await Future.delayed(Duration(seconds: 1));
-  //   currentUser = await userRepository.firebaseLogin(userEmail, userPassword);
-  //
-  //   if (currentUser != null) {
-  //     Modular.to.navigate('/home', arguments: currentUser);
-  //     resetLoginIsWrong();
-  //   } else {
-  //     loginReallyIsWrong();
-  //   }
-  // }
+  @action
+  Future<void> emailLogin(String userEmail, String userPassword) async {
+    await UserModel().authEmailAccount(userEmail, userPassword);
+    UserModel().authUserAccount(
+      homeScreen: () {
+        _navegarPaginas("/home");
+      },
+      signUpScreen: () {
+        _navegarPaginas("/login/signUp");
+      },
+    );
+  }
 
   //******************************************************************************
   /// Login com Google ///
@@ -158,13 +157,15 @@ abstract class _LoginStore with Store {
     await UserModel().authGoogleAccount();
   }
 
-//******************************************************************************
+  //******************************************************************************
   /// Criar conta ///
 
+  //******************************************************************************
   /// User Birthday info
   int userBirthDay = 0;
   int userBirthMonth = 0;
   int userBirthYear = DateTime.now().year;
+
   // End
 
   @observable
@@ -270,8 +271,10 @@ abstract class _LoginStore with Store {
       minDateTime: DateTime(1920, 1, 1),
       maxDateTime: DateTime.now(),
       initialDateTime: initialDateTime,
-      dateFormat: 'dd-MMMM-yyyy', // Date format
-      locale: _getDatePickerLocale(), // Set your App Locale here
+      dateFormat: 'dd-MMMM-yyyy',
+      // Date format
+      locale: _getDatePickerLocale(),
+      // Set your App Locale here
       onClose: () => print("----- onClose -----"),
       onCancel: () => print('onCancel'),
       onChange: (dateTime, List<int> index) {

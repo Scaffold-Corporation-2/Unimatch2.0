@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// APP SETINGS INFO CONSTANTS - SECTION ///
 ///
-const String APP_NAME = "Uni Match";
+const String APP_NAME = "UNIMATCH";
 const Color APP_PRIMARY_COLOR = Colors.pink;
 const Color APP_ACCENT_COLOR = Colors.pinkAccent;
 const String APP_VERSION_NAME = "v1.0.3";
@@ -30,9 +30,9 @@ const List<Locale> SUPPORTED_LOCALES = [
   Locale('pt_br'),
   Locale('en'),
 ];
+
 ///
 /// END APP SETINGS - SECTION
-
 
 ///
 /// DATABASE COLLECTIONS FIELD - SECTION
