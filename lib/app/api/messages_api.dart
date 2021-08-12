@@ -34,6 +34,7 @@ class MessagesApi {
     required String userReplyMsg,
     required String imgLink,
     required bool isRead,
+    required bool likeMsg,
   }) async {
     /// Save message
     print("Date " + DateTime.now().toString());
@@ -50,6 +51,8 @@ class MessagesApi {
       MESSAGE_IMG_LINK: imgLink,
       USER_REPLY_TEXT: userReplyMsg,
       REPLY_TYPE:replyType,
+      LIKE_MSG:likeMsg,
+
       // TIMESTAMP: DateTime.now(),
       TIMESTAMP: Timestamp.now(),
     });
@@ -64,6 +67,7 @@ class MessagesApi {
         textMsg: textMsg,
         replyMsg: replyMsg,
         replyType:replyType,
+        likeMsg: likeMsg,
         userReplyMsg: userReplyMsg,
         isRead: isRead);
   }

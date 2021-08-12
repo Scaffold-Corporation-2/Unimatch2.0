@@ -25,6 +25,14 @@ abstract class _ChatStore  with Store {
   @observable
   bool showEmoji = false;
 
+  @observable
+  bool likeMsg = false;
+
+  @action
+  msgLiked(){
+    likeMsg=!likeMsg;
+  }
+
 
 @action
   void replyToMessage(String message, bool user,String? image, bool imageBool) {

@@ -15,6 +15,7 @@ class ChatMessage extends StatelessWidget {
   final String replyMessage;
   final String userReply;
   final bool isReplyImage;
+  final bool likeMsg;
 
   ChatMessage({
     required this.isUserSender,
@@ -26,6 +27,7 @@ class ChatMessage extends StatelessWidget {
     required this.replyMessage,
     required this.userReply,
     required this.isReplyImage,
+    required this.likeMsg,
   });
 
   Widget buildReply() => ReplyConversationWidget(

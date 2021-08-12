@@ -86,13 +86,15 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                 if (image != null) {
                   Navigator.of(context).pop();
                   await _sendMessage(
-                      type: 'image',
-                      imgFile: image,
-                      replyText: controller.replyMessage,
-                      replyType: controller.isImage ? 'image' : 'text',
-                      userReplyMsg: controller.comparationWhoSendM(
-                          UserModel().user.userFullname,
-                          widget.user.userFullname));
+                    type: 'image',
+                    imgFile: image,
+                    replyText: controller.replyMessage,
+                    replyType: controller.isImage ? 'image' : 'text',
+                    userReplyMsg: controller.comparationWhoSendM(
+                        UserModel().user.userFullname,
+                        widget.user.userFullname),
+                    likeMsg: controller.msgLiked(),
+                  );
                   // close modal
                 }
               },
@@ -107,6 +109,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
     required replyText,
     required String replyType,
     required userReplyMsg,
+    required likeMsg,
   }) async {
     String textMsg = '';
     String imageUrl = '';
@@ -133,33 +136,37 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
 
     /// Save message for current user
     await _messagesApi.saveMessage(
-        type: type,
-        replyType: replyType,
-        fromUserId: UserModel().user.userId,
-        senderId: UserModel().user.userId,
-        receiverId: widget.user.userId,
-        userPhotoLink: widget.user.userProfilePhoto, // other user photo
-        userFullName: widget.user.userFullname, // other user ful name
-        textMsg: textMsg,
-        imgLink: imageUrl,
-        replyMsg: replyText,
-        userReplyMsg: userReplyMsg,
-        isRead: true);
+      type: type,
+      replyType: replyType,
+      fromUserId: UserModel().user.userId,
+      senderId: UserModel().user.userId,
+      receiverId: widget.user.userId,
+      userPhotoLink: widget.user.userProfilePhoto, // other user photo
+      userFullName: widget.user.userFullname, // other user ful name
+      textMsg: textMsg,
+      imgLink: imageUrl,
+      replyMsg: replyText,
+      likeMsg: likeMsg,
+      userReplyMsg: userReplyMsg,
+      isRead: true,
+    );
 
     /// Save copy message for receiver
     await _messagesApi.saveMessage(
-        type: type,
-        replyType: replyType,
-        fromUserId: UserModel().user.userId,
-        senderId: widget.user.userId,
-        receiverId: UserModel().user.userId,
-        userPhotoLink: UserModel().user.userProfilePhoto, // current user photo
-        userFullName: UserModel().user.userFullname, // current user ful name
-        textMsg: textMsg,
-        replyMsg: replyText,
-        imgLink: imageUrl,
-        userReplyMsg: userReplyMsg,
-        isRead: false);
+      type: type,
+      replyType: replyType,
+      fromUserId: UserModel().user.userId,
+      senderId: widget.user.userId,
+      receiverId: UserModel().user.userId,
+      userPhotoLink: UserModel().user.userProfilePhoto, // current user photo
+      userFullName: UserModel().user.userFullname, // current user ful name
+      textMsg: textMsg,
+      replyMsg: replyText,
+      likeMsg: likeMsg,
+      imgLink: imageUrl,
+      userReplyMsg: userReplyMsg,
+      isRead: false,
+    );
 
     /// Send push notification
     await _notificationsApi.sendPushNotification(
@@ -175,11 +182,13 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
   void initState() {
     super.initState();
     _messages = _messagesApi.getMessages(widget.user.userId);
-
     controller.focusNode.addListener(() {
       controller.textController.text = controller.textController.text;
       if (controller.focusNode.hasFocus) {
         controller.showEmoji = false;
+      }
+      if (controller.showEmoji == true) {
+        controller.focusNode.unfocus();
       }
     });
   }
@@ -316,9 +325,9 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
       ///Column das mensagens.
       body: WillPopScope(
         onWillPop: () {
-          if(controller.showEmoji == true){
-            controller.showEmoji= false;
-          }else{
+          if (controller.showEmoji == true) {
+            controller.showEmoji = false;
+          } else {
             Navigator.pop(context);
           }
           return Future.value(false);
@@ -327,15 +336,18 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
           children: <Widget>[
             /// how message list
             Expanded(
-                child: Container(color: Colors.white54, child: _showMessages())),
+                child:
+                    Container(color: Colors.white54, child: _showMessages())),
 
             /// Text Composer
+            ///
+
             Observer(
-              builder: (_) => FadeInUp(
-                child: ListTile(
-                  title: Column(
-                    children: [
-                      Row(
+              builder: (_) => ListTile(
+                title: Column(
+                  children: [
+                    FadeInUp(
+                      child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Expanded(
@@ -357,16 +369,16 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                           bottom: 0),
                                       child: IconButton(
                                           iconSize: 30,
-                                          icon: Icon(controller.showEmoji == true
-                                              ? Icons.keyboard
-                                              : Icons.insert_emoticon),
+                                          icon: Icon(
+                                              controller.showEmoji == true
+                                                  ? Icons.keyboard
+                                                  : Icons.insert_emoticon),
                                           splashColor: Colors.transparent,
                                           highlightColor: Colors.transparent,
                                           color: Colors.grey,
                                           onPressed: () {
                                             controller.focusNode.unfocus();
                                             controller.showEmojiKeyboard();
-
                                           }),
                                     ),
                                     suffixIcon: IconButton(
@@ -425,11 +437,14 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                 onPressed: _isComposing
                                     ? () async {
                                         /// Get text
-                                        final text =
-                                            controller.textController.text.trim();
-                                        final replyText = controller.replyMessage;
-                                        final replyType =
-                                            controller.isImage ? 'image' : 'text';
+                                        final text = controller
+                                            .textController.text
+                                            .trim();
+                                        final replyText =
+                                            controller.replyMessage;
+                                        final replyType = controller.isImage
+                                            ? 'image'
+                                            : 'text';
 
                                         /// clear input text
                                         controller.textController.clear();
@@ -440,14 +455,16 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
 
                                         /// Send text message
                                         await _sendMessage(
-                                            type: 'text',
-                                            text: text,
-                                            replyType: replyType,
-                                            replyText: replyText,
-                                            userReplyMsg:
-                                                controller.comparationWhoSendM(
-                                                    UserModel().user.userFullname,
-                                                    widget.user.userFullname));
+                                          type: 'text',
+                                          text: text,
+                                          replyType: replyType,
+                                          replyText: replyText,
+                                          userReplyMsg:
+                                              controller.comparationWhoSendM(
+                                                  UserModel().user.userFullname,
+                                                  widget.user.userFullname),
+                                          likeMsg: controller.likeMsg,
+                                        );
 
                                         /// Update scroll
 
@@ -457,60 +474,64 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
             Observer(
               builder: (_) => controller.showEmoji == true
-                  ? FadeInDown(
-                child: Container(
-                  height: 280,
-                  child:
-                  EmojiPicker(
-                    onEmojiSelected: (category, emoji) {
-                      controller.onEmojiSelected(emoji);
-                      setState(() {
-                        if (controller.textController.text !=
-                            '') {
-                          _isComposing = true;
-                        }
-                      });
-                    },
-                    config: Config(
-                      columns: 7,
-                      emojiSizeMax: 35.0,
-                      verticalSpacing: 0,
-                      horizontalSpacing: 0,
-                      initCategory: Category.RECENT,
-                      bgColor: Colors.white54,
-                      indicatorColor: Colors.pinkAccent,
-                      iconColor: Colors.pink.shade100,
-                      iconColorSelected: Colors.pink,
-                      progressIndicatorColor:
-                      Colors.pink.shade100,
-                      showRecentsTab: true,
-                      backspaceColor: Colors.pink,
-                      recentsLimit: 28,
-                      noRecentsText: "Nada recente",
-                      noRecentsStyle: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.pink,
+                  ? AnimatedContainer(
+                height: 280,
+                      curve: Curves.bounceInOut,
+                      duration: Duration(
+                        microseconds: 5,
                       ),
-                      categoryIcons: const CategoryIcons(),
-                      buttonMode: ButtonMode.MATERIAL,
-                    ),
-                  ),
-                ),
-              )
-                  : FadeInDownBig(child: SizedBox()),
+                      child: emojiKeyboard(),
+                    )
+                  : AnimatedContainer(duration: Duration(
+                seconds: 5,
+              )),
             ),
           ],
         ),
       ),
 
       ///Column das mensagens.
+    );
+  }
+  Widget emojiKeyboard() {
+    return EmojiPicker(
+      onEmojiSelected: (category, emoji) {
+        controller.onEmojiSelected(emoji);
+        setState(() {
+          if (controller.textController.text != '') {
+            _isComposing = true;
+          }
+        });
+      },
+      config: Config(
+        columns: 7,
+        emojiSizeMax: 35.0,
+        verticalSpacing: 0,
+        horizontalSpacing: 0,
+        initCategory: Category.RECENT,
+        bgColor: Colors.white54,
+        indicatorColor: Colors.pinkAccent,
+        iconColor: Colors.pink.shade100,
+        iconColorSelected: Colors.pink,
+        progressIndicatorColor: Colors.pink.shade100,
+        showRecentsTab: true,
+        backspaceColor: Colors.pink,
+        recentsLimit: 28,
+        noRecentsText: "Nada recente",
+        noRecentsStyle: const TextStyle(
+          fontSize: 20,
+          color: Colors.pink,
+        ),
+        categoryIcons: const CategoryIcons(),
+        buttonMode: ButtonMode.MATERIAL,
+      ),
     );
   }
 
@@ -544,6 +565,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                   String userPhotoLink;
 
                   final bool isImage = msg[MESSAGE_TYPE] == 'image';
+                  final bool likeMsgBool = msg[LIKE_MSG];
                   final bool isReplyImage = msg[REPLY_TYPE] == 'image';
                   final String textMessage =
                       msg[MESSAGE_TEXT] == null ? '' : msg[MESSAGE_TEXT];
@@ -567,7 +589,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                   // Show chat bubble
                   return GestureDetector(
                     onDoubleTap: () {
-                      print("curtiu");
+
                     },
                     child: SwipeTo(
                       iconColor: Colors.transparent,
@@ -585,6 +607,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                           timeAgo: timeAgo,
                           replyMessage: replyMsg,
                           userReply: userReply,
+                          likeMsg: likeMsgBool,
                         ),
                       ),
                       onRightSwipe: () {

@@ -84,7 +84,33 @@ mixin _$ChatStore on _ChatStore, Store {
     });
   }
 
+  final _$likeMsgAtom = Atom(name: '_ChatStore.likeMsg');
+
+  @override
+  bool get likeMsg {
+    _$likeMsgAtom.reportRead();
+    return super.likeMsg;
+  }
+
+  @override
+  set likeMsg(bool value) {
+    _$likeMsgAtom.reportWrite(value, super.likeMsg, () {
+      super.likeMsg = value;
+    });
+  }
+
   final _$_ChatStoreActionController = ActionController(name: '_ChatStore');
+
+  @override
+  dynamic msgLiked() {
+    final _$actionInfo =
+        _$_ChatStoreActionController.startAction(name: '_ChatStore.msgLiked');
+    try {
+      return super.msgLiked();
+    } finally {
+      _$_ChatStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void replyToMessage(
@@ -149,7 +175,8 @@ replyMessage: ${replyMessage},
 userSend: ${userSend},
 replyImage: ${replyImage},
 isImage: ${isImage},
-showEmoji: ${showEmoji}
+showEmoji: ${showEmoji},
+likeMsg: ${likeMsg}
     ''';
   }
 }
