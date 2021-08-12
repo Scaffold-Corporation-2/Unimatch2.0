@@ -1,10 +1,13 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uni_match/constants/constants.dart';
 
 class AppInfo {
   /// Variables
   final int androidAppCurrentVersion;
   final int iosAppCurrentVersion;
+  final int freeAccountSwipes;
+  final int vipAccountSwipes;
   final String androidPackageName;
   final String iOsAppId;
   final String appEmail;
@@ -29,6 +32,8 @@ class AppInfo {
       required this.subscriptionIds,
       required this.freeAccountMaxDistance,
       required this.vipAccountMaxDistance,
+      required this.freeAccountSwipes,
+      required this.vipAccountSwipes,
       });
 
   /// factory AppInfo object
@@ -43,12 +48,18 @@ class AppInfo {
         termsOfServicesUrl: doc[TERMS_OF_SERVICE_URL] ?? '',
         firebaseServerKey: doc[FIREBASE_SERVER_KEY] ?? '',
         subscriptionIds: List<String>.from(doc[STORE_SUBSCRIPTION_IDS] ?? []),
-        freeAccountMaxDistance: doc[FREE_ACCOUNT_MAX_DISTANCE] == null 
-        ? 100
-        : doc[FREE_ACCOUNT_MAX_DISTANCE].toDouble(),
-        vipAccountMaxDistance: doc[VIP_ACCOUNT_MAX_DISTANCE] == null 
-        ? 200
-        : doc[VIP_ACCOUNT_MAX_DISTANCE].toDouble(),
+        freeAccountMaxDistance: doc[FREE_ACCOUNT_MAX_DISTANCE] == null
+            ? 100
+            : doc[FREE_ACCOUNT_MAX_DISTANCE].toDouble(),
+        vipAccountMaxDistance: doc[VIP_ACCOUNT_MAX_DISTANCE] == null
+            ? 200
+            : doc[VIP_ACCOUNT_MAX_DISTANCE].toDouble(),
+        freeAccountSwipes: doc[FREE_ACCOUNT_SWIPES] == null
+            ? 15
+            : doc[FREE_ACCOUNT_SWIPES],
+      vipAccountSwipes: doc[VIP_ACCOUNT_SWIPES] == null
+            ? 10
+            : doc[VIP_ACCOUNT_SWIPES],
      );
   }
 }

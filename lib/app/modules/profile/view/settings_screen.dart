@@ -147,7 +147,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             "travel_to_any_country_or_city_and_match_with_people_there")!),
                         trailing: TextButton(
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Theme.of(context).primaryColor),
                           ),
                           child: Text(_i18n.translate("travel_now")!,
                               style: TextStyle(color: Colors.white)),
@@ -158,7 +159,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               _goToPassportScreen();
                             } else {
                               /// Show VIP dialog
-                              showDialog(context: context,
+                              showDialog(
+                                  context: context,
                                   builder: (context) => VipDialog());
                             }
                           },
@@ -180,14 +182,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             style: TextStyle(fontSize: 18)),
                       ),
                       ListTile(
-                        leading: SvgIcon(
-                            "assets/icons/location_point_icon.svg",
+                        leading: SvgIcon("assets/icons/location_point_icon.svg",
                             color: Theme.of(context).primaryColor),
                         title: Text(
                             '${UserModel().user.userCountry}, ${UserModel().user.userLocality}'),
                         trailing: TextButton(
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Theme.of(context).primaryColor),
                           ),
                           child: Text(_i18n.translate("UPDATE")!,
                               style: TextStyle(color: Colors.white)),
@@ -226,8 +228,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Slider(
                         activeColor: Theme.of(context).primaryColor,
                         value: _selectedMaxDistance,
-                        label:
-                        _selectedMaxDistance.round().toString() + ' km',
+                        label: _selectedMaxDistance.round().toString() + ' km',
                         divisions: 100,
                         min: 0,
 
@@ -249,7 +250,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               userId: UserModel().user.userId,
                               data: {
                                 '$USER_SETTINGS.$USER_MAX_DISTANCE':
-                                double.parse(radius.toStringAsFixed(2))
+                                    double.parse(radius.toStringAsFixed(2))
                               }).then((_) {
                             print(
                                 'User max distance updated -> ${radius.toStringAsFixed(2)}');
@@ -260,14 +261,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       UserModel().userIsVip
                           ? Container(width: 0, height: 0)
                           : Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                            "${_i18n.translate("need_more_radius_away")} "
-                                "${AppModel().appInfo.vipAccountMaxDistance} km "
-                                "${_i18n.translate('radius_away')}",
-                            style: TextStyle(
-                                color: Theme.of(context).primaryColor)),
-                      ),
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                  "${_i18n.translate("need_more_radius_away")} "
+                                  "${AppModel().appInfo.vipAccountMaxDistance} km "
+                                  "${_i18n.translate('radius_away')}",
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor)),
+                            ),
                     ],
                   )),
               SizedBox(height: 15),
@@ -275,59 +276,59 @@ class _SettingsScreenState extends State<SettingsScreen> {
               // User age range
               Card(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListTile(
-                        title: Text(_i18n.translate("age_range")!,
-                            style: TextStyle(fontSize: 19)),
-                        subtitle: Text(
-                            _i18n.translate("show_people_within_this_age_range")!),
-                        trailing: Text(
-                            "${_selectedAgeRange.start.toStringAsFixed(0)} - "
-                                "${_selectedAgeRange.end.toStringAsFixed(0)}",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
-                      ),
-                      RangeSlider(
-                          activeColor: Theme.of(context).primaryColor,
-                          values: _selectedAgeRange,
-                          labels: _selectedAgeRangeLabels,
-                          divisions: 100,
-                          min: 18,
-                          max: 100,
-                          onChanged: (newRange) {
-                            // Update state
-                            setState(() {
-                              _selectedAgeRange = newRange;
-                              _selectedAgeRangeLabels = RangeLabels(
-                                  newRange.start.toStringAsFixed(0),
-                                  newRange.end.toStringAsFixed(0));
-                            });
-                            print('_selectedAgeRange: $_selectedAgeRange');
-                          },
-                          onChangeEnd: (endValues) {
-                            /// Update age range
-                            ///
-                            /// Get start value
-                            final int minAge =
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    title: Text(_i18n.translate("age_range")!,
+                        style: TextStyle(fontSize: 19)),
+                    subtitle: Text(
+                        _i18n.translate("show_people_within_this_age_range")!),
+                    trailing: Text(
+                        "${_selectedAgeRange.start.toStringAsFixed(0)} - "
+                        "${_selectedAgeRange.end.toStringAsFixed(0)}",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                  ),
+                  RangeSlider(
+                      activeColor: Theme.of(context).primaryColor,
+                      values: _selectedAgeRange,
+                      labels: _selectedAgeRangeLabels,
+                      divisions: 100,
+                      min: 18,
+                      max: 100,
+                      onChanged: (newRange) {
+                        // Update state
+                        setState(() {
+                          _selectedAgeRange = newRange;
+                          _selectedAgeRangeLabels = RangeLabels(
+                              newRange.start.toStringAsFixed(0),
+                              newRange.end.toStringAsFixed(0));
+                        });
+                        print('_selectedAgeRange: $_selectedAgeRange');
+                      },
+                      onChangeEnd: (endValues) {
+                        /// Update age range
+                        ///
+                        /// Get start value
+                        final int minAge =
                             int.parse(endValues.start.toStringAsFixed(0));
 
-                            /// Get end value
-                            final int maxAge =
+                        /// Get end value
+                        final int maxAge =
                             int.parse(endValues.end.toStringAsFixed(0));
 
-                            // Update age range
-                            UserModel().updateUserData(
-                                userId: UserModel().user.userId,
-                                data: {
-                                  '$USER_SETTINGS.$USER_MIN_AGE': minAge,
-                                  '$USER_SETTINGS.$USER_MAX_AGE': maxAge,
-                                }).then((_) {
-                              print('Age range updated');
-                            });
-                          })
-                    ],
-                  )),
+                        // Update age range
+                        UserModel().updateUserData(
+                            userId: UserModel().user.userId,
+                            data: {
+                              '$USER_SETTINGS.$USER_MIN_AGE': minAge,
+                              '$USER_SETTINGS.$USER_MAX_AGE': maxAge,
+                            }).then((_) {
+                          print('Age range updated');
+                        });
+                      })
+                ],
+              )),
 
               SizedBox(height: 15),
               // Show me option
@@ -340,8 +341,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   title: Text(_i18n.translate('show_me')!,
                       style: TextStyle(fontSize: 18)),
-                  trailing: Text(_showMeOption(),
-                      style: TextStyle(fontSize: 18)),
+                  trailing:
+                      Text(_showMeOption(), style: TextStyle(fontSize: 18)),
                   onTap: () {
                     /// Choose Show me option
                     showDialog(
@@ -361,21 +362,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: ListTile(
                   leading: _hideProfile
                       ? Icon(Icons.visibility_off,
-                      color: Theme.of(context).primaryColor, size: 30)
+                          color: Theme.of(context).primaryColor, size: 30)
                       : Icon(Icons.visibility,
-                      color: Theme.of(context).primaryColor, size: 30),
+                          color: Theme.of(context).primaryColor, size: 30),
                   title: Text(_i18n.translate('hide_profile')!,
                       style: TextStyle(fontSize: 18)),
                   subtitle: _hideProfile
                       ? Text(
-                    _i18n.translate(
-                        'your_profile_is_hidden_on_discover_tab')!,
-                    style: TextStyle(color: Colors.red),
-                  )
+                          _i18n.translate(
+                              'your_profile_is_hidden_on_discover_tab')!,
+                          style: TextStyle(color: Colors.red),
+                        )
                       : Text(
-                      _i18n.translate(
-                          'your_profile_is_visible_on_discover_tab')!,
-                      style: TextStyle(color: Colors.green)),
+                          _i18n.translate(
+                              'your_profile_is_visible_on_discover_tab')!,
+                          style: TextStyle(color: Colors.green)),
                   trailing: Switch(
                     value: _hideProfile,
                     onChanged: (newValue) {

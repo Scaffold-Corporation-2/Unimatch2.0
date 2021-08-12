@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/helpers/app_notifications.dart';
 import 'package:uni_match/app/api/notifications_api.dart';
 import 'package:uni_match/app/app_controller.dart';
@@ -80,7 +81,10 @@ class NotificationsScreen extends StatelessWidget {
                   if (nType == 'alert') {
                     bgImage = AssetImage('assets/images/app_logo.png');
                   } else {
-                    bgImage = NetworkImage(notification[N_SENDER_PHOTO_LINK]);
+                    bgImage = UserModel().userIsVip
+                        ? NetworkImage(notification[N_SENDER_PHOTO_LINK])
+                    //todo colocar imagem logo
+                        :  AssetImage('assets/images/app_logo_alt.png') as ImageProvider;
                   }
 
                   /// Show notification
@@ -99,7 +103,7 @@ class NotificationsScreen extends StatelessWidget {
                               : notification[N_SENDER_FULLNAME].split(" ")[0],
                           style: TextStyle(fontSize: 18)),
                       subtitle: Text("${notification[N_MESSAGE]}\n"
-                          "${timeago.format(notification[TIMESTAMP].toDate())}"),
+                          "${timeago.format(notification[TIMESTAMP].toDate(), locale: 'pt_BR')}"),
                       trailing: !notification[N_READ]
                           ? Badge(text: i18n.translate("new"))
                           : null,

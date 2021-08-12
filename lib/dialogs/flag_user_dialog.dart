@@ -32,6 +32,7 @@ class _FlagUserDialogState extends State<FlagUserDialog> {
       _i18n.translate("abusive_content")!,
       _i18n.translate("violent_content")!,
       _i18n.translate("inappropriate_content")!,
+      _i18n.translate("non_university")!,
       _i18n.translate("spam_or_misleading")!,
     ];
 

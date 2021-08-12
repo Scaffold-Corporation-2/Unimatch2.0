@@ -114,14 +114,14 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
             type: BottomNavigationBarType.shifting,
             elevation: Platform.isIOS ? 0 : 8,
             currentIndex: _selectedIndex,
-            selectedItemColor: Colors.pinkAccent,
+            selectedItemColor: Colors.transparent,
             onTap: (int index) => setState(() => _selectedIndex = index),
             items: [
               /// Discover Tab
               BottomNavigationBarItem(
                   icon: SvgIcon("assets/icons/search_icon.svg",
-                      width: 27,
-                      height: 27,
+                      width: 31,
+                      height: 31,
                       color: _selectedIndex == 0
                           ? Theme.of(context).primaryColor
                           : null),

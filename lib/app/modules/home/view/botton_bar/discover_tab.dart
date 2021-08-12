@@ -1,6 +1,9 @@
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:ntp/ntp.dart';
 import 'package:uni_match/app/api/dislikes_api.dart';
 import 'package:uni_match/app/api/likes_api.dart';
 import 'package:uni_match/app/api/matches_api.dart';
@@ -8,10 +11,12 @@ import 'package:uni_match/app/api/users_api.dart';
 import 'package:uni_match/app/api/visits_api.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/datas/user.dart';
+import 'package:uni_match/app/models/app_model.dart';
 import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/app/modules/profile/view/profile_screen.dart';
 import 'package:uni_match/constants/constants.dart';
 import 'package:uni_match/dialogs/its_match_dialog.dart';
+import 'package:uni_match/dialogs/vip_dialog.dart';
 import 'package:uni_match/plugins/swipe_stack/swipe_stack.dart';
 import 'package:uni_match/widgets/cicle_button.dart';
 import 'package:uni_match/widgets/no_data.dart';
@@ -34,9 +39,13 @@ class _DiscoverTabState extends State<DiscoverTab> {
   final UsersApi _usersApi = UsersApi();
   List<DocumentSnapshot>? _users;
   AppController _i18n = Modular.get();
+  int swipeNum = 10;
+  Duration? swipeTime;
 
   /// Get all Users
   Future<void> _loadUsers(List<DocumentSnapshot> dislikedUsers) async {
+    DateTime dateTime = await NTP.now();
+
     _usersApi.getUsers(dislikedUsers: dislikedUsers).then((users) {
       // Check result
       if (users.isNotEmpty) {
@@ -48,10 +57,79 @@ class _DiscoverTabState extends State<DiscoverTab> {
           setState(() => _users = []);
         }
       }
+      _limiteSwipes(dateTime);
+      _recuperarDislike(dislikedUsers);
       // Debug
+      print('DateTime now  -> $dateTime');
+      print('DateTime user -> ${UserModel().user.userSettings![USER_TIME_SWIPES].toDate()}');
+      print('Diferença     -> ${dateTime.difference(UserModel().user.userSettings![USER_TIME_SWIPES].toDate()).inHours}h');
+
       print('Usuários -> ${users.length}');
       print('Usuários Disliked -> ${dislikedUsers.length}');
     });
+  }
+
+  _limiteSwipes(DateTime dateTime) async {
+    if (UserModel().userIsVip) {
+      setState(() => swipeNum = AppModel().appInfo.vipAccountSwipes);
+    } else {
+      if (dateTime.difference(UserModel().user.userSettings![USER_TIME_SWIPES].toDate()).inHours >= 24){
+        debugPrint("Tempo superior à 24 horas");
+
+        await UserModel().updateUserData(
+            userId: UserModel().user.userId,
+            data: {'$USER_SETTINGS.$USER_TIME_SWIPES': dateTime});
+
+        await UserModel()
+            .updateUserData(userId: UserModel().user.userId, data: {
+          '$USER_SETTINGS.$USER_SWIPES': AppModel().appInfo.freeAccountSwipes
+        });
+
+        setState(() => swipeNum = AppModel().appInfo.freeAccountSwipes);
+      } else {
+        setState(() {
+          swipeTime = Duration(hours: 24) - dateTime.difference(UserModel().user.userSettings![USER_TIME_SWIPES].toDate());
+          swipeNum = UserModel().user.userSettings![USER_SWIPES] == null
+              ? 10
+              : UserModel().user.userSettings![USER_SWIPES];
+        });
+      }
+    }
+
+    print('Swipes        -> $swipeNum');
+  }
+
+  _recuperarDislike(List<DocumentSnapshot> dislikedUsers) async {
+    DateTime dateTime = await NTP.now();
+    debugPrint("Recuperar Dislike => Tempo GTM: $dateTime");
+
+    if (dateTime.difference(UserModel().user.userLastLogin).inDays >= 7) {
+      debugPrint("Tempo superior à 6 dias");
+
+      await UserModel().updateUserData(
+          userId: UserModel().user.userId, data: {USER_LAST_LOGIN: dateTime});
+
+      debugPrint("Login atual: ${UserModel().user.userLastLogin}");
+
+      if (dislikedUsers.isNotEmpty) {
+        Map dadosUser =
+            dislikedUsers[Random().nextInt(dislikedUsers.length)].data() as Map;
+
+        if (dislikedUsers.length > 2) {
+          debugPrint("Dislike deletado -> ${dadosUser[DISLIKED_USER_ID]}");
+
+          _dislikesApi.deleteDislikedUser(dadosUser[DISLIKED_USER_ID]);
+          dadosUser = dislikedUsers[Random().nextInt(dislikedUsers.length)]
+              .data() as Map;
+          if (dateTime.difference(dadosUser[TIMESTAMP].toDate()).inDays >= 6) {
+            debugPrint("2: Dislike deletado -> ${dadosUser[DISLIKED_USER_ID]}");
+            _dislikesApi.deleteDislikedUser(dadosUser[DISLIKED_USER_ID]);
+          }
+        } else {
+          _dislikesApi.deleteDislikedUser(dadosUser[DISLIKED_USER_ID]);
+        }
+      }
+    }
   }
 
   @override
@@ -83,6 +161,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
     } else if (_users!.isEmpty) {
       /// No user found
       return NoData(
+          animated: true,
           svgName: 'search_icon',
           text: _i18n
               .translate("no_user_found_around_you_please_try_again_later")!);
@@ -92,54 +171,143 @@ class _DiscoverTabState extends State<DiscoverTab> {
         children: [
           /// User card list
           SwipeStack(
-              key: _swipeKey,
-              children: _users!.map((userDoc) {
-                // Get User object
-                final Usuario user = Usuario.fromDocument(userDoc.data()! as Map);
-                // Return user profile
-                return SwiperItem(
-                    builder: (SwiperPosition position, double progress) {
-                  /// Return User Card
-                  return ProfileCard(
-                      page: 'discover', position: position, user: user);
-                });
-              }).toList(),
-              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-              translationInterval: 6,
-              scaleInterval: 0.03,
-              stackFrom: StackFrom.None,
-              onEnd: () => debugPrint("onEnd"),
-              onSwipe: (int index, SwiperPosition position) {
-                /// Control swipe position
-                switch (position) {
-                  case SwiperPosition.None:
-                    break;
-                  case SwiperPosition.Left:
+                  key: _swipeKey,
+                  children: _users!.map((userDoc) {
+                    // Get User object
+                    final Usuario user =
+                        Usuario.fromDocument(userDoc.data()! as Map);
+                    // Return user profile
+                    return SwiperItem(
+                        builder: (SwiperPosition position, double progress) {
+                      /// Return User Card
+                      return ProfileCard(
+                          page: 'discover', position: position, user: user);
+                    });
+                  }).toList(),
+                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                  translationInterval: 6,
+                  scaleInterval: 0.03,
+                  stackFrom: StackFrom.None,
+                  onEnd: () => debugPrint("onEnd"),
+                  onSwipe: (int index, SwiperPosition position) async {
 
-                    /// Swipe Left Dislike profile
-                    _dislikesApi.dislikeUser(
-                        dislikedUserId: _users![index][USER_ID],
-                        onDislikeResult: (r) =>
-                            debugPrint('onDislikeResult: $r'));
+                   swipeNum--;
+                    debugPrint("SwipeNum: $swipeNum");
 
-                    break;
+                   await UserModel()
+                       .updateUserData(userId: UserModel().user.userId, data: {
+                     '$USER_SETTINGS.$USER_SWIPES': swipeNum});
 
-                  case SwiperPosition.Right:
+                    /// Control swipe position
+                    switch (position) {
+                      case SwiperPosition.None:
+                        break;
+                      case SwiperPosition.Left:
 
-                    /// Swipe right and Like profile
-                    _likeUser(context, clickedUserDoc: _users![index]);
+                        /// Swipe Left Dislike profile
+                        _dislikesApi.dislikeUser(
+                            dislikedUserId: _users![index][USER_ID],
+                            onDislikeResult: (r) =>
+                                debugPrint('onDislikeResult: $r'));
 
-                    break;
-                }
-              }),
+                        if(swipeNum == 0)setState(() {});
+                        break;
 
+                      case SwiperPosition.Right:
+
+                        /// Swipe right and Like profile
+                        _likeUser(context, clickedUserDoc: _users![index]);
+
+                        if(swipeNum == 0)setState(() {});
+                        break;
+                    }
+                  }),
+
+        if(swipeNum == 0)
+          Align(
+            alignment: Alignment.center,
+            child: InkWell(
+                child: Container(
+                  color: Colors.white.withOpacity(.25),
+                  child: Dialog(
+                    insetAnimationCurve: Curves.bounceInOut,
+                    insetAnimationDuration: Duration(seconds: 2),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    backgroundColor: Colors.white,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      height: MediaQuery.of(context).size.height * .55,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+
+                          Icon(
+                            Icons.lock_outline,
+                            size: 80,
+                            color: Colors.pinkAccent,
+                          ),
+                          Text(
+                            "Você já usou o número máximo de Swipes gratuitos disponíveis por 24 horas.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[600],
+                                fontSize: 20),
+                          ),
+
+                          Column(
+                            children: [
+                              Text(
+                                "RESTA APENAS",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[500],
+                                    fontSize: 14),
+                              ),
+                              SizedBox(height: 2,),
+                              CustomTimer(
+                                from: swipeTime!,
+                                to: Duration(hours: 0),
+                                onBuildAction: CustomTimerAction.auto_start,
+                                builder: (CustomTimerRemainingTime remaining) {
+                                  return Text(
+                                    "${remaining.hours}:${remaining.minutes}:${remaining.seconds}",
+                                    style: TextStyle(fontSize: 30.0, color: Colors.grey[500]),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                          Text(
+                            "Para descolar mais universitários, basta assinar nossos planos UniVips.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.pinkAccent,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  showDialog(context: context,
+                      builder: (context) => VipDialog());
+                }),
+          ),
           /// Swipe buttons
-          Container(
+          if(swipeNum != 0)
+            Container(
               margin: const EdgeInsets.only(bottom: 20),
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: swipeButtons(context),
-              )),
+              )
+          )
         ],
       );
     }
@@ -156,7 +324,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
         cicleButton(
             bgColor: Colors.white,
             padding: 8,
-            icon: Icon(Icons.restore, size: 22, color: Colors.grey),
+            icon: Icon(Icons.restore, size: 22, color: Colors.grey[600]),
             onTap: () {
               // Go to Disliked Profiles Screen
               Modular.to.pushNamed('/profile/dislikes');
@@ -170,7 +338,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
         cicleButton(
             bgColor: Colors.white,
             padding: 8,
-            icon: Icon(Icons.close, size: 35, color: Colors.grey),
+            icon: Icon(Icons.close, size: 35, color: Colors.deepPurpleAccent),
             onTap: () {
               /// Get card current index
               final cardIndex = _swipeKey.currentState!.currentIndex;
@@ -207,7 +375,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
         cicleButton(
             bgColor: Colors.white,
             padding: 8,
-            icon: Icon(Icons.remove_red_eye, size: 22, color: Colors.grey),
+            icon: Icon(Icons.remove_red_eye, size: 22, color: Colors.grey[600]),
             onTap: () {
               /// Get card current index
               final cardIndex = _swipeKey.currentState!.currentIndex;
@@ -215,7 +383,8 @@ class _DiscoverTabState extends State<DiscoverTab> {
               /// Check card valid index
               if (cardIndex != -1) {
                 /// Get User object
-                final Usuario user = Usuario.fromDocument(_users![cardIndex].data()!  as Map);
+                final Usuario user =
+                    Usuario.fromDocument(_users![cardIndex].data()! as Map);
 
                 /// Go to profile screen
                 // Modular.to.pushNamed('/profile');
@@ -224,6 +393,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                         ProfileScreen(user: user, showButtons: false)));
 
                 /// Increment user visits an push notification
+                print("_visitsApi() => Enviar Visita");
                 _visitsApi.visitUserProfile(
                   visitedUserId: user.userId,
                   userDeviceToken: user.userDeviceToken,
@@ -251,7 +421,8 @@ class _DiscoverTabState extends State<DiscoverTab> {
                 builder: (context) {
                   return ItsMatchDialog(
                     swipeKey: _swipeKey,
-                    matchedUser: Usuario.fromDocument(clickedUserDoc.data()!  as Map),
+                    matchedUser:
+                        Usuario.fromDocument(clickedUserDoc.data()! as Map),
                   );
                 });
           }

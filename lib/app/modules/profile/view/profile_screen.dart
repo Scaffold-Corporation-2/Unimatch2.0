@@ -30,7 +30,8 @@ class ProfileScreen extends StatefulWidget {
       {required this.user,
         this.showButtons = true,
         this.hideDislikeButton = false,
-        this.fromDislikesScreen = false});
+        this.fromDislikesScreen = false
+      });
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -146,55 +147,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SizedBox(height: 5),
 
                         /// Home location
-                        _rowProfileInfo(
-                          context,
-                          icon: SvgIcon(
+                        ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                          visualDensity: VisualDensity(horizontal: 0, vertical: -2),
+                          leading: SvgIcon(
                               "assets/icons/location_point_icon.svg",
                               color: Theme.of(context).primaryColor,
-                              width: 24,
-                              height: 24),
-                          title:
-                          "${widget.user.userLocality}, ${widget.user.userCountry}",
+                              width: 25,
+                              height: 25),
+                          title: Text("${widget.user.userLocality}, ${widget.user.userCountry}", style: TextStyle(fontSize: 19)),
                         ),
 
-                        SizedBox(height: 5),
-
-                        /// Job title
-                        _rowProfileInfo(context,
-                            icon: SvgIcon("assets/icons/gender_icon.svg",
-                                color: Theme.of(context).primaryColor,
-                                width: 27,
-                                height: 27),
-                            title: widget.user.userOrientation),
-
-                        SizedBox(height: 5),
+                        /// Orientation
+                        ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                          visualDensity: VisualDensity(horizontal: 0, vertical: -2),
+                          leading: SvgIcon("assets/icons/gender_icon.svg",
+                              color: Theme.of(context).primaryColor,
+                              width: 27,
+                              height: 27),
+                          title: Text("${widget.user.userOrientation}", style: TextStyle(fontSize: 19)),
+                        ),
 
                         /// Education
-                        _rowProfileInfo(context,
-                            icon: SvgIcon("assets/icons/university_icon.svg",
-                                color: Theme.of(context).primaryColor,
-                                width: 34,
-                                height: 34),
-                            title: widget.user.userSchool),
+                        ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                          visualDensity: VisualDensity(horizontal: 0, vertical: -2),
+                          leading: SvgIcon("assets/icons/university_icon.svg",
+                              color: Theme.of(context).primaryColor,
+                              width: 32,
+                              height: 32),
+                          title: Text("${widget.user.userSchool}", style: TextStyle(fontSize: 19)),
+                        ),
 
                         /// Birthday
-                        _rowProfileInfo(context,
-                            icon: SvgIcon("assets/icons/gift_icon.svg",
-                                color: Theme.of(context).primaryColor,
-                                width: 28,
-                                height: 28),
-                            title:
-                            '${_i18n.translate('birthday')} ${widget.user.userBirthYear}/${widget.user.userBirthMonth}/${widget.user.userBirthDay}'),
+                        ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                          visualDensity: VisualDensity(horizontal: 0, vertical: -2),
+                          leading: SvgIcon("assets/icons/gift_icon.svg",
+                              color: Theme.of(context).primaryColor,
+                              width: 28,
+                              height: 28),
+                          title: Text('${_i18n.translate('birthday')} '
+                              '${widget.user.userBirthDay < 10 ? '0' + widget.user.userBirthDay.toString() :  widget.user.userBirthDay}/'
+                              '${widget.user.userBirthMonth < 10 ? '0' + widget.user.userBirthMonth.toString() : widget.user.userBirthMonth}/'
+                              '${widget.user.userBirthYear}', style: TextStyle(fontSize: 19)),
+                        ),
 
                         /// Join date
-                        _rowProfileInfo(context,
-                            icon: SvgIcon("assets/icons/info_icon.svg",
-                                color: Theme.of(context).primaryColor,
-                                width: 28,
-                                height: 28),
-                            title:
-                            '${_i18n.translate('join_date')} ${timeago.format(widget.user.userRegDate)}'),
-
+                        ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                          visualDensity: VisualDensity(horizontal: 0, vertical: -2),
+                          leading: SvgIcon("assets/icons/info_icon.svg",
+                              color: Theme.of(context).primaryColor,
+                              width: 28,
+                              height: 28),
+                          title: Text("${_i18n.translate('join_date')}: ${timeago.format(widget.user.userRegDate, locale: 'pt_BR')}",
+                              style: TextStyle(fontSize: 19)),
+                        ),
                         Divider(),
 
                         /// Profile bio
@@ -247,20 +257,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         bottomNavigationBar:
         widget.showButtons ? _buildButtons(context) : null);
-  }
-
-  Widget _rowProfileInfo(BuildContext context,
-      {required Widget icon, required String title}) {
-    return Row(
-      children: [
-        icon,
-        SizedBox(width: 10),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(title, style: TextStyle(fontSize: 19)),
-        ),
-      ],
-    );
   }
 
   /// Build Like and Dislike buttons

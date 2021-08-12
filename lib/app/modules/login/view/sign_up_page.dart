@@ -80,7 +80,7 @@ class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
                             controller: controller.nameController,
                             decoration: InputDecoration(
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                                  borderRadius: BorderRadius.all(Radius.circular(28)),
                                   borderSide: BorderSide(width: 1.8,color: Theme.of(context).primaryColor,),
                                 ),
                                 labelText: controller.i18n.translate("fullname"),
@@ -182,7 +182,7 @@ class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
                             controller: controller.schoolController,
                             decoration: InputDecoration(
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                                  borderRadius: BorderRadius.all(Radius.circular(28)),
                                   borderSide: BorderSide(width: 1.8,color: Theme.of(context).primaryColor,),
                                 ),
                                 labelStyle: TextStyle(
@@ -206,7 +206,7 @@ class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
                             maxLines: 4,
                             decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(30)),
+                                borderRadius: BorderRadius.all(Radius.circular(28)),
                                 borderSide: BorderSide(width: 1.8,color: Theme.of(context).primaryColor,),
                               ),
                               labelStyle: TextStyle(

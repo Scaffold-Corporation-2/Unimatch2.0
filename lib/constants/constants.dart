@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 /// APP SETINGS INFO CONSTANTS - SECTION ///
 ///
-const String APP_NAME = "Uni Match";
+const String APP_NAME = "Unimatch";
 const Color APP_PRIMARY_COLOR = Colors.pink;
 const Color APP_ACCENT_COLOR = Colors.pinkAccent;
-const String APP_VERSION_NAME = "v1.0.3";
+const String APP_VERSION_NAME = "v1.0.0";
 const int ANDROID_APP_VERSION_NUMBER = 3; // Google Play Version Number
 const int IOS_APP_VERSION_NUMBER = 3; // App Store Version Number
 //
@@ -68,7 +68,9 @@ const String TERMS_OF_SERVICE_URL = "terms_of_service_url";
 const String FIREBASE_SERVER_KEY = "firebase_server_key";
 const String STORE_SUBSCRIPTION_IDS = "store_subscription_ids";
 const String FREE_ACCOUNT_MAX_DISTANCE = "free_account_max_distance";
+const String FREE_ACCOUNT_SWIPES = "free_account_swipes";
 const String VIP_ACCOUNT_MAX_DISTANCE = "vip_account_max_distance";
+const String VIP_ACCOUNT_SWIPES = "vip_account_swipes";
 // Admob variables
 const String ADMOB_APP_ID = "admob_app_id";
 const String ADMOB_INTERSTITIAL_AD_ID = "admob_interstitial_ad_id";
@@ -97,6 +99,7 @@ const String USER_IS_VERIFIED = "usuario_verificado";
 const String USER_LEVEL = "usuario_nivel";
 const String USER_REG_DATE = "usuario_data_registro";
 const String USER_LAST_LOGIN = "usuario_ultimo_login";
+const String USER_LAST_SWIPES = "usuario_ultimo_tempo_swipe";
 const String USER_DEVICE_TOKEN = "usuario_device_token";
 const String USER_TOTAL_LIKES = "usuario_total_likes";
 const String USER_TOTAL_VISITS = "usuario_total_visitas";
@@ -105,6 +108,8 @@ const String USER_TOTAL_DISLIKED = "usuario_total_disliked";
 const String USER_MIN_AGE = "usuario_min_idade";
 const String USER_MAX_AGE = "usuario_max_idade";
 const String USER_MAX_DISTANCE = "usuario_max_distancia";
+const String USER_SWIPES = "usuario_swipes";
+const String USER_TIME_SWIPES = "usuario_tempo_swipes";
 const String USER_SHOW_ME = "usuario_show_me";
 
 /// DATABASE FIELDS FOR UsuariosSinalizados COLLECTION  ///

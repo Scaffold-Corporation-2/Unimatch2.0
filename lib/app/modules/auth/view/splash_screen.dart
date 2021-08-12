@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:uni_match/app/modules/auth/store/auth_store.dart';
+import 'package:uni_match/constants/constants.dart';
 
 class SplashScreen extends StatefulWidget {
 
@@ -31,17 +32,17 @@ class _SplashScreenState extends ModularState<SplashScreen, AuthStore> {
                       child: Image.asset("assets/images/app_logo.png",
                           width: 120, height: 120)),
                   SizedBox(height: 10),
-                  Text("Uni Match",
+                  Text(APP_NAME,
                       style:
                       TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
                   SizedBox(height: 5),
-                  Text("Match com universitários ao seu redor",
+                  Text("Dê match com universitários ao seu redor",
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 18, color: Colors.grey)),
                   SizedBox(height: 20),
                   SpinKitPumpingHeart(
                     color: Theme.of(context).primaryColor,
-                    size: 45,
+                    size: 50,
                   )
                 ],
               ),
