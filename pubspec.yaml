@@ -118,7 +118,7 @@ dependencies:
 
     #Biblioteca de emoji_picker_flutter:
   emoji_picker_flutter: ^1.0.6
-  flutter_keyboard_visibility: ^5.0.3
+
 
     #Biblioteca de animação
   animate_do: ^2.0.0
@@ -152,7 +152,6 @@ flutter:
      - assets/images/
      - assets/icons/
      - assets/lang/
-     - assets/fonts/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
