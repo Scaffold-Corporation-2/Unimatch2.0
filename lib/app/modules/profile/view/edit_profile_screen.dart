@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/app/modules/profile/view/profile_screen.dart';
@@ -22,13 +24,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _schoolController =
       TextEditingController(text: UserModel().user.userSchool);
 
-  //todo Mudar para Orientação
-  final _jobController =
-      TextEditingController(text: UserModel().user.userJobTitle);
+
+  final _orientationController =
+      TextEditingController(text: UserModel().user.userOrientation);
 
   final _bioController = TextEditingController(text: UserModel().user.userBio);
   AppController _i18n = Modular.get();
   late ProgressDialog _pr;
+
+  File? imagemSelecionada;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +51,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             onPressed: () {
               /// Validate form
               if (_formKey.currentState!.validate()) {
-                _saveChanges();
+                setState(() => _saveChanges());
               }
             },
           )
@@ -66,8 +70,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: Stack(
                     children: <Widget>[
                       CircleAvatar(
-                        backgroundImage:
-                        NetworkImage(UserModel().user.userProfilePhoto),
+                        backgroundImage: imagemSelecionada == null?
+                          NetworkImage(UserModel().user.userProfilePhoto)
+                          : FileImage(imagemSelecionada!) as ImageProvider,
                         radius: 80,
                         backgroundColor: Theme.of(context).primaryColor,
                       ),
@@ -88,6 +93,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 onTap: () async {
                   /// Update profile image
                   _selectImage(
+                      context: context,
                       imageUrl: UserModel().user.userProfilePhoto,
                       path: 'profile');
                 },
@@ -154,7 +160,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
               /// Job title field
               TextFormField(
-                controller: _jobController,
+                controller: _orientationController,
                 decoration: InputDecoration(
                     labelText: _i18n.translate("job_title"),
                     hintText: _i18n.translate("enter_your_job_title"),
@@ -179,22 +185,60 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   /// Get image from camera / gallery
-  void _selectImage({required String imageUrl, required String path}) async {
+  void _selectImage({required String imageUrl, required String path, required context}) async {
     await showModalBottomSheet(
         context: context,
         builder: (context) => ImageSourceSheet(
               onImageSelected: (image) async {
                 if (image != null) {
-                  /// Show progress dialog
-                  _pr.show(_i18n.translate("processing")!);
+                  if (Platform.isAndroid) {
 
-                  /// Update profile image
-                  await UserModel().updateProfileImage(
-                      imageFile: image, oldImageUrl: imageUrl, path: 'profile');
-                  // Hide dialog
-                  _pr.hide();
-                  // close modal
-                  Navigator.of(context).pop();
+                    _pr.show(_i18n.translate("processing")!);
+
+                    final inputImage = InputImage.fromFile(image);
+                    final faceDetector = GoogleMlKit.vision.faceDetector();
+                    final List<Face> faces = await faceDetector.processImage(inputImage);
+
+                    debugPrint("Faces detectadas: ${faces.length}");
+
+                    if(faces.length == 1){
+
+                      await UserModel().updateProfileImage(
+                          imageFile: image, oldImageUrl: imageUrl, path: 'profile');
+
+                      setState(() {
+                        imagemSelecionada = image;
+                      });
+
+                      _pr.hide();
+                      Navigator.of(context).pop();
+
+                    }else if(faces.length > 1){
+                      debugPrint('Varias pessoas na foto');
+
+                      infoDialog(
+                          context,
+                          positiveAction: (){
+                            _pr.hide();
+                            Navigator.of(context).pop();
+                          },
+                          message: "Não utilize foto em grupo no seu perfil da Unimatch. Isso é prejudicial para você mesmo!");
+
+                    }else{
+                      debugPrint('Pessoa não identificada');
+
+                      infoDialog(
+                          context,
+                          positiveAction: (){
+                            _pr.hide();
+                            Navigator.of(context).pop();
+                          },
+                          message: "Não foi possível identificar você na foto. "
+                              "Se você estiver na imagem, tente novamente mais tarde ou tente adicionar outra foto,  "
+                              "mas se o problema persistir, entre em contato conosco via instagram: @unimatch.app");
+                    }
+                    faceDetector.close();
+                  }
                 }
               },
             ));
@@ -205,7 +249,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     /// Update uer profile
     UserModel().updateProfile(
         userSchool: _schoolController.text.trim(),
-        userOrientation: _jobController.text.trim(),
+        userOrientation: _orientationController.text.trim(),
         userBio: _bioController.text.trim(),
         onSuccess: () {
           /// Show success message
@@ -216,7 +260,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             Navigator.of(context).pop();
 
             /// Go to profilescreen
-            //Todo Usado Navigator
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) =>
                     ProfileScreen(user: UserModel().user, showButtons: false)));

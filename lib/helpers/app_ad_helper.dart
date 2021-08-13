@@ -20,45 +20,46 @@ class AppAdHelper {
   }
 
   // Ad Event Listener
-  // static final AdListener _adListener = AdListener(
-  //   // Called when an ad is successfully received.
-  //   onAdLoaded: (Ad ad) {
-  //     print('Ad loaded.');
-  //     _interstitialAd?.show();
-  //   },
-  //   // Called when an ad request failed.
-  //   onAdFailedToLoad: (Ad ad, LoadAdError error) {
-  //     ad.dispose();
-  //     print('Ad failed to load: $error');
-  //   },
-  //   // Called when an ad opens an overlay that covers the screen.
-  //   onAdOpened: (Ad ad) => print('Ad opened.'),
-  //   // Called when an ad removes an overlay that covers the screen.
-  //   onAdClosed: (Ad ad) {
-  //     ad.load();
-  //     print('Ad closed.');
-  //   },
-  //   // Called when an ad is in the process of leaving the application.
-  //   onApplicationExit: (Ad ad) => print('Left application.'),
-  // );
+  static final AdListener _adListener = AdListener(
+    // Called when an ad is successfully received.
+    onAdLoaded: (Ad ad) {
+      print('Anúncio carregado.');
+      _interstitialAd?.show();
+    },
+    // Called when an ad request failed.
+    onAdFailedToLoad: (Ad ad, LoadAdError error) {
+      ad.dispose();
+      print('O anúncio falhou ao carregar: $error');
+    },
+    // Called when an ad opens an overlay that covers the screen.
+    onAdOpened: (Ad ad) => print('Anúncio aberto.'),
+    // Called when an ad removes an overlay that covers the screen.
+    onAdClosed: (Ad ad) {
+      ad.load();
+      print('Anúncio fechado.');
+    },
+    // Called when an ad is in the process of leaving the application.
+    onApplicationExit: (Ad ad) => print('Esquerda do aplicativo.'),
+  );
   //
   // // Create Interstitial Ad
-  // static Future<void> _createInterstitialAd() async {
-  //   _interstitialAd = InterstitialAd(
-  //       adUnitId: _interstitialID,
-  //       request: AdRequest(),
-  //       listener: _adListener);
-  //     // Load InterstitialAd Ad
-  //     _interstitialAd?.load();
-  // }
+  static Future<void> _createInterstitialAd() async {
+    _interstitialAd = InterstitialAd(
+        adUnitId: _interstitialID,
+        request: AdRequest(),
+        listener: _adListener);
+      // Load InterstitialAd Ad
+      _interstitialAd?.load();
+  }
 
   // Show Interstitial Ads for Non VIP Users
   static Future<void> showInterstitialAd() async {
     /// Check User VIP Status
     if (!UserModel().userIsVip) {
-      // _createInterstitialAd();
+      print('Usuário comum');
+      _createInterstitialAd();
     } else {
-      print('User is VIP');
+      print('Usuário VIP');
     }
   }
 

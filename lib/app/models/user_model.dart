@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:ntp/ntp.dart';
 import 'package:place_picker/entities/location_result.dart';
 import 'package:place_picker/place_picker.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -171,6 +172,7 @@ class UserModel extends Model {
             // Update user device token and subscribe to fcm topic
             updateUserDeviceToken();
             // Go to home screen
+            print(Timestamp.now().toDate().subtract(Duration(days: 1)));
             homeScreen();
           }
           // Debug
@@ -333,6 +335,9 @@ class UserModel extends Model {
         path: 'uploads/users/profiles',
         userId: getFirebaseUser!.uid);
 
+    /// Pegar hora em GTM
+    DateTime dateTime = await NTP.now();
+
     /// Save user information in database
     await _firestore
         .collection(C_USERS)
@@ -357,8 +362,8 @@ class UserModel extends Model {
       USER_COUNTRY: country,
       USER_LOCALITY: locality,
       // End
-      USER_LAST_LOGIN: FieldValue.serverTimestamp(),
-      USER_REG_DATE: FieldValue.serverTimestamp(),
+      USER_LAST_LOGIN: dateTime,
+      USER_REG_DATE:  dateTime,
       USER_DEVICE_TOKEN: userDeviceToken,
       // Set User default settings
       USER_SETTINGS: {
@@ -366,6 +371,9 @@ class UserModel extends Model {
         USER_MAX_AGE: 100, // int
         USER_SHOW_ME: 'everyone', // default
         USER_MAX_DISTANCE: AppModel().appInfo.freeAccountMaxDistance, // double
+        USER_SWIPES: AppModel().appInfo.freeAccountSwipes, // int
+        USER_TIME_SWIPES : dateTime
+
         // USER_MAX_DISTANCE: 1000, // double
       },
     }).then((_) async {
@@ -627,6 +635,7 @@ class UserModel extends Model {
   }
 
   // Filter the User Gender
+  //Todo filtro por genero
   Query filterUserGender(Query query) {
     // Get the opposite gender
     final String oppositeGender =

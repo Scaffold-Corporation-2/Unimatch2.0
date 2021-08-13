@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 
 /// APP SETINGS INFO CONSTANTS - SECTION ///
 ///
-const String APP_NAME = "Uni Match";
+const String APP_NAME = "Unimatch";
 const Color APP_PRIMARY_COLOR = Colors.pink;
 const Color APP_ACCENT_COLOR = Colors.pinkAccent;
-const String APP_VERSION_NAME = "v1.0.3";
+const String APP_VERSION_NAME = "v1.0.0";
 const int ANDROID_APP_VERSION_NUMBER = 3; // Google Play Version Number
 const int IOS_APP_VERSION_NUMBER = 3; // App Store Version Number
 //
 // Add Google Maps - API KEY required for Passport feature
 //
-const String ANDROID_MAPS_API_KEY = "AIzaSyBlcVLVVlre07LtTyTeC_qv6OQt2k5ANUU";
+const String ANDROID_MAPS_API_KEY = "AIzaSyDQHbPVOqoBhcqhp6N5N_g7W5LmyjhW8pk"; //AIzaSyDQHbPVOqoBhcqhp6N5N_g7W5LmyjhW8pk
 const String IOS_MAPS_API_KEY = "YOUR IOS API KEY";
 //
 // GOOGLE ADMOB INTERSTITIAL IDS
 //
 // For Android Platform
-const String ANDROID_INTERSTITIAL_ID = "ca-app-pub-2236562881766006~9666534352";
+const String ANDROID_INTERSTITIAL_ID = "ca-app-pub-2162183208526463/1129939918"; //ca-app-pub-3940256099942544/1033173712
 // For IOS Platform
 const String IOS_INTERSTITIAL_ID = "ca-app-pub-2236562881766006/4868383683";
 
@@ -53,6 +53,8 @@ const String C_VISITS = "Visitas";
 const String C_DISLIKES = "Dislikes";
 const String C_MESSAGES = "Mensagens";
 const String C_NOTIFICATIONS = "Notificacoes";
+const String C_PARTY = "Festas";
+const String C_ATHLETIC = "Atleticas";
 
 /// NOME DE CAMPOS PARA AppInfo COLLECTION  ///
 ///
@@ -66,7 +68,9 @@ const String TERMS_OF_SERVICE_URL = "terms_of_service_url";
 const String FIREBASE_SERVER_KEY = "firebase_server_key";
 const String STORE_SUBSCRIPTION_IDS = "store_subscription_ids";
 const String FREE_ACCOUNT_MAX_DISTANCE = "free_account_max_distance";
+const String FREE_ACCOUNT_SWIPES = "free_account_swipes";
 const String VIP_ACCOUNT_MAX_DISTANCE = "vip_account_max_distance";
+const String VIP_ACCOUNT_SWIPES = "vip_account_swipes";
 // Admob variables
 const String ADMOB_APP_ID = "admob_app_id";
 const String ADMOB_INTERSTITIAL_AD_ID = "admob_interstitial_ad_id";
@@ -95,6 +99,7 @@ const String USER_IS_VERIFIED = "usuario_verificado";
 const String USER_LEVEL = "usuario_nivel";
 const String USER_REG_DATE = "usuario_data_registro";
 const String USER_LAST_LOGIN = "usuario_ultimo_login";
+const String USER_LAST_SWIPES = "usuario_ultimo_tempo_swipe";
 const String USER_DEVICE_TOKEN = "usuario_device_token";
 const String USER_TOTAL_LIKES = "usuario_total_likes";
 const String USER_TOTAL_VISITS = "usuario_total_visitas";
@@ -103,6 +108,8 @@ const String USER_TOTAL_DISLIKED = "usuario_total_disliked";
 const String USER_MIN_AGE = "usuario_min_idade";
 const String USER_MAX_AGE = "usuario_max_idade";
 const String USER_MAX_DISTANCE = "usuario_max_distancia";
+const String USER_SWIPES = "usuario_swipes";
+const String USER_TIME_SWIPES = "usuario_tempo_swipes";
 const String USER_SHOW_ME = "usuario_show_me";
 
 /// DATABASE FIELDS FOR UsuariosSinalizados COLLECTION  ///
@@ -148,6 +155,28 @@ const String DISLIKED_BY_USER_ID = 'disliked_por_usuario_id';
 ///
 const String VISITED_USER_ID = 'visitado_usuario_id';
 const String VISITED_BY_USER_ID = 'visitado_por_usuario_id';
+
+/// DATABASE FIELDS FOR Parties COLLECTION
+///
+
+const String NAME_PARTY = "nome_festa";
+const String DATE_PARTY = "data_festa";
+const String TIME_PARTY = "hora_festa";
+const String LOCAL_PARTY = "nome_local";
+const String PARTY_GEO_POINT = "local_festa";
+const String IMAGES_PARTY = "images_festa";
+const String DESC_PARTY = "descricao_festa";
+const String BUY_PARTY = "ingresso_festa";
+const String COR_PARTY = "cor_festa";
+
+/// DATABASE FIELDS FOR Atletica COLLECTION
+///
+const String NOME_ATHLETIC   = "nome_atletica";
+const String SIGLA_ATHLETIC  = "sigla_atletica";
+const String IMAGE_ATHLETIC  = "imagem_atletica";
+const String CIDADE_ATHLETIC = "cidade_atletica";
+const String UNIVER_ATHLETIC = "universidade_atletica";
+const String CURSO_ATHLETIC  = "curso_atletica";
 
 /// DATABASE SHARED FIELDS FOR COLLECTION
 ///

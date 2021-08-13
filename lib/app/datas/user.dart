@@ -11,7 +11,7 @@ class Usuario {
   final int userBirthMonth;
   final int userBirthYear;
   final String userSchool;
-  final String userJobTitle;
+  final String userOrientation;
   final String userBio;
   final String userPhoneNumber;
   final String userEmail;
@@ -40,7 +40,7 @@ class Usuario {
     required this.userBirthMonth,
     required this.userBirthYear,
     required this.userSchool,
-    required this.userJobTitle,
+    required this.userOrientation,
     required this.userBio,
     required this.userPhoneNumber,
     required this.userEmail,
@@ -71,7 +71,7 @@ class Usuario {
       userBirthMonth: doc[USER_BIRTH_MONTH],
       userBirthYear: doc[USER_BIRTH_YEAR],
       userSchool: doc[USER_SCHOOL] ?? '',
-      userJobTitle: doc[USER_ORIENTATION] ?? '',
+      userOrientation: doc[USER_ORIENTATION] ?? '',
       userBio: doc[USER_BIO] ?? '',
       userPhoneNumber: doc[USER_PHONE_NUMBER] ?? '',
       userEmail: doc[USER_EMAIL] ?? '',

@@ -20,8 +20,17 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <!-- Url Launcher -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
    <application
-        android:label="Uni Match"
+        android:label="Unimatch"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -49,6 +58,12 @@
               android:name="io.flutter.embedding.android.SplashScreenDrawable"
               android:resource="@drawable/launch_background"
               />
+
+            <meta-data
+                android:name="com.google.mlkit.vision.DEPENDENCIES"
+                android:value="ica" />
+            <!-- To use multiple models: android:value="ica,model2,model3" -->
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -76,14 +91,14 @@
        <!-- Sample AdMob App ID for test: ca-app-pub-3940256099942544~3347511713 -->
        <meta-data
            android:name="com.google.android.gms.ads.APPLICATION_ID"
-           android:value="ca-app-pub-2236562881766006~9666534352"/>
+           android:value="ca-app-pub-2162183208526463~6350191598"/>
 
        <!-- Config for place_picker plugin to use the Passport feature!
         // Add your Android API KEY for Google MAPS
         // Get your it from your Google Cloud Platform Developer Account
         // Link: https://console.cloud.google.com/apis/credentials -->
        <meta-data android:name="com.google.android.geo.API_KEY"
-           android:value="AIzaSyBlcVLVVlre07LtTyTeC_qv6OQt2k5ANUU"/>
+           android:value="AIzaSyDQHbPVOqoBhcqhp6N5N_g7W5LmyjhW8pk"/>
 
    </application>
 </manifest>

@@ -99,6 +99,39 @@ class _ShowMeDialogState extends State<ShowMeDialog> {
           color: Colors.black,
           height: 5,
         ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+          child: Column(
+            children: [
+              Text(
+                "Unimatch é um app para todos!",
+                style: TextStyle(
+                  fontSize: 18,
+                    color: Colors.grey[800],
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+              SizedBox(height: 8,),
+
+              Text(
+                "As configurações do filtro e busca referem-se apenas ao sexo "
+                "escolhido pelo usuário e não sua orientação sexual. "
+                "Cada orientação pode ser visualizada no card de pesquisa, "
+                "podendo ser alterado a qualquer momento.",
+                style: TextStyle(
+                    fontSize: 15,
+                  color: Colors.grey[600]
+                ),
+
+              ),
+            ],
+          ),
+        ),
+
+        Divider(
+          color: Colors.black,
+          height: 5,
+        ),
         Builder(
           builder: (context) {
             return Padding(

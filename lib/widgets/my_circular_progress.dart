@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class MyCircularProgress extends StatelessWidget {
   final double size;
 
-  const MyCircularProgress({Key? key, this.size = 45}) : super(key: key);
+  const MyCircularProgress({Key? key, this.size = 50}) : super(key: key);
 
 
   @override

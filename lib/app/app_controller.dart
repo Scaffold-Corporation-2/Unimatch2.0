@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_match/constants/constants.dart';
 part 'app_controller.g.dart';
 
@@ -26,9 +27,7 @@ abstract class _AppController with Store{
   }
 
   String? translate(String key) {
-    if( localizedStrings ==  null){
-    }
-
     return localizedStrings![key] ==  null ? '' : localizedStrings![key];
   }
+
 }

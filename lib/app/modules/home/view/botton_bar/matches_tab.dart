@@ -84,9 +84,6 @@ class _MatchesTabState extends State<MatchesTab> {
                     onTap: () {
                       /// Go to chat screen
                       Modular.to.pushNamed('/chat', arguments: user);
-
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) => ChatScreen(user: user)));
                     });
               });
         },

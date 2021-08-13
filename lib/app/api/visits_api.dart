@@ -65,7 +65,7 @@ class VisitsApi {
             nMessage: nMessage);
         debugPrint('visitUserProfile() -> success');
       } else {
-        print('You already visited the user');
+        print('Você já visitou o usuário');
       }
     }).catchError((e) {
       print('visitUserProfile() -> error: $e');

@@ -25,6 +25,7 @@ class AppNotifications {
           _goToProfileScreen(context, nSenderId);
         } else {
           /// Go Profile Likes Screen
+          print('/profile/likes');
           Modular.to.pushNamed('/profile/likes');
           // Navigator.of(context).push(
           //     MaterialPageRoute(builder: (context) => ProfileLikesScreen()));
@@ -38,6 +39,7 @@ class AppNotifications {
           _goToProfileScreen(context, nSenderId);
         } else {
           /// Go Profile Visits Screen
+          print('/profile/visits');
           Modular.to.pushNamed('/profile/visits');
           // Navigator.of(context).push(
           //     MaterialPageRoute(builder: (context) => ProfileVisitsScreen()));

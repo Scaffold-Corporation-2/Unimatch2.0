@@ -59,7 +59,8 @@ class ProfileCard extends StatelessWidget {
             clipBehavior: Clip.antiAlias,
             elevation: 4.0,
             margin: EdgeInsets.all(0),
-            shape: defaultCardBorder(),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(28.0))),
             child: Container(
               decoration: BoxDecoration(
                 /// User profile image
@@ -92,10 +93,10 @@ class ProfileCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              '${user.userFullname}, '
+                              '${user.userFullname.split(' ')[0]}, '
                               '${userAge.toString()}',
                               style: TextStyle(
-                                  fontSize: this.page == 'discover' ? 20 : 18,
+                                  fontSize: this.page == 'discover' ? 25 : 20,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
                               maxLines: 1,
@@ -104,19 +105,20 @@ class ProfileCard extends StatelessWidget {
                           ),
                         ],
                       ),
+                      SizedBox(height: 5,),
 
                       /// User education
                       Row(
                         children: [
                           SvgIcon("assets/icons/university_icon.svg",
-                              color: Colors.white, width: 20, height: 20),
+                              color: Colors.white, width: 22, height: 22),
                           SizedBox(width: 5),
                           Expanded(
                             child: Text(
                               user.userSchool,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 16,
+                                fontSize: this.page == 'discover' ? 18 : 16,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -124,20 +126,19 @@ class ProfileCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 3),
+                      SizedBox(height: 5),
 
-                      /// User job title
                       Row(
                         children: [
                           SvgIcon("assets/icons/gender_icon.svg",
-                              color: Colors.white, width: 17, height: 17),
+                              color: Colors.white, width: 20, height: 20),
                           SizedBox(width: 5),
                           Expanded(
                             child: Text(
-                              user.userJobTitle,
+                              user.userOrientation,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 16,
+                                fontSize: this.page == 'discover' ? 18 : 16,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -175,20 +176,23 @@ class ProfileCard extends StatelessWidget {
               : Container(width: 0, height: 0),
 
           /// Show message icon
-          this.page == 'matches'
-              ? Positioned(
-                  bottom: 5,
-                  right: 5,
-                  child: Container(
-                      padding: EdgeInsets.all(7),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: SvgIcon("assets/icons/message_icon.svg",
-                          color: Colors.white, width: 30, height: 30)),
-                )
-              : Container(width: 0, height: 0),
+          // Todo verificar se matem ou retira
+          /// icone de msg na TAB Matches
+          // this.page == 'matches'
+          //     ? Positioned(
+          //         bottom: 5,
+          //         right: 5,
+          //         child: Container(
+          //             padding: EdgeInsets.all(7),
+          //             decoration: BoxDecoration(
+          //               color: Theme.of(context).primaryColor,
+          //               shape: BoxShape.circle,
+          //             ),
+          //             child: SvgIcon("assets/icons/message_icon.svg",
+          //                 color: Colors.white, width: 30, height: 30)
+          //         ),
+          //       )
+          //     : Container(width: 0, height: 0),
 
           /// Show flag profile icon
           this.page == 'discover'

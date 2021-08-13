@@ -37,7 +37,7 @@ class UserGallery extends StatelessWidget {
               boxFit = BoxFit.cover;
             }
           }
-          /// Show image widget
+          /// Show image -widget
           return GalleryImageCard(
             imageProvider: imageProvider,
             boxFit: boxFit,

@@ -43,11 +43,10 @@ class AppWidget extends StatelessWidget {
               }
 
               /// Se a localidade do dispositivo não for compatível, use o primeiro
-              /// da lista (inglês, neste caso).
               ///
               return supportedLocales.first;
             },
-              title: 'Uni Match',
+              title: 'Unimatch',
               theme: _appTheme(),
               initialRoute: '/',
 
@@ -67,8 +66,14 @@ ThemeData _appTheme() {
     primaryColor: APP_PRIMARY_COLOR,
     accentColor: APP_ACCENT_COLOR,
     scaffoldBackgroundColor: Colors.white,
+
     inputDecorationTheme: InputDecorationTheme(
         errorStyle: TextStyle(fontSize: 16),
+        labelStyle: TextStyle(fontSize: 18, color: APP_PRIMARY_COLOR),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(28),
+          borderSide: BorderSide(color: APP_PRIMARY_COLOR,),
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(28),
         )),

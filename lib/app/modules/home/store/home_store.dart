@@ -2,15 +2,19 @@ import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:mobx/mobx.dart';
+import 'package:place_picker/entities/location_result.dart';
 import 'package:uni_match/app/api/conversations_api.dart';
 import 'package:uni_match/app/api/notifications_api.dart';
+import 'package:uni_match/app/modules/profile/view/passaport/passport_screen.dart';
 import 'package:uni_match/helpers/app_notifications.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/constants/constants.dart';
+import 'package:uni_match/widgets/show_scaffold_msg.dart';
 part 'home_store.g.dart';
 
 class HomeStore = _HomeStore with _$HomeStore;
@@ -52,7 +56,7 @@ abstract class _HomeStore with Store{
       // Chek past purchases result
       if (pastPurchases.pastPurchases.isNotEmpty) {
         for (var purchase in pastPurchases.pastPurchases) {
-          /// Updae User VIP Status to true
+          /// Update User VIP Status to true
           UserModel().setUserVip();
           // Set Vip Subscription Id
           UserModel().setActiveVipId(purchase.productID);
@@ -180,6 +184,49 @@ abstract class _HomeStore with Store{
       // Handle notification data
       await handleNotificationClick(message?.data, context);
     });
+  }
+
+//******************************************************************************
+  /// Passaport
+  ///
+  Future<void> goToPassportScreen(context) async {
+    // Get picked location result
+    LocationResult? result = await Navigator.of(context).push<LocationResult?>(
+        MaterialPageRoute(builder: (context) => PassportScreen()));
+    // Handle the retur result
+    if (result != null) {
+      // Update current your location
+      _updateUserLocation(context, true, locationResult: result);
+      // Debug info
+      print(
+          '_goToPassportScreen() -> result: ${result.country!.name}, ${result.city!.name}');
+    } else {
+      print('_goToPassportScreen() -> result: empty');
+    }
+  }
+
+  // Update User Location
+  Future<void> _updateUserLocation(context, bool isPassport,
+      {LocationResult? locationResult}) async {
+    /// Update user location: Country & City an Geo Data
+
+    /// Update user data
+    await UserModel().updateUserLocation(
+        isPassport: isPassport,
+        locationResult: locationResult,
+        onSuccess: () {
+          // Show success message
+          showScaffoldMessage(
+              context: context,
+              message: _i18n.translate("location_updated_successfully")!);
+        },
+        onFail: () {
+          // Show error message
+          showScaffoldMessage(
+              context: context,
+              message:
+              _i18n.translate("we_were_unable_to_update_your_location")!);
+        });
   }
 
 }
