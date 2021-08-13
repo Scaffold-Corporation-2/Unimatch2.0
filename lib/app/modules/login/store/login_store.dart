@@ -161,7 +161,9 @@ abstract class _LoginStore with Store{
   @observable
   String? selectedOrientation;
 
-  List<String> sexualOrientation  = ['Heterossexual', 'Homossexual', 'Bissexual', 'Assexual', 'Pansexual'];
+  List<String> sexualOrientation  = ['Heterossexual', 'Gay', 'Lésbica',
+                                     'Bissexual', 'Assexual', 'Pansexual',
+                                     'Demissexual', 'Queer', 'Questionado'];
 
   @observable
   String? birthday;

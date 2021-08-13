@@ -122,8 +122,6 @@ class _ConversationsTabState extends State<ConversationsTab> {
 
                           /// Go to chat screen
                           Modular.to.pushNamed('/chat', arguments: user);
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (context) => ChatScreen(user: user)));
                         },
                       ),
                     );

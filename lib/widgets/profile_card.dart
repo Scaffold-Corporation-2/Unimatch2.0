@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:uni_match/app/datas/user.dart';
 import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/helpers/app_helper.dart';
@@ -7,8 +8,6 @@ import 'package:uni_match/widgets/show_like_or_dislike.dart';
 import 'package:uni_match/widgets/svg_icon.dart';
 import 'package:uni_match/plugins/swipe_stack/swipe_stack.dart';
 import 'package:uni_match/dialogs/flag_user_dialog.dart';
-
-import 'default_card_border.dart';
 
 class ProfileCard extends StatelessWidget {
   /// User object
@@ -95,17 +94,16 @@ class ProfileCard extends StatelessWidget {
                             child: Text(
                               '${user.userFullname.split(' ')[0]}, '
                               '${userAge.toString()}',
-                              style: TextStyle(
-                                  fontSize: this.page == 'discover' ? 25 : 20,
+                              style: GoogleFonts.eczar(
+                                  fontSize: this.page == 'discover' ? 30 : 20,
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                                  fontWeight: FontWeight.w500),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 5,),
 
                       /// User education
                       Row(
@@ -174,25 +172,6 @@ class ProfileCard extends StatelessWidget {
           this.page == 'discover'
               ? ShowLikeOrDislike(position: position!)
               : Container(width: 0, height: 0),
-
-          /// Show message icon
-          // Todo verificar se matem ou retira
-          /// icone de msg na TAB Matches
-          // this.page == 'matches'
-          //     ? Positioned(
-          //         bottom: 5,
-          //         right: 5,
-          //         child: Container(
-          //             padding: EdgeInsets.all(7),
-          //             decoration: BoxDecoration(
-          //               color: Theme.of(context).primaryColor,
-          //               shape: BoxShape.circle,
-          //             ),
-          //             child: SvgIcon("assets/icons/message_icon.svg",
-          //                 color: Colors.white, width: 30, height: 30)
-          //         ),
-          //       )
-          //     : Container(width: 0, height: 0),
 
           /// Show flag profile icon
           this.page == 'discover'
