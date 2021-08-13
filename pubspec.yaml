@@ -68,7 +68,7 @@ dependencies:
   scoped_model: ^2.0.0-nullsafety.0
 
     # Used to select images from the User's device image library or take a new photo using the camera
-  image_picker: ^0.8.3+1
+  image_picker: ^0.8.3+2
 
     # Used to Crop/Rotate Selected images from user's device
   image_cropper: ^1.4.1
@@ -135,6 +135,21 @@ dependencies:
 
     #Biblioteca para contar tempo
   custom_timer: ^0.0.6
+
+    #Biblioteca de fontes
+  google_fonts: ^2.1.0
+
+    #Biblioteca de arrastar pro lado
+  swipe_to: 0.1.0-nullsafety.1
+
+    #Biblioteca de emoji_picker_flutter:
+  emoji_picker_flutter: ^1.0.6
+
+    #Biblioteca de animação
+  animate_do: ^2.0.0
+
+    #Biblioteca do botao de reacao
+  flutter_reaction_button: ^1.0.8
 
   flutter_cupertino_datetime_picker: ^2.0.1
 
