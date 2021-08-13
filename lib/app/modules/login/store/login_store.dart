@@ -151,13 +151,6 @@ abstract class _LoginStore with Store {
   }
 
   //******************************************************************************
-  /// Login com Google ///
-  @action
-  Future<void> googleLogin() async {
-    await UserModel().authGoogleAccount();
-  }
-
-  //******************************************************************************
   /// Criar conta ///
 
   //******************************************************************************
@@ -185,13 +178,10 @@ abstract class _LoginStore with Store {
   @observable
   String? selectedOrientation;
 
-  List<String> sexualOrientation = [
-    'Heterossexual',
-    'Homossexual',
-    'Bissexual',
-    'Assexual',
-    'Pansexual'
-  ];
+  List<String> sexualOrientation  = ['Heterossexual', 'Gay', 'Lésbica',
+                                     'Bissexual', 'Assexual', 'Pansexual',
+                                     'Demissexual', 'Queer', 'Questionado'];
+
 
   @observable
   String? birthday;

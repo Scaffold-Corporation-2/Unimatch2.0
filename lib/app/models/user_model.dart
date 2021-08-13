@@ -144,6 +144,53 @@ class UserModel extends Model {
     return age;
   }
 
+  /// Login com E-mail e Senha
+  Future authEmailAccount(String userEmail, String password) async {
+    try {
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: userEmail,
+        password: password,
+      );
+      return true;
+    } catch (error) {
+      var errorMessage;
+
+      switch (error) {
+        case "invalid-email":
+          errorMessage = "Email inválido";
+          return errorMessage;
+
+        case "wrong-password":
+          errorMessage = "Senha incorreta";
+          return errorMessage;
+
+        case "user-not-found":
+          errorMessage = "Usuário não encontrado";
+
+          return errorMessage;
+        case "user-disable":
+          errorMessage = "Usuário bloqueado ou inativo";
+          return errorMessage;
+
+        case "too-many-requests":
+          errorMessage = "Muitas tentativas. Tente novamente mais tarde";
+          return errorMessage;
+
+        case "operation-not-allowed":
+          errorMessage = "Login desabilitado.";
+          return errorMessage;
+
+        case "email-already-in-use":
+          errorMessage = "O e-mail fornecido já está em uso por outro usuário";
+          return errorMessage;
+
+        default:
+          errorMessage = "Ocorreu um erro desconhecido";
+          return errorMessage;
+      }
+    }
+  }
+
 
   /// Authenticate User Account
   Future<void> authUserAccount({

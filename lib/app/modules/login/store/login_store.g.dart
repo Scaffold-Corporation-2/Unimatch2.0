@@ -130,11 +130,12 @@ mixin _$LoginStore on _LoginStore, Store {
     });
   }
 
-  final _$googleLoginAsyncAction = AsyncAction('_LoginStore.googleLogin');
+  final _$emailLoginAsyncAction = AsyncAction('_LoginStore.emailLogin');
 
   @override
-  Future<void> googleLogin() {
-    return _$googleLoginAsyncAction.run(() => super.googleLogin());
+  Future<void> emailLogin(String userEmail, String userPassword) {
+    return _$emailLoginAsyncAction
+        .run(() => super.emailLogin(userEmail, userPassword));
   }
 
   final _$getImageAsyncAction = AsyncAction('_LoginStore.getImage');
