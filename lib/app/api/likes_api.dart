@@ -75,8 +75,7 @@ class LikesApi {
 
   /// Get users who liked current user profile
   Future<List<DocumentSnapshot>> getLikedMeUsers(
-      {bool loadMore = false, 
-      DocumentSnapshot? userLastDoc}) async {
+      {bool loadMore = false, DocumentSnapshot? userLastDoc}) async {
     /// Build Users query
     Query usersQuery = _firestore
         .collection(C_LIKES)
@@ -127,7 +126,8 @@ class LikesApi {
           await doc.reference.delete();
         });
         debugPrint('deleteLikedUsers() -> deleted');
-      }
+      } else
+        debugPrint('deleteLikedUsers() -> not deleted');
     });
   }
 
@@ -145,7 +145,8 @@ class LikesApi {
           await doc.reference.delete();
         });
         debugPrint('deleteLikedMeUsers() -> deleted');
-      }
+      } else
+        debugPrint('deleteLikedMeUsers() -> not deleted');
     });
   }
 }

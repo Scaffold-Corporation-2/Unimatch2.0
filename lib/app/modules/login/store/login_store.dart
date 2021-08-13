@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:mobx/mobx.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/models/app_model.dart';
@@ -14,11 +13,12 @@ import 'package:uni_match/widgets/image_source_sheet.dart';
 import 'package:uni_match/widgets/show_scaffold_msg.dart';
 import 'package:uni_match/dialogs/common_dialogs.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 part 'login_store.g.dart';
 
 class LoginStore = _LoginStore with _$LoginStore;
 
-abstract class _LoginStore with Store{
+abstract class _LoginStore with Store {
   final AppController i18n = Modular.get();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -32,7 +32,7 @@ abstract class _LoginStore with Store{
   String phoneCode = '+55'; // Define yor default phone code
   String initialSelection = 'BR'; // Define yor default country code
 
-  void _navegarPaginas(String nomeRota){
+  void _navegarPaginas(String nomeRota) {
     Modular.to.navigate(nomeRota);
   }
 
@@ -43,9 +43,9 @@ abstract class _LoginStore with Store{
   addForm() => formKey = GlobalKey<FormState>();
 
 //******************************************************************************
-                          /// Login com Numéro ///
+  /// Login com Número ///
   ///
-  progress(context){
+  progress(context) {
     pr = ProgressDialog(context, isDismissible: false);
   }
 
@@ -62,7 +62,6 @@ abstract class _LoginStore with Store{
           UserModel().authUserAccount(homeScreen: () {
             /// Go to home screen
             _navegarPaginas("/home");
-
           }, signUpScreen: () {
             /// Go to sign up screen
 
@@ -73,7 +72,8 @@ abstract class _LoginStore with Store{
           // Hide progreess dialog
           pr.hide();
           // Go to verification code screen
-          Modular.to.pushNamed('/login/signIn/phone/verification', arguments: code);
+          Modular.to
+              .pushNamed('/login/signIn/phone/verification', arguments: code);
 
           // Navigator.of(context).push(MaterialPageRoute(
           //     builder: (context) => VerificationCodeScreen(
@@ -88,7 +88,7 @@ abstract class _LoginStore with Store{
           if (errorType == 'invalid_number') {
             // Check error type
             final String message =
-            i18n.translate("we_were_unable_to_verify_your_number")!;
+                i18n.translate("we_were_unable_to_verify_your_number")!;
             // Show error message
             // Validate context
             if (mounted) {
@@ -102,8 +102,8 @@ abstract class _LoginStore with Store{
   /// Check and request location permission
   Future<void> checkLocationPermission(
       {required VoidCallback onGpsDisabled,
-        required VoidCallback onDenied,
-        required VoidCallback onGranted}) async {
+      required VoidCallback onDenied,
+      required VoidCallback onGranted}) async {
     /// Check if GPS is enabled
     if (!(await Geolocator.isLocationServiceEnabled())) {
       // Callback function
@@ -112,7 +112,7 @@ abstract class _LoginStore with Store{
     } else {
       /// Request permission
       final LocationPermission permission =
-      await Geolocator.requestPermission();
+          await Geolocator.requestPermission();
 
       switch (permission) {
         case LocationPermission.denied:
@@ -135,13 +135,37 @@ abstract class _LoginStore with Store{
     }
   }
 
-//******************************************************************************
-                             /// Criar conta ///
+  //******************************************************************************
+  /// Login Email ///
+  @action
+  Future<void> emailLogin(String userEmail, String userPassword) async {
+    await UserModel().authEmailAccount(userEmail, userPassword);
+    UserModel().authUserAccount(
+      homeScreen: () {
+        _navegarPaginas("/home");
+      },
+      signUpScreen: () {
+        _navegarPaginas("/login/signUp");
+      },
+    );
+  }
 
+  //******************************************************************************
+  /// Login com Google ///
+  @action
+  Future<void> googleLogin() async {
+    await UserModel().authGoogleAccount();
+  }
+
+  //******************************************************************************
+  /// Criar conta ///
+
+  //******************************************************************************
   /// User Birthday info
   int userBirthDay = 0;
   int userBirthMonth = 0;
   int userBirthYear = DateTime.now().year;
+
   // End
 
   @observable
@@ -161,9 +185,13 @@ abstract class _LoginStore with Store{
   @observable
   String? selectedOrientation;
 
-  List<String> sexualOrientation  = ['Heterossexual', 'Gay', 'Lésbica',
-                                     'Bissexual', 'Assexual', 'Pansexual',
-                                     'Demissexual', 'Queer', 'Questionado'];
+  List<String> sexualOrientation = [
+    'Heterossexual',
+    'Homossexual',
+    'Bissexual',
+    'Assexual',
+    'Pansexual'
+  ];
 
   @observable
   String? birthday;
@@ -190,61 +218,26 @@ abstract class _LoginStore with Store{
     await showModalBottomSheet(
         context: context,
         builder: (context) => ImageSourceSheet(
-          onImageSelected: (image) async {
-            if (image != null) {
-                if (Platform.isAndroid) {
-
-                  final inputImage = InputImage.fromFile(image);
-                  final faceDetector = GoogleMlKit.vision.faceDetector();
-                  final List<Face> faces = await faceDetector.processImage(inputImage);
-
-                  debugPrint("Faces detectadas: ${faces.length}");
-
-                  if(faces.length == 1){
-
-                    imageFile = image;
-                    Navigator.of(context).pop();
-
-                  }else if(faces.length > 1){
-
-                    debugPrint('Varias pessoas na foto');
-
-                    infoDialog(
-                        context,
-                        message: "Não utilize foto em grupo no seu perfil da Unimatch. Isso é prejudicial para você mesmo!");
-
-                  }else{
-                    debugPrint('Pessoa não identificada');
-
-                    infoDialog(
-                        context,
-                        message: "Não foi possível identificar você na foto. "
-                            "Se você estiver na imagem, tente novamente mais tarde ou tente adicionar outra foto,  "
-                            "mas se o problema persistir, entre em contato conosco via instagram: @unimatch.app");
-                  }
-
-                  faceDetector.close();
+              onImageSelected: (image) {
+                if (image != null) {
+                  imageFile = image;
+                  Navigator.of(context).pop();
                 }
-                //para IOS a versão mínima é a 10.0(validar quando for IOS
-                else if (Platform.isIOS){
-
-                }
-            }
-          },
-        ));
+              },
+            ));
   }
 
   @action
   updateUserBithdayInfo(DateTime date) {
-      // Update the inicial date
-      initialDateTime = date;
-      // Set for label
-      // birthday = date.toString().split(' ')[0];
-      birthday = UtilData.obterDataDDMMAAAA(date);
-      // User birthday info
-      userBirthDay = date.day;
-      userBirthMonth = date.month;
-      userBirthYear = date.year;
+    // Update the inicial date
+    initialDateTime = date;
+    // Set for label
+    // birthday = date.toString().split(' ')[0];
+    birthday = UtilData.obterDataDDMMAAAA(date);
+    // User birthday info
+    userBirthDay = date.day;
+    userBirthMonth = date.month;
+    userBirthYear = date.year;
   }
 
   // Get Date time picker app locale
@@ -252,9 +245,11 @@ abstract class _LoginStore with Store{
     // Inicial value
     DateTimePickerLocale _locale = DateTimePickerLocale.pt_br;
 
-    if(i18n.locale.toString() == 'pt_br') _locale = DateTimePickerLocale.pt_br;
-    if(i18n.locale.toString() == 'en') _locale = DateTimePickerLocale.en_us;
-    else _locale = DateTimePickerLocale.pt_br;
+    if (i18n.locale.toString() == 'pt_br') _locale = DateTimePickerLocale.pt_br;
+    if (i18n.locale.toString() == 'en')
+      _locale = DateTimePickerLocale.en_us;
+    else
+      _locale = DateTimePickerLocale.pt_br;
 
     return _locale;
   }
@@ -276,8 +271,10 @@ abstract class _LoginStore with Store{
       minDateTime: DateTime(1920, 1, 1),
       maxDateTime: DateTime.now(),
       initialDateTime: initialDateTime,
-      dateFormat: 'dd-MMMM-yyyy', // Date format
-      locale: _getDatePickerLocale(), // Set your App Locale here
+      dateFormat: 'dd-MMMM-yyyy',
+      // Date format
+      locale: _getDatePickerLocale(),
+      // Set your App Locale here
       onClose: () => print("----- onClose -----"),
       onCancel: () => print('onCancel'),
       onChange: (dateTime, List<int> index) {
@@ -309,7 +306,7 @@ abstract class _LoginStore with Store{
           bgcolor: Colors.red);
 
       /// Validate form
-    }else if (selectedGender == null) {
+    } else if (selectedGender == null) {
       // Show error message
       showScaffoldMessage(
           context: context,
@@ -317,7 +314,7 @@ abstract class _LoginStore with Store{
           bgcolor: Colors.red);
 
       /// Validate form
-    }else if (selectedOrientation == null) {
+    } else if (selectedOrientation == null) {
       // Show error message
       showScaffoldMessage(
           context: context,
@@ -325,7 +322,7 @@ abstract class _LoginStore with Store{
           bgcolor: Colors.red);
 
       /// Validate form
-    }else if (nameController.text.isEmpty) {
+    } else if (nameController.text.isEmpty) {
       // Show error message
       showScaffoldMessage(
           context: context,
@@ -341,7 +338,7 @@ abstract class _LoginStore with Store{
           bgcolor: Colors.red);
 
       /// Validate form
-    }else if (UserModel().calculateUserAge(initialDateTime) < 18) {
+    } else if (UserModel().calculateUserAge(initialDateTime) < 18) {
       // Show error message
       showScaffoldMessage(
           context: context,
@@ -349,12 +346,12 @@ abstract class _LoginStore with Store{
           message: i18n.translate(
               "only_18_years_old_and_above_are_allowed_to_create_an_account")!,
           bgcolor: Colors.red);
-
     } else if (!formKey!.currentState!.validate()) {
     } else {
       /// Call all input onSaved method
       formKey!.currentState!.save();
       isLoading = true;
+
       /// Call sign up method
       UserModel().signUp(
           userPhotoFile: imageFile!,
@@ -373,9 +370,9 @@ abstract class _LoginStore with Store{
                 message: i18n
                     .translate("your_account_has_been_created_successfully")!,
                 positiveAction: () {
-                  // Execute action
-                  Modular.to.navigate('/home');
-                });
+              // Execute action
+              Modular.to.navigate('/home');
+            });
           },
           onFail: (error) {
             // Debug error
@@ -389,9 +386,8 @@ abstract class _LoginStore with Store{
     }
   }
 
-
 //******************************************************************************
-              /// Acessar - Google Play / Apple Store
+  /// Acessar - Google Play / Apple Store
 
   /// Open app store - Google Play / Apple Store
   Future<void> openAppStore() async {
