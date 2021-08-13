@@ -52,7 +52,15 @@ class ChatMessage extends StatelessWidget {
       child: Row(
         children: <Widget>[
           /// User receiver photo Left
-          !isUserSender ? _userProfilePhoto : Container(width: 0, height: 0),
+          !isUserSender ? Column(
+            children: [
+              _userProfilePhoto,
+              if(likeMsg)Icon(Icons.favorite,
+                color: Colors.red,
+                size: 30,
+              )
+            ],
+          ) : Container(width: 0, height: 0),
 
           SizedBox(width: 10),
 
@@ -111,10 +119,6 @@ class ChatMessage extends StatelessWidget {
                                         child: Image.network(imageLink!))),
                               ),
                             )
-
-
-
-
                           )
                           /// Text message
                           :
@@ -123,77 +127,45 @@ class ChatMessage extends StatelessWidget {
                               width: replyMessage.isNotEmpty
                                   ? MediaQuery.of(context).size.width * 0.65
                                   : null,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left:4,top: 3),
-                                    child: Text(
-                                      textMessage ?? "",
-                                      style: GoogleFonts.eczar(
-                                         height: 1.3,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                          color: isUserSender
-                                              ? Colors.white
-                                              : Colors.white),
-                                      textAlign: TextAlign.start,
-                                    ),
-                                  ),
-                                ],
+                              child: Padding(
+                                padding: const EdgeInsets.only(left:4,top: 3),
+                                child: Text(
+                                  textMessage ?? "",
+                                  style: GoogleFonts.eczar(
+                                     height: 1.3,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                      color: isUserSender
+                                          ? Colors.white
+                                          : Colors.white),
+                                  textAlign: TextAlign.start,
+                                ),
                               ),
                             ),
                     ],
                   ),
                 ),
-
                 SizedBox(height: 5),
-
                 /// Message time ago
                 Container(
                     margin: const EdgeInsets.only(left: 20, right: 20),
-                    child: Text(timeAgo)),
-                // isImage? FlutterReactionButton(onReactionChanged: (reaction,index){
-                //
-                // },
-                //   reactions: <Reaction>[
-                //     Reaction(
-                //       icon: Icon(
-                //         Icons.whatshot,
-                //         color: Colors.redAccent,
-                //       ),
-                //     ),
-                //     Reaction(
-                //       icon: Icon(
-                //         Icons.emoji_emotions_outlined,
-                //         color: Colors.yellow,
-                //       ),
-                //     ),
-                //     Reaction(
-                //       icon: Icon(
-                //         Icons.favorite,
-                //         color: Colors.red,
-                //       ),
-                //     ),
-                //   ],
-                //   initialReaction: Reaction(
-                //       icon: Icon(
-                //         Icons.emoji_emotions_outlined,
-                //         color: Colors.black,
-                //       )
-                //   ),
-                //   boxColor: Colors.white,
-                //   boxRadius: 10,
-                //   boxDuration: Duration(milliseconds: 500),
-                //   boxAlignment: AlignmentDirectional.bottomEnd,
-                // ): SizedBox(),
+                    child: Text(timeAgo)
+                ),
 
               ],
             ),
           ),
           SizedBox(width: 1),
           /// Current User photo right
-          isUserSender ? _userProfilePhoto : Container(width: 0, height: 0),
+          isUserSender ? Column(
+            children: [
+              _userProfilePhoto,
+              if(likeMsg)Icon(Icons.favorite,
+                color: Colors.red,
+                size: 30,
+              )
+            ],
+          ) : Container(width: 0, height: 0),
         ],
       ),
     );

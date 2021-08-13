@@ -40,87 +40,112 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.3
   flutter_modular: ^3.3.1
-  mobx: ^2.0.1
-  flutter_mobx: ^2.0.0
+  mobx: ^2.0.4
+  flutter_mobx: ^2.0.2
 
-    # FIREBASE Packages Section
+  # FIREBASE Packages Section
   firebase_core: ^1.4.0
   firebase_auth: ^3.0.1
   cloud_firestore: ^2.4.0
   firebase_messaging: ^10.0.4
   firebase_storage: ^10.0.1
-  google_mobile_ads: ^0.13.2
-  # END
+  google_mobile_ads: ^0.12.1+1
+    # END
 
-    # This plugin help us to Sell VIP Subscription Plans in app
+  # This plugin help us to Sell VIP Subscription Plans in app
   in_app_purchase: ^0.5.2 #Olhar os bugs
 
-    # This plugin help us to query users by geolocation center
+  # This plugin help us to query users by geolocation center
   geoflutterfire: ^3.0.1
 
-    # This plugin help us to use custom svg icons
+  # This plugin help us to use custom svg icons
   flutter_svg: ^0.22.0
 
-    # Used to generate app icon launcher for both platforms android and iOS
-  flutter_launcher_icons: ^0.9.0
-
-    # Used to Select User Country Code
+  # Used to Select User Country Code
   country_code_picker: ^2.0.2
 
-    # Used to Manage Application State
+  # Used to Manage Application State
   scoped_model: ^2.0.0-nullsafety.0
 
-    # Used to select images from the User's device image library or take a new photo using the camera
-  image_picker: ^0.8.2
+  # Used to select images from the User's device image library or take a new photo using the camera
+  image_picker: ^0.8.3+2
 
-    # Used to Crop/Rotate Selected images from user's device
+  # Used to Crop/Rotate Selected images from user's device
   image_cropper: ^1.4.1
 
-    # Used to open link schemes in application or browser
+  # Used to open link schemes in application or browser
   url_launcher: ^6.0.3
 
-    # Used to get User location by GPS
-  geolocator: ^7.3.0
+  # Used to get User location by GPS
+  geolocator: ^7.4.0
 
-    # Used to translate User latitude and longitude coordinates into a readable address
+  # Used to translate User latitude and longitude coordinates into a readable address
   geocoding: ^2.0.0
 
-    # This plugin help us to create Passport feature
+  # This plugin help us to create Passport feature
   place_picker: ^0.9.19-nullsafety
 
-    # Used to create placeholder widget while app is loading the image
+  # Used to create placeholder widget while app is loading the image
   shimmer: ^2.0.0
 
-
-    # Used to create fuzzy timestamps: (e.g. "3 minutes ago")
+  # Used to create fuzzy timestamps: (e.g. "3 minutes ago")
   timeago: ^3.1.0
 
-    # Used to share application content in other applications
+  # Used to share application content in other applications
   share: ^2.0.4
 
-    #Tradução para pt-Br de alguns componentes
+  #Tradução para pt-Br de alguns componentes
   flutter_cupertino_localizations: ^1.0.1
 
-    #Biblioteca para alerta em widget
-  rflutter_alert: ^2.0.2
+  #Biblioteca para alerta em widget
+  rflutter_alert: ^2.0.4
 
-    #Biblioteca de tipos de carregamentos
+  #Biblioteca de tipos de carregamentos
   flutter_spinkit: ^5.0.0
 
-    #Biblioteca de tipos de Formatters
-  brasil_fields: ^1.1.3
+  #Biblioteca de tipos de Formatters
+  brasil_fields: ^1.1.4
 
-    #Biblioteca de fontes
+  #Biblioteca para story instagram
+  story: ^0.5.1
+
+  #Biblioteca para animação em list
+  flutter_staggered_animations: ^1.0.0
+
+  #Biblioteca para animação
+  lottie: ^1.1.0
+
+  #Biblioteca para animação
+  animator: ^3.1.0
+
+  #Biblioteca para animação
+  flare_flutter: ^3.0.2
+
+  #Biblioteca para salvar dados em cash
+  shared_preferences: ^2.0.6
+
+  #Biblioteca para enviar para maps
+  map_launcher: ^2.1.1
+
+  #Biblioteca para machine learning
+  google_ml_kit: ^0.7.0
+
+  #Biblioteca para buscar horas GTM - 00:00
+  ntp: ^2.0.0
+
+  #Biblioteca para contar tempo
+  custom_timer: ^0.0.6
+
+  #Biblioteca de fontes
   google_fonts: ^2.1.0
 
-    #Biblioteca de arrastar pro lado
+  #Biblioteca de arrastar pro lado
   swipe_to: 0.1.0-nullsafety.1
 
-    #Biblioteca de emoji_picker_flutter:
+  #Biblioteca de emoji_picker_flutter:
   emoji_picker_flutter: ^1.0.6
 
-
-    #Biblioteca de animação
+  #Biblioteca de animação
   animate_do: ^2.0.0
 
   #Biblioteca do botao de reacao
@@ -128,13 +153,18 @@ dependencies:
 
   flutter_cupertino_datetime_picker: ^2.0.1
 
-
 dev_dependencies:
+  #Biblioteca para splash_screen nativo
+  flutter_native_splash: ^1.2.1
+
+  #Biblioteca para icone do app
+  flutter_launcher_icons: ^0.9.1
+
   flutter_modular_test: ^1.0.1
   flutter_test:
     sdk: flutter
-  mobx_codegen: ^2.0.1+3
-  build_runner: ^2.0.6
+  mobx_codegen: ^2.0.2
+  build_runner: ^2.1.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -149,9 +179,11 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-     - assets/images/
-     - assets/icons/
-     - assets/lang/
+    - assets/images/
+    - assets/icons/
+    - assets/lang/
+    - assets/flare/
+    - assets/lottie/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -164,16 +196,6 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  #  fonts:
-  #    - family: Eczar
-  #      fonts:
-  #        - asset: assets/fonts/EczarBold.ttf
-  #          weight: 500
-  #        - asset: assets/fonts/EczarExtraBold.ttf
-  #        - asset: assets/fonts/Medium.ttf
-  #        - asset: assets/fonts/Regular.ttf
-  #        - asset: assets/fonts/SemiBold.ttf
-
   # fonts:
   #   - family: Schyler
   #     fonts:
@@ -193,3 +215,7 @@ flutter_icons:
   ios: true
   remove_alpha_ios: true
   image_path: "assets/images/app_logo.png"
+
+flutter_native_splash:
+  image: assets/images/app_logo_white.png
+  color: "#e91e63"

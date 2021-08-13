@@ -18,6 +18,7 @@ import 'package:uni_match/app/datas/user.dart';
 import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/app/modules/chat/store/chat_store.dart';
 import 'package:uni_match/app/modules/chat/widgets/reply_message_widget.dart';
+import 'package:uni_match/app/modules/chat/widgets/show_modal_bottom.dart';
 import 'package:uni_match/app/modules/profile/view/profile_screen.dart';
 import 'package:uni_match/constants/constants.dart';
 import 'package:uni_match/dialogs/common_dialogs.dart';
@@ -133,9 +134,11 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
         _pr.hide();
         break;
     }
+    String idDoc = _messagesApi.getId(senderId: UserModel().user.userId, receiverId:widget.user.userId);
 
     /// Save message for current user
     await _messagesApi.saveMessage(
+      idDoc: idDoc,
       type: type,
       replyType: replyType,
       fromUserId: UserModel().user.userId,
@@ -153,6 +156,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
 
     /// Save copy message for receiver
     await _messagesApi.saveMessage(
+      idDoc: idDoc,
       type: type,
       replyType: replyType,
       fromUserId: UserModel().user.userId,
@@ -178,24 +182,27 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
         nUserDeviceToken: widget.user.userDeviceToken);
   }
 
-
-
   Future<void> _updateMenssage({
     required likeMsg,
+    required idDoc,
   }) async {
-      print("update 1");
+    print("update 1");
+
     /// Save message for current user
     await _messagesApi.updateMessage(
       senderId: UserModel().user.userId,
       receiverId: widget.user.userId,
       likeMsg: likeMsg,
+      idDoc:idDoc,
     );
-      print("update 2");
+    print("update 2");
+
     /// Save copy message for receiver
     await _messagesApi.updateMessage(
       senderId: widget.user.userId,
       receiverId: UserModel().user.userId,
       likeMsg: likeMsg,
+      idDoc:idDoc,
     );
 
     /// Send push notification
@@ -207,10 +214,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
     //     nSenderId: UserModel().user.userId,
     //     nUserDeviceToken: widget.user.userDeviceToken);
   }
-
-
-
-
 
   @override
   void initState() {
@@ -367,7 +370,9 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             /// how message list
-            Expanded(child: Container(color: Colors.white54, child: _showMessages())),
+            Expanded(
+                child:
+                    Container(color: Colors.white54, child: _showMessages())),
 
             /// Text Composer
             ///
@@ -395,9 +400,24 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                     minLines: 1,
                                     autocorrect: false,
                                     decoration: InputDecoration(
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: controller.replyMessage != ''
+                                              ? Radius.zero
+                                              : Radius.circular(25),
+                                          topRight:
+                                              controller.replyMessage != ''
+                                                  ? Radius.zero
+                                                  : Radius.circular(25),
+                                          bottomLeft: Radius.circular(25),
+                                          bottomRight: Radius.circular(25),
+                                        ),
+                                      ),
                                       prefixIcon: Padding(
-                                        padding: const EdgeInsetsDirectional.only(
-                                            bottom: 0),
+                                        padding:
+                                            const EdgeInsetsDirectional.only(
+                                                bottom: 0),
                                         child: IconButton(
                                             iconSize: 30,
                                             icon: Icon(
@@ -428,16 +448,18 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                           }),
                                       filled: true,
                                       fillColor: Colors.grey[100],
-                                      hintText: _i18n.translate("type_a_message"),
+                                      hintText:
+                                          _i18n.translate("type_a_message"),
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide.none,
                                         borderRadius: BorderRadius.only(
                                           topLeft: controller.replyMessage != ''
                                               ? Radius.zero
                                               : Radius.circular(25),
-                                          topRight: controller.replyMessage != ''
-                                              ? Radius.zero
-                                              : Radius.circular(25),
+                                          topRight:
+                                              controller.replyMessage != ''
+                                                  ? Radius.zero
+                                                  : Radius.circular(25),
                                           bottomLeft: Radius.circular(25),
                                           bottomRight: Radius.circular(25),
                                         ),
@@ -492,7 +514,9 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                             replyText: replyText,
                                             userReplyMsg:
                                                 controller.comparationWhoSendM(
-                                                    UserModel().user.userFullname,
+                                                    UserModel()
+                                                        .user
+                                                        .userFullname,
                                                     widget.user.userFullname),
                                             likeMsg: controller.likeMsg,
                                           );
@@ -508,19 +532,16 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                       ),
                     ),
                     Observer(
-                      builder: (_) => controller.showEmoji == true
-                          ? Container(
-                        height: 250,
-                        child: emojiKeyboard(),
-                      )
-                          : SizedBox()
-                    ),
+                        builder: (_) => controller.showEmoji == true
+                            ? Container(
+                                height: 250,
+                                child: emojiKeyboard(),
+                              )
+                            : SizedBox()),
                   ],
-
                 ),
               ),
             ),
-
           ],
         ),
       ),
@@ -528,6 +549,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
       ///Column das mensagens.
     );
   }
+
   Widget emojiKeyboard() {
     return EmojiPicker(
       onEmojiSelected: (category, emoji) {
@@ -601,6 +623,8 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                       msg[REPLY_TEXT] == null ? '' : msg[REPLY_TEXT];
                   final String userReply =
                       msg[USER_REPLY_TEXT] == null ? '' : msg[USER_REPLY_TEXT];
+                  final String idDoc =
+                      msg['id_doc'] == null ? '' : msg['id_doc'];
                   final String? imageLink = msg[MESSAGE_IMG_LINK];
                   final String timeAgo =
                       timeago.format(msg[TIMESTAMP].toDate(), locale: 'pt_BR');
@@ -617,8 +641,15 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                   // Show chat bubble
                   return GestureDetector(
                     onDoubleTap: () async {
-                      print('cliquei');
-                      await  _updateMenssage(likeMsg: true);
+                      await _updateMenssage(likeMsg: true,idDoc:idDoc);
+                    },
+                    onLongPress:  ()  {
+                      if(likeMsgBool){
+                        ShowModalBottom.show(context: context,ontap: () async {
+                          await _updateMenssage(likeMsg: false,idDoc:idDoc);
+                        } );
+                        controller.focusNode.unfocus();
+                      }
                     },
                     child: SwipeTo(
                       iconColor: Colors.transparent,

@@ -21,6 +21,7 @@ class ConversationsApi {
     required String replyMsg,
     required String replyType,
     required String userReplyMsg,
+    required String idDoc,
   }) async {
     await _firestore
         .collection(C_CONNECTIONS)
@@ -28,6 +29,7 @@ class ConversationsApi {
         .collection(C_CONVERSATIONS)
         .doc(receiverId)
         .set(<String, dynamic>{
+      ID_DOC:idDoc,
       USER_ID: receiverId,
       USER_PROFILE_PHOTO: userPhotoLink,
       USER_FULLNAME: userFullName,

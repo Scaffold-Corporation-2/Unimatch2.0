@@ -20,6 +20,18 @@ class MessagesApi {
         .snapshots();
   }
 
+  String getId({
+    required String senderId,
+    required String receiverId,
+  }) {
+    return _firestore
+        .collection(C_MESSAGES)
+        .doc(senderId)
+        .collection(receiverId)
+        .doc()
+        .id;
+  }
+
   /// Save chat message
   Future<void> saveMessage({
     required String type,
@@ -32,32 +44,36 @@ class MessagesApi {
     required String textMsg,
     required String replyMsg,
     required String userReplyMsg,
+    required String idDoc,
     required String imgLink,
     required bool isRead,
     required bool likeMsg,
+
   }) async {
     /// Save message
     print("Date " + DateTime.now().toString());
+
     await _firestore
         .collection(C_MESSAGES)
         .doc(senderId)
         .collection(receiverId)
-        .doc()
+        .doc(idDoc)
         .set(<String, dynamic>{
+      ID_DOC: idDoc,
       USER_ID: fromUserId,
       MESSAGE_TYPE: type,
       MESSAGE_TEXT: textMsg,
       REPLY_TEXT: replyMsg,
       MESSAGE_IMG_LINK: imgLink,
       USER_REPLY_TEXT: userReplyMsg,
-      REPLY_TYPE:replyType,
-      LIKE_MSG:likeMsg,
-      // TIMESTAMP: DateTime.now(),
+      REPLY_TYPE: replyType,
+      LIKE_MSG: likeMsg,
       TIMESTAMP: Timestamp.now(),
     });
 
     /// Save last conversation
     await _conversationsApi.saveConversation(
+        idDoc: idDoc,
         type: type,
         senderId: senderId,
         receiverId: receiverId,
@@ -65,7 +81,7 @@ class MessagesApi {
         userFullName: userFullName,
         textMsg: textMsg,
         replyMsg: replyMsg,
-        replyType:replyType,
+        replyType: replyType,
         likeMsg: likeMsg,
         userReplyMsg: userReplyMsg,
         isRead: isRead);
@@ -76,33 +92,18 @@ class MessagesApi {
     required String senderId,
     required String receiverId,
     required bool likeMsg,
+    required String idDoc,
   }) async {
-    print("cheguei aqui");
 
-    var dados = await _firestore
+    await _firestore
         .collection(C_MESSAGES)
         .doc(senderId)
         .collection(receiverId)
-        .doc();
-    print(dados);
-
-    // await _firestore
-    //     .collection(C_MESSAGES)
-    //     .doc(senderId)
-    //     .collection(receiverId)
-    //     .doc()
-       // .update(<String, dynamic>{
-     // LIKE_MSG:likeMsg,
-    //});
-
-    /// Save last conversation
-    // await _conversationsApi.updateConversation(
-    //     senderId: senderId,
-    //     receiverId: receiverId,
-    //     likeMsg: likeMsg,
-    // );
+        .doc(idDoc)
+        .update({
+      LIKE_MSG:likeMsg,
+    });
   }
-
 
   /// Delete current user chat
   Future<void> deleteChat(String withUserId, {bool isDoubleDel = false}) async {
@@ -124,7 +125,7 @@ class MessagesApi {
             msg[USER_ID] == UserModel().user.userId) {
           /// Delete uploaded images by current user
           await FirebaseStorage.instance
-                  .refFromURL(msg[MESSAGE_IMG_LINK])
+              .refFromURL(msg[MESSAGE_IMG_LINK])
               .delete();
         }
         await msg.reference.delete();
@@ -154,7 +155,7 @@ class MessagesApi {
           if (msg[MESSAGE_TYPE] == 'image' && msg[USER_ID] == withUserId) {
             /// Delete uploaded images by onother user
             await FirebaseStorage.instance
-                    .refFromURL(msg[MESSAGE_IMG_LINK])
+                .refFromURL(msg[MESSAGE_IMG_LINK])
                 .delete();
           }
           await msg.reference.delete();
