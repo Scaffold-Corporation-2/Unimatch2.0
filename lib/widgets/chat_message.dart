@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_reaction_button/flutter_reaction_button.dart';
 import 'package:uni_match/app/modules/chat/widgets/reply_conversation_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -109,9 +110,12 @@ class ChatMessage extends StatelessWidget {
                                         tag: imageLink!,
                                         child: Image.network(imageLink!))),
                               ),
-                            ),
-                          )
+                            )
 
+
+
+
+                          )
                           /// Text message
                           :
                           //TODO verificar NULL NO container.
@@ -149,11 +153,45 @@ class ChatMessage extends StatelessWidget {
                 Container(
                     margin: const EdgeInsets.only(left: 20, right: 20),
                     child: Text(timeAgo)),
+                // isImage? FlutterReactionButton(onReactionChanged: (reaction,index){
+                //
+                // },
+                //   reactions: <Reaction>[
+                //     Reaction(
+                //       icon: Icon(
+                //         Icons.whatshot,
+                //         color: Colors.redAccent,
+                //       ),
+                //     ),
+                //     Reaction(
+                //       icon: Icon(
+                //         Icons.emoji_emotions_outlined,
+                //         color: Colors.yellow,
+                //       ),
+                //     ),
+                //     Reaction(
+                //       icon: Icon(
+                //         Icons.favorite,
+                //         color: Colors.red,
+                //       ),
+                //     ),
+                //   ],
+                //   initialReaction: Reaction(
+                //       icon: Icon(
+                //         Icons.emoji_emotions_outlined,
+                //         color: Colors.black,
+                //       )
+                //   ),
+                //   boxColor: Colors.white,
+                //   boxRadius: 10,
+                //   boxDuration: Duration(milliseconds: 500),
+                //   boxAlignment: AlignmentDirectional.bottomEnd,
+                // ): SizedBox(),
+
               ],
             ),
           ),
           SizedBox(width: 1),
-
           /// Current User photo right
           isUserSender ? _userProfilePhoto : Container(width: 0, height: 0),
         ],

@@ -46,6 +46,28 @@ class ConversationsApi {
     });
   }
 
+  ///Update Conversation
+
+  Future<void> updateConversation({
+    required String senderId,
+    required String receiverId,
+    required bool likeMsg,
+  }) async {
+    await _firestore
+        .collection(C_CONNECTIONS)
+        .doc(senderId)
+        .collection(C_CONVERSATIONS)
+        .doc(receiverId)
+        .update(<String, dynamic>{
+      USER_ID: receiverId,
+      LIKE_MSG: likeMsg,
+    }).then((value) {
+      debugPrint('updateConversation() -> succes');
+    }).catchError((e) {
+      print('updateConversation() -> error: $e');
+    });
+  }
+
   /// Get stream conversations for current user
   Stream<QuerySnapshot> getConversations() {
     return _firestore

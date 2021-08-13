@@ -123,6 +123,9 @@ dependencies:
     #Biblioteca de animação
   animate_do: ^2.0.0
 
+  #Biblioteca do botao de reacao
+  flutter_reaction_button: ^1.0.8
+
   flutter_cupertino_datetime_picker: ^2.0.1
 
 

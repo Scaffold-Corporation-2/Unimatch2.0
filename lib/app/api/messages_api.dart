@@ -52,7 +52,6 @@ class MessagesApi {
       USER_REPLY_TEXT: userReplyMsg,
       REPLY_TYPE:replyType,
       LIKE_MSG:likeMsg,
-
       // TIMESTAMP: DateTime.now(),
       TIMESTAMP: Timestamp.now(),
     });
@@ -71,6 +70,39 @@ class MessagesApi {
         userReplyMsg: userReplyMsg,
         isRead: isRead);
   }
+
+  ///UpdateMessage
+  Future<void> updateMessage({
+    required String senderId,
+    required String receiverId,
+    required bool likeMsg,
+  }) async {
+    print("cheguei aqui");
+
+    var dados = await _firestore
+        .collection(C_MESSAGES)
+        .doc(senderId)
+        .collection(receiverId)
+        .doc();
+    print(dados);
+
+    // await _firestore
+    //     .collection(C_MESSAGES)
+    //     .doc(senderId)
+    //     .collection(receiverId)
+    //     .doc()
+       // .update(<String, dynamic>{
+     // LIKE_MSG:likeMsg,
+    //});
+
+    /// Save last conversation
+    // await _conversationsApi.updateConversation(
+    //     senderId: senderId,
+    //     receiverId: receiverId,
+    //     likeMsg: likeMsg,
+    // );
+  }
+
 
   /// Delete current user chat
   Future<void> deleteChat(String withUserId, {bool isDoubleDel = false}) async {

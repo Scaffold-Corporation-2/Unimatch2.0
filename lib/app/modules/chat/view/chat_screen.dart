@@ -93,7 +93,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                     userReplyMsg: controller.comparationWhoSendM(
                         UserModel().user.userFullname,
                         widget.user.userFullname),
-                    likeMsg: controller.msgLiked(),
+                    likeMsg: controller.likeMsg,
                   );
                   // close modal
                 }
@@ -178,6 +178,40 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
         nUserDeviceToken: widget.user.userDeviceToken);
   }
 
+
+
+  Future<void> _updateMenssage({
+    required likeMsg,
+  }) async {
+      print("update 1");
+    /// Save message for current user
+    await _messagesApi.updateMessage(
+      senderId: UserModel().user.userId,
+      receiverId: widget.user.userId,
+      likeMsg: likeMsg,
+    );
+      print("update 2");
+    /// Save copy message for receiver
+    await _messagesApi.updateMessage(
+      senderId: widget.user.userId,
+      receiverId: UserModel().user.userId,
+      likeMsg: likeMsg,
+    );
+
+    /// Send push notification
+    // await _notificationsApi.sendPushNotification(
+    //     nTitle: APP_NAME,
+    //     nBody: '${UserModel().user.userFullname}, '
+    //         '${_i18n.translate("sent_a_message_to_you")}',
+    //     nType: 'message',
+    //     nSenderId: UserModel().user.userId,
+    //     nUserDeviceToken: widget.user.userDeviceToken);
+  }
+
+
+
+
+
   @override
   void initState() {
     super.initState();
@@ -186,9 +220,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
       controller.textController.text = controller.textController.text;
       if (controller.focusNode.hasFocus) {
         controller.showEmoji = false;
-      }
-      if (controller.showEmoji == true) {
-        controller.focusNode.unfocus();
       }
     });
   }
@@ -333,11 +364,10 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
           return Future.value(false);
         },
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             /// how message list
-            Expanded(
-                child:
-                    Container(color: Colors.white54, child: _showMessages())),
+            Expanded(child: Container(color: Colors.white54, child: _showMessages())),
 
             /// Text Composer
             ///
@@ -347,152 +377,150 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                 title: Column(
                   children: [
                     FadeInUp(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              children: [
-                                if (controller.replyMessage != '')
-                                  Container(child: buildReply()),
-                                TextFormField(
-                                  focusNode: controller.focusNode,
-                                  cursorColor: Colors.pinkAccent.shade200,
-                                  cursorWidth: 2,
-                                  controller: controller.textController,
-                                  maxLines: 4,
-                                  minLines: 1,
-                                  autocorrect: false,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Padding(
-                                      padding: const EdgeInsetsDirectional.only(
-                                          bottom: 0),
-                                      child: IconButton(
-                                          iconSize: 30,
-                                          icon: Icon(
-                                              controller.showEmoji == true
-                                                  ? Icons.keyboard
-                                                  : Icons.insert_emoticon),
-                                          splashColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          color: Colors.grey,
-                                          onPressed: () {
-                                            controller.focusNode.unfocus();
-                                            controller.showEmojiKeyboard();
-                                          }),
-                                    ),
-                                    suffixIcon: IconButton(
-                                        icon: SvgIcon(
-                                            "assets/icons/camera_icon.svg",
-                                            width: 20,
-                                            height: 20),
-                                        onPressed: () async {
-                                          /// Send image file
-                                          await _getImage();
-                                          //controller.cancelReply();
-                                          controller.focusNode.hasFocus;
+                      child: Container(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  if (controller.replyMessage != '')
+                                    Container(child: buildReply()),
+                                  TextFormField(
+                                    focusNode: controller.focusNode,
+                                    cursorColor: Colors.pinkAccent.shade200,
+                                    cursorWidth: 2,
+                                    controller: controller.textController,
+                                    maxLines: 4,
+                                    minLines: 1,
+                                    autocorrect: false,
+                                    decoration: InputDecoration(
+                                      prefixIcon: Padding(
+                                        padding: const EdgeInsetsDirectional.only(
+                                            bottom: 0),
+                                        child: IconButton(
+                                            iconSize: 30,
+                                            icon: Icon(
+                                                controller.showEmoji == true
+                                                    ? Icons.keyboard
+                                                    : Icons.insert_emoticon),
+                                            splashColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            color: Colors.grey,
+                                            onPressed: () {
+                                              controller.focusNode.unfocus();
+                                              controller.showEmojiKeyboard();
+                                            }),
+                                      ),
+                                      suffixIcon: IconButton(
+                                          icon: SvgIcon(
+                                              "assets/icons/camera_icon.svg",
+                                              width: 20,
+                                              height: 20),
+                                          onPressed: () async {
+                                            /// Send image file
+                                            await _getImage();
+                                            controller.cancelReply();
+                                            controller.focusNode.hasFocus;
 
-                                          /// Update scroll
-                                          _scrollMessageList();
-                                        }),
-                                    filled: true,
-                                    fillColor: Colors.grey[100],
-                                    hintText: _i18n.translate("type_a_message"),
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: controller.replyMessage != ''
-                                            ? Radius.zero
-                                            : Radius.circular(25),
-                                        topRight: controller.replyMessage != ''
-                                            ? Radius.zero
-                                            : Radius.circular(25),
-                                        bottomLeft: Radius.circular(25),
-                                        bottomRight: Radius.circular(25),
+                                            /// Update scroll
+                                            _scrollMessageList();
+                                          }),
+                                      filled: true,
+                                      fillColor: Colors.grey[100],
+                                      hintText: _i18n.translate("type_a_message"),
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: controller.replyMessage != ''
+                                              ? Radius.zero
+                                              : Radius.circular(25),
+                                          topRight: controller.replyMessage != ''
+                                              ? Radius.zero
+                                              : Radius.circular(25),
+                                          bottomLeft: Radius.circular(25),
+                                          bottomRight: Radius.circular(25),
+                                        ),
                                       ),
                                     ),
+                                    onChanged: (text) {
+                                      setState(() {
+                                        if (text == ' ') {
+                                          controller.textController.clear();
+                                        }
+                                        _isComposing =
+                                            text.isNotEmpty && text != ' ';
+                                      });
+                                    },
                                   ),
-                                  onChanged: (text) {
-                                    setState(() {
-                                      if (text == ' ') {
-                                        controller.textController.clear();
-                                      }
-                                      _isComposing =
-                                          text.isNotEmpty && text != ' ';
-                                    });
-                                  },
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 5),
-                            child: IconButton(
-                                icon: Icon(Icons.send,
-                                    color: _isComposing
-                                        ? Theme.of(context).primaryColor
-                                        : Colors.grey),
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onPressed: _isComposing
-                                    ? () async {
-                                        /// Get text
-                                        final text = controller
-                                            .textController.text
-                                            .trim();
-                                        final replyText =
-                                            controller.replyMessage;
-                                        final replyType = controller.isImage
-                                            ? 'image'
-                                            : 'text';
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: IconButton(
+                                  icon: Icon(Icons.send,
+                                      color: _isComposing
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.grey),
+                                  splashColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onPressed: _isComposing
+                                      ? () async {
+                                          /// Get text
+                                          final text = controller
+                                              .textController.text
+                                              .trim();
+                                          final replyText =
+                                              controller.replyMessage;
+                                          final replyType = controller.isImage
+                                              ? 'image'
+                                              : 'text';
 
-                                        /// clear input text
-                                        controller.textController.clear();
-                                        setState(() {
-                                          controller.cancelReply();
-                                          _isComposing = false;
-                                        });
+                                          /// clear input text
+                                          controller.textController.clear();
+                                          setState(() {
+                                            controller.cancelReply();
+                                            _isComposing = false;
+                                          });
 
-                                        /// Send text message
-                                        await _sendMessage(
-                                          type: 'text',
-                                          text: text,
-                                          replyType: replyType,
-                                          replyText: replyText,
-                                          userReplyMsg:
-                                              controller.comparationWhoSendM(
-                                                  UserModel().user.userFullname,
-                                                  widget.user.userFullname),
-                                          likeMsg: controller.likeMsg,
-                                        );
+                                          /// Send text message
+                                          await _sendMessage(
+                                            type: 'text',
+                                            text: text,
+                                            replyType: replyType,
+                                            replyText: replyText,
+                                            userReplyMsg:
+                                                controller.comparationWhoSendM(
+                                                    UserModel().user.userFullname,
+                                                    widget.user.userFullname),
+                                            likeMsg: controller.likeMsg,
+                                          );
 
-                                        /// Update scroll
+                                          /// Update scroll
 
-                                        _scrollMessageList();
-                                      }
-                                    : null),
-                          ),
-                        ],
+                                          _scrollMessageList();
+                                        }
+                                      : null),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
+                    Observer(
+                      builder: (_) => controller.showEmoji == true
+                          ? Container(
+                        height: 250,
+                        child: emojiKeyboard(),
+                      )
+                          : SizedBox()
+                    ),
                   ],
+
                 ),
               ),
             ),
-            Observer(
-              builder: (_) => controller.showEmoji == true
-                  ? AnimatedContainer(
-                height: 280,
-                      curve: Curves.bounceInOut,
-                      duration: Duration(
-                        microseconds: 5,
-                      ),
-                      child: emojiKeyboard(),
-                    )
-                  : AnimatedContainer(duration: Duration(
-                seconds: 5,
-              )),
-            ),
+
           ],
         ),
       ),
@@ -588,8 +616,9 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
 
                   // Show chat bubble
                   return GestureDetector(
-                    onDoubleTap: () {
-
+                    onDoubleTap: () async {
+                      print('cliquei');
+                      await  _updateMenssage(likeMsg: true);
                     },
                     child: SwipeTo(
                       iconColor: Colors.transparent,
