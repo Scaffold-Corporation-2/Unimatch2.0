@@ -70,8 +70,8 @@ class ReplyMessageWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Container(
-            height: 55,
-              width: 55,
+            height: 70,
+              width: 70,
               child: Image.network(message))),
       ],
     ),

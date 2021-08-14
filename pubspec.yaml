@@ -151,6 +151,10 @@ dependencies:
   #Biblioteca do botao de reacao
   flutter_reaction_button: ^1.0.8
 
+  #Biblioteca de visibilidade do teclado
+  flutter_keyboard_visibility: ^5.0.3
+
+
   flutter_cupertino_datetime_picker: ^2.0.1
 
 dev_dependencies:
@@ -159,6 +163,8 @@ dev_dependencies:
 
   #Biblioteca para icone do app
   flutter_launcher_icons: ^0.9.1
+  #Biblioteca de acoes do teclado
+  keyboard_actions: ^3.4.3
 
   flutter_modular_test: ^1.0.1
   flutter_test:

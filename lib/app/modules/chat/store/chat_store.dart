@@ -9,6 +9,7 @@ class ChatStore = _ChatStore  with _$ChatStore;
 abstract class _ChatStore  with Store {
 
   final focusNode = FocusNode();
+  final focusKeyboardEmoji = FocusNode();
 
   @observable
   String replyMessage = '';
@@ -62,20 +63,11 @@ abstract class _ChatStore  with Store {
   }
   //EMOJIS
 
-
   final textController = TextEditingController();
 
   @action
   onEmojiSelected(Emoji emoji) {
     textController.text = textController.text + emoji.emoji;
-  }
-  @override
-  void onInit(){
-    focusNode.addListener(() {
-      if(focusNode.hasFocus){
-        showEmoji = false;
-      }
-    });
   }
   @action
   showEmojiKeyboard(){
