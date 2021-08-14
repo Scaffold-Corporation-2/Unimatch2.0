@@ -3,6 +3,7 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mobx/mobx.dart';
 import 'package:uni_match/app/app_controller.dart';
@@ -72,8 +73,7 @@ abstract class _LoginStore with Store {
           // Hide progreess dialog
           pr.hide();
           // Go to verification code screen
-          Modular.to
-              .pushNamed('/login/signIn/phone/verification', arguments: code);
+          Modular.to.pushNamed('/login/signIn/phone/verification', arguments: code);
 
           // Navigator.of(context).push(MaterialPageRoute(
           //     builder: (context) => VerificationCodeScreen(
@@ -87,13 +87,11 @@ abstract class _LoginStore with Store {
           // Check Erro type
           if (errorType == 'invalid_number') {
             // Check error type
-            final String message =
-                i18n.translate("we_were_unable_to_verify_your_number")!;
+            final String message = i18n.translate("we_were_unable_to_verify_your_number")!;
             // Show error message
             // Validate context
             if (mounted) {
-              showScaffoldMessage(
-                  context: context, message: message, bgcolor: Colors.red);
+              showScaffoldMessage(context: context, message: message, bgcolor: Colors.red);
             }
           }
         });
@@ -111,8 +109,7 @@ abstract class _LoginStore with Store {
       debugPrint('onGpsDisabled() -> disabled');
     } else {
       /// Request permission
-      final LocationPermission permission =
-          await Geolocator.requestPermission();
+      final LocationPermission permission = await Geolocator.requestPermission();
 
       switch (permission) {
         case LocationPermission.denied:
@@ -139,7 +136,10 @@ abstract class _LoginStore with Store {
   /// Login Email ///
   @action
   Future<void> emailLogin(String userEmail, String userPassword) async {
-    await UserModel().authEmailAccount(userEmail, userPassword);
+    bool response = await UserModel().authEmailAccount(userEmail, userPassword);
+
+    if (response == true) Fluttertoast.showToast(msg: 'E-mail enviado com sucesso');
+
     UserModel().authUserAccount(
       homeScreen: () {
         _navegarPaginas("/home");
@@ -148,6 +148,13 @@ abstract class _LoginStore with Store {
         _navegarPaginas("/login/signUp");
       },
     );
+  }
+
+  //******************************************************************************
+  /// Password recover///
+  @action
+  Future<void> passwordRecover(String userEmail) async {
+    await UserModel().passwordRecover(userEmail);
   }
 
   //******************************************************************************
@@ -178,10 +185,17 @@ abstract class _LoginStore with Store {
   @observable
   String? selectedOrientation;
 
-  List<String> sexualOrientation  = ['Heterossexual', 'Gay', 'Lésbica',
-                                     'Bissexual', 'Assexual', 'Pansexual',
-                                     'Demissexual', 'Queer', 'Questionado'];
-
+  List<String> sexualOrientation = [
+    'Heterossexual',
+    'Gay',
+    'Lésbica',
+    'Bissexual',
+    'Assexual',
+    'Pansexual',
+    'Demissexual',
+    'Queer',
+    'Questionado'
+  ];
 
   @observable
   String? birthday;
@@ -299,25 +313,19 @@ abstract class _LoginStore with Store {
     } else if (selectedGender == null) {
       // Show error message
       showScaffoldMessage(
-          context: context,
-          message: i18n.translate("select_gender")!,
-          bgcolor: Colors.red);
+          context: context, message: i18n.translate("select_gender")!, bgcolor: Colors.red);
 
       /// Validate form
     } else if (selectedOrientation == null) {
       // Show error message
       showScaffoldMessage(
-          context: context,
-          message: i18n.translate("select_orientation")!,
-          bgcolor: Colors.red);
+          context: context, message: i18n.translate("select_orientation")!, bgcolor: Colors.red);
 
       /// Validate form
     } else if (nameController.text.isEmpty) {
       // Show error message
       showScaffoldMessage(
-          context: context,
-          message: i18n.translate("enter_your_fullname")!,
-          bgcolor: Colors.red);
+          context: context, message: i18n.translate("enter_your_fullname")!, bgcolor: Colors.red);
 
       /// Validate form
     } else if (schoolController.text.isEmpty) {
@@ -333,8 +341,7 @@ abstract class _LoginStore with Store {
       showScaffoldMessage(
           context: context,
           duration: Duration(seconds: 7),
-          message: i18n.translate(
-              "only_18_years_old_and_above_are_allowed_to_create_an_account")!,
+          message: i18n.translate("only_18_years_old_and_above_are_allowed_to_create_an_account")!,
           bgcolor: Colors.red);
     } else if (!formKey!.currentState!.validate()) {
     } else {
@@ -357,8 +364,7 @@ abstract class _LoginStore with Store {
             // Show success message
             isLoading = false;
             successDialog(context,
-                message: i18n
-                    .translate("your_account_has_been_created_successfully")!,
+                message: i18n.translate("your_account_has_been_created_successfully")!,
                 positiveAction: () {
               // Execute action
               Modular.to.navigate('/home');
@@ -370,8 +376,7 @@ abstract class _LoginStore with Store {
             debugPrint(error);
             // Show error message
             errorDialog(context,
-                message: i18n.translate(
-                    "an_error_occurred_while_creating_your_account")!);
+                message: i18n.translate("an_error_occurred_while_creating_your_account")!);
           });
     }
   }
