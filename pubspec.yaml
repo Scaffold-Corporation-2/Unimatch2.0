@@ -157,6 +157,8 @@ dependencies:
     #Biblioteca para info
   fluttertoast: ^8.0.8
 
+  liquid_swipe: ^2.1.0
+
   flutter_cupertino_datetime_picker: ^2.0.1
 
 dev_dependencies:
