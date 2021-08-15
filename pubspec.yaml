@@ -159,14 +159,21 @@ dependencies:
 
   liquid_swipe: ^2.1.0
 
+  #Biblioteca de visibilidade do teclado
+  flutter_keyboard_visibility: ^5.0.3
+
+
   flutter_cupertino_datetime_picker: ^2.0.1
 
 dev_dependencies:
-    #Biblioteca para splash_screen nativo
+  #Biblioteca para splash_screen nativo
   flutter_native_splash: ^1.2.1
 
-    #Biblioteca para icone do app
+  #Biblioteca para icone do app
   flutter_launcher_icons: ^0.9.1
+
+  #Biblioteca de acoes do teclado
+  keyboard_actions: ^3.4.3
 
   flutter_modular_test: ^1.0.1
   flutter_test:
@@ -205,11 +212,11 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
-  fonts:
-    - family:  CustomIcons
-      fonts:
-        - asset: assets/icons/CustomIcons.ttf
-
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

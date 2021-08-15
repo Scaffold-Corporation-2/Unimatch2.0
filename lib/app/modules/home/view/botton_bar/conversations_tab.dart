@@ -80,6 +80,7 @@ class _ConversationsTabState extends State<ConversationsTab> {
                           : null,
                       child: ListTile(
                         leading: CircleAvatar(
+                          radius: 30,
                           backgroundColor: Theme.of(context).primaryColor,
                           backgroundImage:
                               NetworkImage(conversation[USER_PROFILE_PHOTO]),
@@ -88,8 +89,11 @@ class _ConversationsTabState extends State<ConversationsTab> {
                             style: TextStyle(fontSize: 18)),
                         subtitle: conversation[MESSAGE_TYPE] == 'text'
                           ? Text(
-                              "${conversation[LAST_MESSAGE]}\n"
-                              "${timeago.format(conversation[TIMESTAMP].toDate())}")
+                          conversation[LAST_MESSAGE].toString().length <= 25
+                              ? "${conversation[LAST_MESSAGE]}\n"+"${timeago.format(conversation[TIMESTAMP].toDate())}"
+                              : "${conversation[LAST_MESSAGE].toString().substring(0,22)}...\n"+"${timeago.format(conversation[TIMESTAMP].toDate())}"
+
+                        )
                           : Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[

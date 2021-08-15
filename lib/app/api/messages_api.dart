@@ -20,44 +20,89 @@ class MessagesApi {
         .snapshots();
   }
 
+  String getId({
+    required String senderId,
+    required String receiverId,
+  }) {
+    return _firestore
+        .collection(C_MESSAGES)
+        .doc(senderId)
+        .collection(receiverId)
+        .doc()
+        .id;
+  }
+
   /// Save chat message
   Future<void> saveMessage({
     required String type,
+    required String replyType,
     required String senderId,
     required String receiverId,
     required String fromUserId,
     required String userPhotoLink,
     required String userFullName,
     required String textMsg,
+    required String replyMsg,
+    required String userReplyMsg,
+    required String idDoc,
     required String imgLink,
     required bool isRead,
+    required bool likeMsg,
+
   }) async {
     /// Save message
-    print(Timestamp.now());
     print("Date " + DateTime.now().toString());
+
     await _firestore
         .collection(C_MESSAGES)
         .doc(senderId)
         .collection(receiverId)
-        .doc()
+        .doc(idDoc)
         .set(<String, dynamic>{
+      ID_DOC: idDoc,
       USER_ID: fromUserId,
       MESSAGE_TYPE: type,
       MESSAGE_TEXT: textMsg,
+      REPLY_TEXT: replyMsg,
       MESSAGE_IMG_LINK: imgLink,
-      // TIMESTAMP: DateTime.now(),
+      USER_REPLY_TEXT: userReplyMsg,
+      REPLY_TYPE: replyType,
+      LIKE_MSG: likeMsg,
       TIMESTAMP: Timestamp.now(),
     });
 
     /// Save last conversation
     await _conversationsApi.saveConversation(
+        idDoc: idDoc,
         type: type,
         senderId: senderId,
         receiverId: receiverId,
         userPhotoLink: userPhotoLink,
         userFullName: userFullName,
         textMsg: textMsg,
+        replyMsg: replyMsg,
+        replyType: replyType,
+        likeMsg: likeMsg,
+        userReplyMsg: userReplyMsg,
         isRead: isRead);
+  }
+
+  ///UpdateMessage
+  Future<void> updateMessage({
+    required String senderId,
+    required String receiverId,
+    required bool likeMsg,
+    required String idDoc,
+  }) async {
+
+    await _firestore
+        .collection(C_MESSAGES)
+        .doc(senderId)
+        .collection(receiverId)
+        .doc(idDoc)
+        .update({
+      LIKE_MSG:likeMsg,
+    });
   }
 
   /// Delete current user chat
@@ -80,7 +125,7 @@ class MessagesApi {
             msg[USER_ID] == UserModel().user.userId) {
           /// Delete uploaded images by current user
           await FirebaseStorage.instance
-                  .refFromURL(msg[MESSAGE_IMG_LINK])
+              .refFromURL(msg[MESSAGE_IMG_LINK])
               .delete();
         }
         await msg.reference.delete();
@@ -110,7 +155,7 @@ class MessagesApi {
           if (msg[MESSAGE_TYPE] == 'image' && msg[USER_ID] == withUserId) {
             /// Delete uploaded images by onother user
             await FirebaseStorage.instance
-                    .refFromURL(msg[MESSAGE_IMG_LINK])
+                .refFromURL(msg[MESSAGE_IMG_LINK])
                 .delete();
           }
           await msg.reference.delete();

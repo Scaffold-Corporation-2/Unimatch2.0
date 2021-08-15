@@ -121,7 +121,12 @@ const String FLAGGED_BY_USER_ID = "sinalizado_por_usuario_id";
 /// DATABASE FIELDS FOR Messages and Conversations COLLECTION ///
 ///
 const String MESSAGE_TEXT = "mensagem_texto";
+const String ID_DOC = "id_doc";
+const String REPLY_TEXT = "resposta_mensagem";
+const String USER_REPLY_TEXT = "name_user_resposta_mensagem";
 const String MESSAGE_TYPE = "mensagem_tipo";
+const String REPLY_TYPE = "tipo_resposta";
+const String LIKE_MSG = "mensagem_curtida";
 const String MESSAGE_IMG_LINK = "mensagem_img_link";
 const String MESSAGE_READ = "mensagem_lida";
 const String LAST_MESSAGE = "ultima_mensagem";
