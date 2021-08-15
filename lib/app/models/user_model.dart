@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fireAuth;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:ntp/ntp.dart';
@@ -11,7 +13,6 @@ import 'package:place_picker/entities/location_result.dart';
 import 'package:place_picker/place_picker.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fireAuth;
 import 'package:uni_match/app/datas/user.dart';
 import 'package:uni_match/constants/constants.dart';
 import 'package:uni_match/helpers/app_helper.dart';
@@ -40,10 +41,13 @@ class UserModel extends Model {
   /// Create Singleton factory for [UserModel]
   ///
   static final UserModel _userModel = new UserModel._internal();
+
   factory UserModel() {
     return _userModel;
   }
+
   UserModel._internal();
+
   // End
 
   ///*** FirebaseAuth and Firestore Methods ***///
@@ -79,8 +83,7 @@ class UserModel extends Model {
   }
 
   /// Update user data
-  Future<void> updateUserData(
-      {required String userId, required Map<String, dynamic> data}) async {
+  Future<void> updateUserData({required String userId, required Map<String, dynamic> data}) async {
     // Update user data
     _firestore.collection(C_USERS).doc(userId).update(data);
   }
@@ -144,53 +147,71 @@ class UserModel extends Model {
     return age;
   }
 
-  /// Login com E-mail e Senha
+  /// Login with E-mail and Password
   Future authEmailAccount(String userEmail, String password) async {
-    try {
-      await _firebaseAuth.signInWithEmailAndPassword(
-        email: userEmail,
-        password: password,
-      );
-      return true;
-    } catch (error) {
-      var errorMessage;
-
-      switch (error) {
+    await _firebaseAuth
+        .signInWithEmailAndPassword(
+      email: userEmail,
+      password: password,
+    )
+        .catchError((error, stacktrace) {
+      switch (error.code) {
         case "invalid-email":
-          errorMessage = "Email inválido";
-          return errorMessage;
+          Fluttertoast.showToast(msg: 'E-mail inválido');
+          break;
 
         case "wrong-password":
-          errorMessage = "Senha incorreta";
-          return errorMessage;
+          Fluttertoast.showToast(msg: 'Senha incorreta');
+          break;
 
         case "user-not-found":
-          errorMessage = "Usuário não encontrado";
+          Fluttertoast.showToast(msg: 'Usuário não encontrado');
+          break;
 
-          return errorMessage;
         case "user-disable":
-          errorMessage = "Usuário bloqueado ou inativo";
-          return errorMessage;
+          Fluttertoast.showToast(msg: 'Usuário bloqueado ou inativo');
+          break;
 
         case "too-many-requests":
-          errorMessage = "Muitas tentativas. Tente novamente mais tarde";
-          return errorMessage;
+          Fluttertoast.showToast(msg: 'Muitas tentativas. Tente novamente mais tarde');
+          break;
 
         case "operation-not-allowed":
-          errorMessage = "Login desabilitado.";
-          return errorMessage;
+          Fluttertoast.showToast(msg: 'Login desabilitado');
+          break;
 
         case "email-already-in-use":
-          errorMessage = "O e-mail fornecido já está em uso por outro usuário";
-          return errorMessage;
+          Fluttertoast.showToast(msg: 'O e-mail fornecido já está em uso por outro usuário');
+          break;
 
         default:
-          errorMessage = "Ocorreu um erro desconhecido";
-          return errorMessage;
+          Fluttertoast.showToast(msg: 'Ocorreu um erro desconhecido');
+          break;
+      }
+    });
+  }
+
+  /// Password recover
+  Future passwordRecover(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      return true;
+    } on fireAuth.FirebaseAuthException catch (error) {
+      switch (error.code) {
+        case "invalid-email":
+          Fluttertoast.showToast(msg: 'E-mail inválido');
+          return;
+
+        case "user-not-found":
+          Fluttertoast.showToast(msg: 'Usuário não cadastrado');
+          return;
+
+        default:
+          Fluttertoast.showToast(msg: 'Ocorreu um erro desconhecido');
+          return;
       }
     }
   }
-
 
   /// Authenticate User Account
   Future<void> authUserAccount({
@@ -209,13 +230,12 @@ class UserModel extends Model {
         /// if exists check status and take action
         if (userDoc.exists) {
           /// Check User Account Status
-          if (userDoc[USER_STATUS] == 'blocked' ||
-              userDoc[USER_STATUS] == 'flagged') {
+          if (userDoc[USER_STATUS] == 'blocked' || userDoc[USER_STATUS] == 'flagged') {
             // Go to blocked user account screen
             blockedScreen!();
           } else {
             // Update UserModel for current user
-            updateUserObject(userDoc.data()!  as Map);
+            updateUserObject(userDoc.data()! as Map);
             // Update user device token and subscribe to fcm topic
             updateUserDeviceToken();
             // Go to home screen
@@ -254,6 +274,7 @@ class UserModel extends Model {
     phoneNumber = phoneNumber.replaceAll("-", "");
 
     debugPrint('Telefone limpo: $phoneNumber');
+
     /// **** CallBack functions **** ///
 
     // Auto validate SMS code and return AuthResult to get user.
@@ -276,47 +297,39 @@ class UserModel extends Model {
       codeSent(verificationId);
     };
 
-    var verificationFailed =
-        (fireAuth.FirebaseAuthException authException) async {
+    var verificationFailed = (fireAuth.FirebaseAuthException authException) async {
       // CallBack function
       onError('invalid_number');
       // debugPrint error on console
-      debugPrint(
-          'verificationFailed() -> error: ${authException.message.toString()}');
+      debugPrint('verificationFailed() -> error: ${authException.message.toString()}');
     };
 
     var codeAutoRetrievalTimeout = (String verificationId) async {
       // CallBack function
       onError('timeout');
       // Debug
-      debugPrint(
-          'codeAutoRetrievalTimeout() -> verificationId: $verificationId');
+      debugPrint('codeAutoRetrievalTimeout() -> verificationId: $verificationId');
     };
 
     await _firebaseAuth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        verificationCompleted: (authCredential) =>
-            verificationComplete(authCredential),
-        verificationFailed: (authException) =>
-            verificationFailed(authException),
-        codeAutoRetrievalTimeout: (verificationId) =>
-            codeAutoRetrievalTimeout(verificationId),
+        verificationCompleted: (authCredential) => verificationComplete(authCredential),
+        verificationFailed: (authException) => verificationFailed(authException),
+        codeAutoRetrievalTimeout: (verificationId) => codeAutoRetrievalTimeout(verificationId),
         // called when the SMS code is sent
-        codeSent: (verificationId, [code]) =>
-            smsCodeSent(verificationId, [code!]));
+        codeSent: (verificationId, [code]) => smsCodeSent(verificationId, [code!]));
   }
 
   /// Sign In with OPT sent to user device
   Future<void> signInWithOTP(
       {required String verificationId,
-        required String otp,
-        // Callback functions
-        required Function() checkUserAccount,
-        required VoidCallback onError}) async {
+      required String otp,
+      // Callback functions
+      required Function() checkUserAccount,
+      required VoidCallback onError}) async {
     /// Get AuthCredential
     final fireAuth.AuthCredential credential =
-    fireAuth.PhoneAuthProvider.credential(
-        verificationId: verificationId, smsCode: otp);
+        fireAuth.PhoneAuthProvider.credential(verificationId: verificationId, smsCode: otp);
 
     /// Try to sign in with provided credential
     await _firebaseAuth
@@ -357,12 +370,11 @@ class UserModel extends Model {
 
     ///
     /// Get User current location using GPS
-    final Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    final Position position =
+        await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
     /// Get User location from formatted address
-    final Placemark place =
-    await _appHelper.getUserAddress(position.latitude, position.longitude);
+    final Placemark place = await _appHelper.getUserAddress(position.latitude, position.longitude);
     // Get User Country, City or Locality
     country = place.country ?? '';
     locality = place.locality != '' // Check value
@@ -370,26 +382,21 @@ class UserModel extends Model {
         : place.administrativeArea ?? '';
 
     /// Set Geolocation point
-    final GeoFirePoint geoPoint = _geo.point(
-        latitude: position.latitude, longitude: position.longitude);
+    final GeoFirePoint geoPoint =
+        _geo.point(latitude: position.latitude, longitude: position.longitude);
 
     /// Get user device token for push notifications
     final userDeviceToken = await _fcm.getToken();
 
     /// Upload user profile image
     final String imageProfileUrl = await uploadFile(
-        file: userPhotoFile,
-        path: 'uploads/users/profiles',
-        userId: getFirebaseUser!.uid);
+        file: userPhotoFile, path: 'uploads/users/profiles', userId: getFirebaseUser!.uid);
 
     /// Pegar hora em GTM
     DateTime dateTime = await NTP.now();
 
     /// Save user information in database
-    await _firestore
-        .collection(C_USERS)
-        .doc(this.getFirebaseUser!.uid)
-        .set(<String, dynamic>{
+    await _firestore.collection(C_USERS).doc(this.getFirebaseUser!.uid).set(<String, dynamic>{
       USER_ID: this.getFirebaseUser!.uid,
       USER_PROFILE_PHOTO: imageProfileUrl,
       USER_FULLNAME: userFullName,
@@ -410,7 +417,7 @@ class UserModel extends Model {
       USER_LOCALITY: locality,
       // End
       USER_LAST_LOGIN: dateTime,
-      USER_REG_DATE:  dateTime,
+      USER_REG_DATE: dateTime,
       USER_DEVICE_TOKEN: userDeviceToken,
       // Set User default settings
       USER_SETTINGS: {
@@ -419,7 +426,7 @@ class UserModel extends Model {
         USER_SHOW_ME: 'everyone', // default
         USER_MAX_DISTANCE: AppModel().appInfo.freeAccountMaxDistance, // double
         USER_SWIPES: AppModel().appInfo.freeAccountSwipes, // int
-        USER_TIME_SWIPES : dateTime
+        USER_TIME_SWIPES: dateTime
 
         // USER_MAX_DISTANCE: 1000, // double
       },
@@ -428,7 +435,7 @@ class UserModel extends Model {
       final DocumentSnapshot userDoc = await getUser(getFirebaseUser!.uid);
 
       /// Update UserModel for current user
-      updateUserObject(userDoc.data()!  as Map);
+      updateUserObject(userDoc.data()! as Map);
 
       /// Update loading status
       isLoading = false;
@@ -476,8 +483,7 @@ class UserModel extends Model {
   }
 
   /// Flag User profile
-  Future<void> flagUserProfile(
-      {required String flaggedUserId, required String reason}) async {
+  Future<void> flagUserProfile({required String flaggedUserId, required String reason}) async {
     await _firestore.collection(C_FLAGGED_USERS).doc().set({
       FLAGGED_USER_ID: flaggedUserId,
       FLAG_REASON: reason,
@@ -485,8 +491,7 @@ class UserModel extends Model {
       TIMESTAMP: FieldValue.serverTimestamp()
     });
     // Update flagged profile status
-    await this
-        .updateUserData(userId: flaggedUserId, data: {USER_STATUS: 'flagged'});
+    await this.updateUserData(userId: flaggedUserId, data: {USER_STATUS: 'flagged'});
   }
 
   /// Update User location info
@@ -508,12 +513,12 @@ class UserModel extends Model {
       /// Update user location: Country, City and Geo Data
       ///
       /// Get user current location using GPS
-      final Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+      final Position position =
+          await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
       /// Get User location from formatted address
-      final Placemark place = await _appHelper.getUserAddress(
-          position.latitude, position.longitude);
+      final Placemark place =
+          await _appHelper.getUserAddress(position.latitude, position.longitude);
       // Set values
       country = place.country ?? '';
       // Check
@@ -524,8 +529,7 @@ class UserModel extends Model {
       }
 
       /// Set Geolocation point
-      geoPoint = _geo.point(
-          latitude: position.latitude, longitude: position.longitude);
+      geoPoint = _geo.point(latitude: position.latitude, longitude: position.longitude);
     } else {
       // Get location data from passort feature
       //country = locationResult.country.name ?? '';
@@ -545,18 +549,15 @@ class UserModel extends Model {
       LatLng latAndlong = locationResult.latLng!;
 
       // Get information from passport feature
-      geoPoint = _geo.point(
-          latitude: latAndlong.latitude, longitude: latAndlong.longitude);
+      geoPoint = _geo.point(latitude: latAndlong.latitude, longitude: latAndlong.longitude);
     }
 
     /// Check place result before updating user info
     if (country != '') {
       // Update user location
-      await UserModel().updateUserData(userId: UserModel().user.userId, data: {
-        USER_GEO_POINT: geoPoint.data,
-        USER_COUNTRY: country,
-        USER_LOCALITY: locality
-      });
+      await UserModel().updateUserData(
+          userId: UserModel().user.userId,
+          data: {USER_GEO_POINT: geoPoint.data, USER_COUNTRY: country, USER_LOCALITY: locality});
 
       // Show success message
       onSuccess();
@@ -573,15 +574,13 @@ class UserModel extends Model {
   /// if user canceled the VIP subscription and
   /// avoids the error in the Slider located at lib/settings_screen.dart
   Future<void> checkUserMaxDistance() async {
-    final double userMaxDistance =
-    this.user.userSettings![USER_MAX_DISTANCE].toDouble();
+    final double userMaxDistance = this.user.userSettings![USER_MAX_DISTANCE].toDouble();
     final double freeMaxDistance = AppModel().appInfo.freeAccountMaxDistance;
     // Check to reset
     if (userMaxDistance > freeMaxDistance) {
       // Give user free distance again
       await this.updateUserData(
-          userId: this.user.userId,
-          data: {'$USER_SETTINGS.$USER_MAX_DISTANCE': freeMaxDistance});
+          userId: this.user.userId, data: {'$USER_SETTINGS.$USER_MAX_DISTANCE': freeMaxDistance});
       debugPrint('verifique a distância máxima do usuário -> Atualizado com sucesso');
     } else {
       debugPrint("verifique a distância máxima do usuário -> é válido");
@@ -595,13 +594,10 @@ class UserModel extends Model {
     required String userId,
   }) async {
     // Image name
-    String imageName =
-        userId + DateTime.now().millisecondsSinceEpoch.toString();
+    String imageName = userId + DateTime.now().millisecondsSinceEpoch.toString();
     // Upload file
-    final UploadTask uploadTask = _storageRef
-        .ref()
-        .child(path + '/' + userId + '/' + imageName)
-        .putFile(file);
+    final UploadTask uploadTask =
+        _storageRef.ref().child(path + '/' + userId + '/' + imageName).putFile(file);
     final TaskSnapshot snapshot = await uploadTask;
     String url = await snapshot.ref.getDownloadURL();
     // return file link
@@ -610,10 +606,7 @@ class UserModel extends Model {
 
   /// Add / Update profile image and gallery
   Future<void> updateProfileImage(
-      {required File imageFile,
-        String? oldImageUrl,
-        required String path,
-        int? index}) async {
+      {required File imageFile, String? oldImageUrl, required String path, int? index}) async {
     // Variables
     String uploadPath;
 
@@ -630,30 +623,25 @@ class UserModel extends Model {
     }
 
     /// Upload new image
-    final imageLink = await uploadFile(
-        file: imageFile, path: uploadPath, userId: this.user.userId);
+    final imageLink = await uploadFile(file: imageFile, path: uploadPath, userId: this.user.userId);
 
     if (path == 'profile') {
       /// Update profile image link
-      await updateUserData(
-          userId: user.userId, data: {USER_PROFILE_PHOTO: imageLink});
+      await updateUserData(userId: user.userId, data: {USER_PROFILE_PHOTO: imageLink});
     } else {
       /// Update gallery image
-      await updateUserData(
-          userId: user.userId, data: {'$USER_GALLERY.image_$index': imageLink});
+      await updateUserData(userId: user.userId, data: {'$USER_GALLERY.image_$index': imageLink});
     }
   }
 
   /// Delete image from user gallery
-  Future<void> deleteGalleryImage(
-      {required String imageUrl, required int index}) async {
+  Future<void> deleteGalleryImage({required String imageUrl, required int index}) async {
     /// Delete image
     await FirebaseStorage.instance.refFromURL(imageUrl).delete();
 
     /// Update user gallery
     await updateUserData(
-        userId: user.userId,
-        data: {'$USER_GALLERY.image_$index': FieldValue.delete()});
+        userId: user.userId, data: {'$USER_GALLERY.image_$index': FieldValue.delete()});
   }
 
   /// Get user profile images
@@ -685,8 +673,7 @@ class UserModel extends Model {
   //Todo filtro por genero
   Query filterUserGender(Query query) {
     // Get the opposite gender
-    final String oppositeGender =
-    this.user.userGender == "Male" ? "Female" : "Male";
+    final String oppositeGender = this.user.userGender == "Male" ? "Female" : "Male";
 
     /// Get user settings
     final Map<String, dynamic>? settings = this.user.userSettings;
@@ -706,7 +693,7 @@ class UserModel extends Model {
             query = query.where(USER_GENDER, isEqualTo: 'Female');
             break;
           case 'everyone':
-          // Do nothing - app will get everyone
+            // Do nothing - app will get everyone
             break;
         }
       } else {
