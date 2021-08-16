@@ -46,7 +46,6 @@ abstract class _ChatStore  with Store {
     replyMessage = message;
     userSend = user;
   }
-    print(replyMessage);
 }
 @action
   void cancelReply() {
