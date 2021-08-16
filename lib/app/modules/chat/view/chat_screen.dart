@@ -207,6 +207,16 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
       likeMsg: likeMsg,
       idDoc: idDoc,
     );
+    // await _notificationsApi.sendPushNotification(
+    //     nTitle: APP_NAME,
+    ///MENSAGEM - CURTIU UMA MENSAGEM
+    //     nBody: '${UserModel().user.userFullname}, '
+    //         '${_i18n.translate("send_a_message_to_you")}',
+    //     nType: 'message',
+    //     nSenderId: UserModel().user.userId,
+    //     nUserDeviceToken: widget.user.userDeviceToken);
+
+
   }
 
   late StreamSubscription<bool> subscription;
@@ -529,7 +539,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                     !isKeyboard && controller.showEmoji == true
                         ? FadeInUp(
                             child:
-                                Container(height: 230, child: emojibuilder()))
+                                Container(height: 250, child: emojibuilder()))
                         : AnimatedContainer(
                             duration: Duration(microseconds: 500))
                   ],
@@ -638,7 +648,8 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                       await _updateMenssage(likeMsg: true, idDoc: idDoc);
                     },
                     onLongPress: () {
-                      if (likeMsgBool) {
+                      if (likeMsgBool)
+                      {
                         ShowModalBottom.show(
                             context: context,
                             ontap: () async {
