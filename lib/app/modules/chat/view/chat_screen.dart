@@ -176,13 +176,14 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
     );
 
     /// Send push notification
-    await _notificationsApi.sendPushNotification(
-        nTitle: APP_NAME,
-        nBody: '${UserModel().user.userFullname}, '
-            '${_i18n.translate("sent_a_message_to_you")}',
-        nType: 'message',
-        nSenderId: UserModel().user.userId,
-        nUserDeviceToken: widget.user.userDeviceToken);
+    // await _notificationsApi.sendPushNotification(
+    //     nTitle: APP_NAME,
+    //     nBody: '${UserModel().user.userFullname}, '
+              ///Mensagem -- Curtiu uma mensagem.
+    //         '${_i18n.translate("sent_a_message_to_you")}',
+    //     nType: 'message',
+    //     nSenderId: UserModel().user.userId,
+    //     nUserDeviceToken: widget.user.userDeviceToken);
   }
 
   Future<void> _updateMenssage({
