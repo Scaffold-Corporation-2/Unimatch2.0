@@ -21,6 +21,7 @@ class _SignInScreenState extends State<SignInScreen> {
   LoginStore _loginStore = Modular.get();
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
+  TextEditingController _emailRecover = TextEditingController();
   bool visualizar = true;
 
   void boolVisualizar() => setState(() => visualizar = !visualizar);
@@ -116,13 +117,58 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                           onPressed: () async {
-                            if (_email.text.isNotEmpty) {
-                              if (EmailValidator.validate(_email.text)) {
-                                await _loginStore.passwordRecover(_email.text);
-                              } else
-                                Fluttertoast.showToast(msg: 'Insira um e-mail válido');
-                            } else
-                              Fluttertoast.showToast(msg: 'Digite um e-mail a ser recuperado');
+                            if (EmailValidator.validate(_email.text))
+                              _emailRecover.text = _email.text;
+
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                title: Text('Recuperação de senha'),
+                                content: Container(
+                                  height: 150,
+                                  width: MediaQuery.of(context).size.width * 0.8,
+                                  child: Column(
+                                    children: [
+                                      InputCustomizado(
+                                        icon: Icons.mail,
+                                        hintText: "E-mail",
+                                        hintStyle: TextStyle(color: Colors.grey[700]),
+                                        fillColor: Colors.white,
+                                        enableColor: Colors.white,
+                                        keyboardType: TextInputType.emailAddress,
+                                        controller: _emailRecover,
+                                      ),
+                                      Container(
+                                        height: 25,
+                                      ),
+                                      CustomAnimatedButton(
+                                        onTap: () async {
+                                          if (EmailValidator.validate(_emailRecover.text)) {
+                                            if (await _loginStore
+                                                .passwordRecover(_emailRecover.text)) {
+                                              _email.text = _emailRecover.text;
+                                              _emailRecover.clear();
+                                              Modular.to.pop();
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      'E-mail enviado. Verifique sua caixa de entrada.');
+                                            }
+                                          } else
+                                            Fluttertoast.showToast(msg: 'Digite um e-mail válido');
+                                        },
+                                        widhtMultiply: 0.5,
+                                        height: 53,
+                                        color: Colors.white,
+                                        text: "Recuperar",
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(Colors.transparent),

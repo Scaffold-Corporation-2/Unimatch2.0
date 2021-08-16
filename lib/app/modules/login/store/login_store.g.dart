@@ -138,6 +138,15 @@ mixin _$LoginStore on _LoginStore, Store {
         .run(() => super.emailLogin(userEmail, userPassword));
   }
 
+  final _$passwordRecoverAsyncAction =
+      AsyncAction('_LoginStore.passwordRecover');
+
+  @override
+  Future<dynamic> passwordRecover(String userEmail) {
+    return _$passwordRecoverAsyncAction
+        .run(() => super.passwordRecover(userEmail));
+  }
+
   final _$getImageAsyncAction = AsyncAction('_LoginStore.getImage');
 
   @override
