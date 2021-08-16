@@ -149,12 +149,13 @@ class UserModel extends Model {
 
   /// Login with E-mail and Password
   Future authEmailAccount(String userEmail, String password) async {
-    await _firebaseAuth
-        .signInWithEmailAndPassword(
-      email: userEmail,
-      password: password,
-    )
-        .catchError((error, stacktrace) {
+    try {
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: userEmail,
+        password: password,
+      );
+      return true;
+    } on fireAuth.FirebaseAuthException catch (error) {
       switch (error.code) {
         case "invalid-email":
           Fluttertoast.showToast(msg: 'E-mail inválido');
@@ -188,7 +189,7 @@ class UserModel extends Model {
           Fluttertoast.showToast(msg: 'Ocorreu um erro desconhecido');
           break;
       }
-    });
+    }
   }
 
   /// Password recover
@@ -200,15 +201,15 @@ class UserModel extends Model {
       switch (error.code) {
         case "invalid-email":
           Fluttertoast.showToast(msg: 'E-mail inválido');
-          return;
+          return false;
 
         case "user-not-found":
           Fluttertoast.showToast(msg: 'Usuário não cadastrado');
-          return;
+          return false;
 
         default:
           Fluttertoast.showToast(msg: 'Ocorreu um erro desconhecido');
-          return;
+          return false;
       }
     }
   }

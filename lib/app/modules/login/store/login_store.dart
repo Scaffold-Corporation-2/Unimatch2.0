@@ -136,9 +136,7 @@ abstract class _LoginStore with Store {
   /// Login Email ///
   @action
   Future<void> emailLogin(String userEmail, String userPassword) async {
-    bool response = await UserModel().authEmailAccount(userEmail, userPassword);
-
-    if (response == true) Fluttertoast.showToast(msg: 'E-mail enviado com sucesso');
+    await UserModel().authEmailAccount(userEmail, userPassword);
 
     UserModel().authUserAccount(
       homeScreen: () {
@@ -153,8 +151,11 @@ abstract class _LoginStore with Store {
   //******************************************************************************
   /// Password recover///
   @action
-  Future<void> passwordRecover(String userEmail) async {
-    await UserModel().passwordRecover(userEmail);
+  Future passwordRecover(String userEmail) async {
+    if (await UserModel().passwordRecover(userEmail))
+      return true;
+    else
+      return false;
   }
 
   //******************************************************************************
