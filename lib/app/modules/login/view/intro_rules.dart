@@ -163,7 +163,7 @@ class _WithBuilder extends State<IntroRules> {
               child: TextButton(
                 onPressed: () {
                   if(liquidController!.currentPage == 5){
-                    Modular.to.navigate('/signUp');
+                    Modular.to.navigate('/login/signUp');
                   }
                   else{
                     liquidController!.jumpToPage(

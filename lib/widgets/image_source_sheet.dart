@@ -29,6 +29,7 @@ class ImageSourceSheet extends StatelessWidget {
             toolbarTitle: i18n.translate("edit_crop_image"),
             toolbarColor: Theme.of(context).primaryColor,
             toolbarWidgetColor: Colors.white,
+            activeControlsWidgetColor: Theme.of(context).primaryColor,
           ));
       onImageSelected(croppedImage);
     }

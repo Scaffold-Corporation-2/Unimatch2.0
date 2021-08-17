@@ -5,7 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uni_match/app/modules/login/store/login_store.dart';
-import 'package:uni_match/app/modules/login/widgets/InputCustomizado.dart';
+import 'package:uni_match/widgets/input_customizado.dart';
 import 'package:uni_match/app/modules/login/widgets/custom_animated_button.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/widgets/app_logo.dart';
@@ -183,10 +183,14 @@ class _SignInScreenState extends State<SignInScreen> {
 
                     CustomAnimatedButton(
                       onTap: () async {
+                        FocusScope.of(context).unfocus();
+
                         if (_email.text.isEmpty || _password.text.isEmpty)
                           Fluttertoast.showToast(msg: 'Preencha todos os campos!');
-                        else
-                          await _loginStore.emailLogin(_email.text, _password.text);
+                        else {
+                          await _loginStore.emailLogin(
+                              _email.text, _password.text);
+                        }
                       },
                       widhtMultiply: 1,
                       height: 53,

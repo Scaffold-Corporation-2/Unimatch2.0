@@ -54,7 +54,7 @@ abstract class _AuthStore with Store{
       /// Autenticar conta de usuário
       UserModel().authUserAccount(
           signInScreen: () => _navegarPaginas("/login/signIn"),
-          signUpScreen: () => _navegarPaginas("/login/signUp"),
+          signUpScreen: () => _navegarPaginas("/login/intro"),
           blockedScreen:() => _navegarPaginas("/login/block"),
           homeScreen:   () => _navegarPaginas("/home")
       );

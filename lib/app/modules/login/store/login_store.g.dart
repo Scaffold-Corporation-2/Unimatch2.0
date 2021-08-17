@@ -142,7 +142,7 @@ mixin _$LoginStore on _LoginStore, Store {
       AsyncAction('_LoginStore.passwordRecover');
 
   @override
-  Future<dynamic> passwordRecover(String userEmail) {
+  Future<bool> passwordRecover(String userEmail) {
     return _$passwordRecoverAsyncAction
         .run(() => super.passwordRecover(userEmail));
   }

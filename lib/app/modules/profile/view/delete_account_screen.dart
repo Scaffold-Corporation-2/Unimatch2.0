@@ -40,6 +40,8 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
     /// DELETE ALL USER TRANSACTIONS FROM DATABASE AND STORAGE
     ///
     /// DELETE CURRENT USER PROFILE
+    debugPrint('Iniciar delete');
+
     await _firestore.collection(C_USERS).doc(UserModel().user.userId).delete();
     debugPrint('Profile account -> deleted...');
 
@@ -116,7 +118,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
     _deleteUserAccount().then((_) {
       // Go to sign in screen
       Future(() {
-        Modular.to.pushNamed('/login/signIn');
+        Modular.to.navigate('/login/signIn');
       });
     });
   }

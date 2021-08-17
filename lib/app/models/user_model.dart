@@ -148,13 +148,14 @@ class UserModel extends Model {
   }
 
   /// Login with E-mail and Password
-  Future authEmailAccount(String userEmail, String password) async {
+  Future<bool> authEmailAccount(String userEmail, String password) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
         email: userEmail,
         password: password,
       );
       return true;
+
     } on fireAuth.FirebaseAuthException catch (error) {
       switch (error.code) {
         case "invalid-email":
@@ -189,6 +190,8 @@ class UserModel extends Model {
           Fluttertoast.showToast(msg: 'Ocorreu um erro desconhecido');
           break;
       }
+
+      return false;
     }
   }
 

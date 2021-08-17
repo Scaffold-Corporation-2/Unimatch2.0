@@ -77,8 +77,6 @@ class ItsMatchDialog extends StatelessWidget {
                         /// Go to chat screen
 
                         Modular.to.pushNamed('/chat', arguments: matchedUser);
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (context) => ChatScreen(user: matchedUser)));
                       })),
               SizedBox(height: 20),
 
@@ -108,7 +106,8 @@ class ItsMatchDialog extends StatelessWidget {
                         Navigator.of(context).pop();
 
                         /// Swipe right
-                        swipeKey!.currentState!.swipeRight();
+                        //todo testar 
+                        // swipeKey!.currentState!.swipeRight();
                       })),
                   
 

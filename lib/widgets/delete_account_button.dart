@@ -38,9 +38,6 @@ class DeleteAccountButton extends StatelessWidget {
                   /// Go to delete account screen
                   Future(() {
                     Modular.to.navigate('/profile/delete');
-                    // Navigator.of(context).popUntil((route) => route.isFirst);
-                    // Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    //     builder: (context) => DeleteAccountScreen()));
                   });
                 });
               });

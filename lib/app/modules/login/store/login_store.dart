@@ -50,52 +50,6 @@ abstract class _LoginStore with Store {
     pr = ProgressDialog(context, isDismissible: false);
   }
 
-  /// Sign in with phone number
-  void signIn(BuildContext context, mounted) async {
-    // Show progress dialog
-    pr.show(i18n.translate("processing")!);
-
-    /// Verify user phone number
-    await UserModel().verifyPhoneNumber(
-        phoneNumber: phoneCode + numberController.text.trim(),
-        checkUserAccount: () {
-          /// Auth user account
-          UserModel().authUserAccount(homeScreen: () {
-            /// Go to home screen
-            _navegarPaginas("/home");
-          }, signUpScreen: () {
-            /// Go to sign up screen
-
-            _navegarPaginas("/login/signUp");
-          });
-        },
-        codeSent: (code) async {
-          // Hide progreess dialog
-          pr.hide();
-          // Go to verification code screen
-          Modular.to.pushNamed('/login/signIn/phone/verification', arguments: code);
-
-          // Navigator.of(context).push(MaterialPageRoute(
-          //     builder: (context) => VerificationCodeScreen(
-          //       verificationId: code,
-          //     )));
-        },
-        onError: (errorType) async {
-          // Hide progreess dialog
-          pr.hide();
-
-          // Check Erro type
-          if (errorType == 'invalid_number') {
-            // Check error type
-            final String message = i18n.translate("we_were_unable_to_verify_your_number")!;
-            // Show error message
-            // Validate context
-            if (mounted) {
-              showScaffoldMessage(context: context, message: message, bgcolor: Colors.red);
-            }
-          }
-        });
-  }
 
   /// Check and request location permission
   Future<void> checkLocationPermission(
@@ -136,14 +90,18 @@ abstract class _LoginStore with Store {
   /// Login Email ///
   @action
   Future<void> emailLogin(String userEmail, String userPassword) async {
-    await UserModel().authEmailAccount(userEmail, userPassword);
+    bool response = await UserModel().authEmailAccount(userEmail, userPassword);
+
+    if (response == true) Fluttertoast.showToast(msg: 'Sucesso');
 
     UserModel().authUserAccount(
       homeScreen: () {
         _navegarPaginas("/home");
       },
+      signInScreen: (){},
+
       signUpScreen: () {
-        _navegarPaginas("/login/signUp");
+        _navegarPaginas("/login/intro");
       },
     );
   }
@@ -151,11 +109,8 @@ abstract class _LoginStore with Store {
   //******************************************************************************
   /// Password recover///
   @action
-  Future passwordRecover(String userEmail) async {
-    if (await UserModel().passwordRecover(userEmail))
-      return true;
-    else
-      return false;
+  Future<bool> passwordRecover(String userEmail) async {
+    return await UserModel().passwordRecover(userEmail);
   }
 
   //******************************************************************************
