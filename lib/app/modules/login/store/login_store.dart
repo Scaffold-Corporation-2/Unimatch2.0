@@ -231,7 +231,7 @@ abstract class _LoginStore with Store {
       minDateTime: DateTime(1920, 1, 1),
       maxDateTime: DateTime.now(),
       initialDateTime: initialDateTime,
-      dateFormat: 'dd-MMMM-yyyy',
+      dateFormat: 'yyyy-MMMM-dd',
       // Date format
       locale: _getDatePickerLocale(),
       // Set your App Locale here

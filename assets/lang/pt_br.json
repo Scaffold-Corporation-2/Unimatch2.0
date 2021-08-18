@@ -121,7 +121,7 @@
   "you_and": "Você e",
   "liked_each_other": "gostaram um do outro!",
   "send_a_message": "Envie uma mensagem",
-  "keep_passing": "continue passando",
+  "keep_passing": "Continue passando",
 
   "_FlagUserDialog": "* Flag User Profile Dialog Translations *",
   "FLAG": "Sinalizar",
@@ -156,14 +156,14 @@
 
   "_ProfileLikesScreen": "* ProfileLikes Screen Translations *",
   "likes": "Likes",
-  "users_who_liked_you": "Usuários que gostaram de você",
-  "liked_your_profile_click_and_see": "deu like no seu perfil, clique e veja ...",
+  "users_who_liked_you": "Usuários que deram like você",
+  "liked_your_profile_click_and_see": "Deu like no seu perfil, clique e veja ...",
   "like_sent_to": "Like enviado para:",
 
   "_ProfileVisitsScreen": "* Profile Visits Screen Translations *",
   "visits": "Visitas",
   "users_who_visited_you": "Usuários que visitaram você",
-  "visited_your_profile_click_and_see": "visitou seu perfil clique e veja ...",
+  "visited_your_profile_click_and_see": "Visitou seu perfil clique e veja ...",
 
   "_DislikedProfilesScreen": "* DislikedProfiles Screen Translations *",
   "disliked_profiles": "Disliked profiles",
@@ -253,7 +253,7 @@
   "DONE": "FEITO",
   "ACTIVE": "ATIVO",
   "sending": "Enviando ...",
-  "CLOSE": "FECHAR",
+  "CLOSE": "Fechar",
 
   "_Passport_feature_translation": "Passport feature translation",
   "passport": "Passaporte",
