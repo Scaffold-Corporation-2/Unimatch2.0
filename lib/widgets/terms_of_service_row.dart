@@ -54,8 +54,6 @@ class TermsOfServiceRow extends StatelessWidget {
       ],
     );
   }
-
-  //Todo mudar depois
   /// Open Terms of Services in Browser
   Future<void> openTermsPage() async {
     // Try to launch

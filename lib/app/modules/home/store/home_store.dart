@@ -28,6 +28,7 @@ abstract class _HomeStore with Store{
   final appNotifications = AppNotifications();
 
   late Stream<DocumentSnapshot> userStream;
+  // ignore: cancel_subscriptions
   late StreamSubscription<List<PurchaseDetails>> inAppPurchaseStream;
 
   /// Get current User Real Time updates

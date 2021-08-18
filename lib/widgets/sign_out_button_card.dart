@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/models/user_model.dart';
-import 'package:uni_match/app/modules/login/view/sign_in_page.dart';
 import 'package:uni_match/widgets/default_card_border.dart';
 
 class SignOutButtonCard extends StatelessWidget {

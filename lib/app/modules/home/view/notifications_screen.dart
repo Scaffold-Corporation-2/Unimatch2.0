@@ -83,7 +83,6 @@ class NotificationsScreen extends StatelessWidget {
                   } else {
                     bgImage = UserModel().userIsVip
                         ? NetworkImage(notification[N_SENDER_PHOTO_LINK])
-                    //todo colocar imagem logo
                         :  AssetImage('assets/images/app_logo_alt.png') as ImageProvider;
                   }
 

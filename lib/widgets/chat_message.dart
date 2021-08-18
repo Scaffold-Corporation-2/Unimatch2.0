@@ -1,7 +1,5 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_reaction_button/flutter_reaction_button.dart';
 import 'package:uni_match/app/modules/chat/widgets/reply_conversation_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -122,7 +120,6 @@ class ChatMessage extends StatelessWidget {
                           )
                           /// Text message
                           :
-                          //TODO verificar NULL NO container.
                           Container(
                               width: replyMessage.isNotEmpty
                                   ? MediaQuery.of(context).size.width * 0.65

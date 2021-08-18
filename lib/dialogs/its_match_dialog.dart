@@ -104,13 +104,9 @@ class ItsMatchDialog extends StatelessWidget {
                       onPressed: () {
                         /// Close it's match dialog 
                         Navigator.of(context).pop();
-
-                        /// Swipe right
-                        //todo testar 
-                        // swipeKey!.currentState!.swipeRight();
-                      })),
-                  
-
+                      }
+                  )
+                ),
             ],
           ),
         ),
