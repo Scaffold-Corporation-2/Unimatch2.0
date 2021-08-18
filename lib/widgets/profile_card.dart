@@ -41,9 +41,9 @@ class ProfileCard extends StatelessWidget {
     //
     // Get User Birthday
     final DateTime userBirthday = DateTime(
-        UserModel().user.userBirthYear,
-        UserModel().user.userBirthMonth,
-        UserModel().user.userBirthDay);
+        user.userBirthYear,
+        user.userBirthMonth,
+        user.userBirthDay);
     // Get User Current Age
     final int userAge = UserModel().calculateUserAge(userBirthday);
 
@@ -94,10 +94,11 @@ class ProfileCard extends StatelessWidget {
                             child: Text(
                               '${user.userFullname.split(' ')[0]}, '
                               '${userAge.toString()}',
-                              style: GoogleFonts.eczar(
-                                  fontSize: this.page == 'discover' ? 30 : 20,
+                              style: GoogleFonts.nunito(
+                                  fontSize: this.page == 'discover' ? 32 : 22,
                                   color: Colors.white,
-                                  fontWeight: FontWeight.w500),
+                                  fontWeight: FontWeight.w500
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -106,48 +107,48 @@ class ProfileCard extends StatelessWidget {
                       ),
 
                       /// User education
-                      Row(
-                        children: [
-                          SvgIcon("assets/icons/university_icon.svg",
-                              color: Colors.white, width: 22, height: 22),
-                          SizedBox(width: 5),
-                          Expanded(
-                            child: Text(
-                              user.userSchool,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: this.page == 'discover' ? 18 : 16,
+                      if(this.page == 'discover')
+                      ...[
+                        Row(
+                          children: [
+                            SvgIcon("assets/icons/university_icon.svg",
+                                color: Colors.white, width: 22, height: 22),
+                            SizedBox(width: 5),
+                            Expanded(
+                              child: Text(
+                                user.userSchool,
+                                style: GoogleFonts.roboto(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 5),
+                          ],
+                        ),
+                        SizedBox(height: 5),
 
-                      Row(
-                        children: [
-                          SvgIcon("assets/icons/gender_icon.svg",
-                              color: Colors.white, width: 20, height: 20),
-                          SizedBox(width: 5),
-                          Expanded(
-                            child: Text(
-                              user.userOrientation,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: this.page == 'discover' ? 18 : 16,
+                        Row(
+                          children: [
+                            SvgIcon("assets/icons/gender_icon.svg",
+                                color: Colors.white, width: 20, height: 20),
+                            SizedBox(width: 5),
+                            Expanded(
+                              child: Text(
+                                user.userOrientation,
+                                style: GoogleFonts.roboto(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                        ],
-                      ),
-
-                      this.page == 'discover'
-                          ? SizedBox(height: 70)
-                          : Container(width: 0, height: 0),
+                          ],
+                        ),
+                        SizedBox(height: 70)
+                      ],
                     ],
                   ),
                 ),
