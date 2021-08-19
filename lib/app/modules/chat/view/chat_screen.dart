@@ -189,8 +189,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
     required likeMsg,
     required idDoc,
   }) async {
-    print("update 1");
-
     /// Save message for current user
     await _messagesApi.updateMessage(
       senderId: UserModel().user.userId,
@@ -198,8 +196,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
       likeMsg: likeMsg,
       idDoc: idDoc,
     );
-    print("update 2");
-
     /// Save copy message for receiver
     await _messagesApi.updateMessage(
       senderId: widget.user.userId,
@@ -215,8 +211,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
     //     nType: 'message',
     //     nSenderId: UserModel().user.userId,
     //     nUserDeviceToken: widget.user.userDeviceToken);
-
-
   }
 
   late StreamSubscription<bool> subscription;
@@ -408,7 +402,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                   cursorColor: Colors.pinkAccent.shade200,
                                   cursorWidth: 2,
                                   controller: controller.textController,
-                                  maxLines: 4,
+                                  maxLines:4,
                                   minLines: 1,
                                   autocorrect: false,
                                   decoration: InputDecoration(
@@ -460,6 +454,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                     filled: true,
                                     fillColor: Colors.grey[100],
                                     hintText: _i18n.translate("type_a_message"),
+                                    hintMaxLines: 1,
                                     border: OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                       borderRadius: BorderRadius.only(
@@ -540,8 +535,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                         ? FadeInUp(
                             child:
                                 Container(height: 250, child: emojibuilder()))
-                        : AnimatedContainer(
-                            duration: Duration(microseconds: 500))
+                        : SizedBox(),
                   ],
                 ),
               ),
