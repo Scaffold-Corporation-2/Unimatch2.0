@@ -49,49 +49,55 @@ dependencies:
   cloud_firestore: ^2.5.0
   firebase_messaging: ^10.0.5
   firebase_storage: ^10.0.2
+
+    # GOOGLE Packages Section
   google_mobile_ads: ^0.12.1+1
+  google_fonts: ^2.1.0
+  google_ml_kit: ^0.7.0
+  #Biblioteca para machine learning
+
   # END
 
-    # This plugin help us to Sell VIP Subscription Plans in app
+    # Este plugin nos ajuda a vender planos de assinatura VIP no aplicativo
   in_app_purchase: ^0.5.2 #Olhar os bugs
 
-    # This plugin help us to query users by geolocation center
+    # Este plugin nos ajuda a consultar usuários por centro de geolocalização
   geoflutterfire: ^3.0.1
 
-    # This plugin help us to use custom svg icons
-  flutter_svg: ^0.22.0
-
-    # Used to Select User Country Code
-  country_code_picker: ^2.0.2
-
-    # Used to Manage Application State
-  scoped_model: ^2.0.0-nullsafety.0
-
-    # Used to select images from the User's device image library or take a new photo using the camera
-  image_picker: ^0.8.3+2
-
-    # Used to Crop/Rotate Selected images from user's device
-  image_cropper: ^1.4.1
-
-    # Used to open link schemes in application or browser
-  url_launcher: ^6.0.3
-
-    # Used to get User location by GPS
+    # Usado para obter a localização do usuário por GPS
   geolocator: ^7.4.0
 
     # Used to translate User latitude and longitude coordinates into a readable address
   geocoding: ^2.0.0
 
-    # This plugin help us to create Passport feature
+    #Biblioteca para enviar para maps
+  map_launcher: ^2.1.1
+
+    # Este plugin nos ajuda a usar ícones SVG personalizados
+  flutter_svg: ^0.22.0
+
+    # Usado para gerenciar o estado do aplicativo Bloc**
+  scoped_model: ^2.0.0-nullsafety.0
+
+    # Usado para selecionar imagens do celular
+  image_picker: ^0.8.3+2
+
+    # Usado para cortar / girar imagens selecionadas do dispositivo do usuário
+  image_cropper: ^1.4.1
+
+    # Usado para abrir link no aplicativo ou navegador
+  url_launcher: ^6.0.3
+
+    # Este plugin nos ajuda a criar o recurso Passport
   place_picker: ^0.9.19-nullsafety
 
-    # Used to create placeholder widget while app is loading the image
+    # Usado para criar widget de espaço reservado enquanto o aplicativo está carregando a imagem
   shimmer: ^2.0.0
 
-    # Used to create fuzzy timestamps: (e.g. "3 minutes ago")
+    # Usado para criar carimbos de data / hora difusos: (por exemplo, "3 minutos atrás")
   timeago: ^3.1.0
 
-    # Used to share application content in other applications
+    # Usado para compartilhar o conteúdo do aplicativo em outros aplicativos
   share: ^2.0.4
 
     #Tradução para pt-Br de alguns componentes
@@ -124,20 +130,11 @@ dependencies:
     #Biblioteca para salvar dados em cash
   shared_preferences: ^2.0.6
 
-    #Biblioteca para enviar para maps
-  map_launcher: ^2.1.1
-
-    #Biblioteca para machine learning
-  google_ml_kit: ^0.7.0
-
     #Biblioteca para buscar horas GTM - 00:00
   ntp: ^2.0.0
 
     #Biblioteca para contar tempo
   custom_timer: ^0.0.6
-
-    #Biblioteca de fontes
-  google_fonts: ^2.1.0
 
     #Biblioteca de arrastar pro lado
   swipe_to: 0.1.0-nullsafety.1

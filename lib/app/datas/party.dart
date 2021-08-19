@@ -3,7 +3,6 @@ import 'package:uni_match/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class PartyModel {
-  // todo adicionar
 
   final List<String> stories;
   final String partyName;

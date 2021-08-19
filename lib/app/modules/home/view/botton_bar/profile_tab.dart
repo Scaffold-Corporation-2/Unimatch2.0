@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:uni_match/widgets/app_section_card.dart';
-import 'package:uni_match/widgets/delete_account_button.dart';
 import 'package:uni_match/widgets/profile_basic_info_card.dart';
 import 'package:uni_match/widgets/profile_statistics_card.dart';
 import 'package:uni_match/widgets/sign_out_button_card.dart';
@@ -39,12 +38,7 @@ class ProfileTab extends StatelessWidget {
           /// Sign out button card
           SignOutButtonCard(),
 
-          SizedBox(height: 25),
-
-          /// Delete Account Button
-          DeleteAccountButton(),
-
-          SizedBox(height: 25),
+          SizedBox(height: 5),
 
         ],
       )

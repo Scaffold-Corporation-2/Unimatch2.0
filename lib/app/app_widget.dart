@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:country_code_picker/country_localizations.dart';
 import 'package:uni_match/constants/constants.dart';
 
 class AppWidget extends StatelessWidget {
@@ -26,7 +25,6 @@ class AppWidget extends StatelessWidget {
             return MaterialApp(
               localizationsDelegates: [
                 // AppLocalizations.delegate,
-                CountryLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
               ],

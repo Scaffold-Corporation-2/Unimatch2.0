@@ -28,9 +28,6 @@ class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
       child: Observer(
         builder:(_) => Scaffold(
             key: controller.scaffoldKey,
-            appBar: AppBar(
-              title: Text(controller.i18n.translate("sign_up")!),
-            ),
             body: controller.isLoading
             ? MyCircularProgress(size: 60,)
             : SingleChildScrollView(

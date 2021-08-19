@@ -70,7 +70,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // Go to Passport screen
   Future<void> _goToPassportScreen() async {
     // Get picked location result
-    //Todo Usando Navigator
     LocationResult? result = await Navigator.of(context).push<LocationResult?>(
         MaterialPageRoute(builder: (context) => PassportScreen()));
     // Handle the retur result

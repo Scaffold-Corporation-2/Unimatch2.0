@@ -1,5 +1,3 @@
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uni_match/constants/constants.dart';
 
 class AppInfo {

@@ -49,6 +49,7 @@ class ImageSourceSheet extends StatelessWidget {
                       style: TextStyle(fontSize: 16)),
                   onPressed: () async {
                     // Get image from device gallery
+                    // ignore: deprecated_member_use
                     final pickedFile = await picker.getImage(
                       source: ImageSource.gallery,
                     );
@@ -65,6 +66,7 @@ class ImageSourceSheet extends StatelessWidget {
                       style: TextStyle(fontSize: 16)),
                   onPressed: () async {
                     // Capture image from camera
+                    // ignore: deprecated_member_use
                     final pickedFile = await picker.getImage(
                       source: ImageSource.camera,
                     );

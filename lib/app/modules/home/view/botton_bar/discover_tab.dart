@@ -397,8 +397,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                 _visitsApi.visitUserProfile(
                   visitedUserId: user.userId,
                   userDeviceToken: user.userDeviceToken,
-                  nMessage: "${UserModel().user.userFullname.split(' ')[0]}, "
-                      "${_i18n.translate("visited_your_profile_click_and_see")}",
+                  nMessage: "${_i18n.translate("visited_your_profile_click_and_see")}",
                 );
               }
             }),
@@ -432,8 +431,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
     await _likesApi.likeUser(
         likedUserId: clickedUserDoc[USER_ID],
         userDeviceToken: clickedUserDoc[USER_DEVICE_TOKEN],
-        nMessage: "${UserModel().user.userFullname.split(' ')[0]}, "
-            "${_i18n.translate("liked_your_profile_click_and_see")}",
+        nMessage: "${_i18n.translate("liked_your_profile_click_and_see")}",
         onLikeResult: (result) {
           print('likeResult: $result');
         });
