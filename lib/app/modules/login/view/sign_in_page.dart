@@ -351,7 +351,9 @@ class _SignInScreenState extends State<SignInScreen> {
                                 color: Colors.white,
                               ),
                             ),
-                            onPressed: () async {},
+                            onPressed: () async {
+                              Modular.to.pushNamed("/login/information");
+                            },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(Colors.transparent),
                               foregroundColor: MaterialStateProperty.all(Colors.transparent),
