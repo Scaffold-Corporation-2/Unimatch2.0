@@ -26,25 +26,30 @@ class _WithBuilder extends State<IntroRules> {
   UpdateType? updateType;
 
   List<ItemData> data = [
-    ItemData(Colors.pinkAccent, "assets/images/logo.png", "Unimatch", "Seja bem vind(x)!",
+    ItemData(Color(0XFFE91E63), "assets/images/logo.png", "Unimatch", "Seja bem vindx!",
         "Por favor, leia com atenção as nossas diretrizes."),
 
-    ItemData(Colors.indigoAccent, "assets/images/logo.png", "1", "Respeito",
-        "respeite os outros e trate-os como gostaria de ser tratado."),
+    ItemData(Color(0XFFd81b77), "assets/images/logo.png", "1", "Respeito",
+        "O respeito começa com você! Tenha respeito com os usuários do sistema, "
+            "trate-os como gostaria de ser tratado e coloque-se no lugar do outro."),
 
-    ItemData(Colors.redAccent, "assets/images/logo.png", "2", "Assédio",
-        "É inaceitável qualquer tipo de assédio dentro do app. Se for vítima, denuncie! "
-            "Estaremos sempre prontos para te ajudar."),
+    ItemData(Color(0XFFFF4081), "assets/images/logo.png", "2", "Assédio",
+        "É inaceitável qualquer tipo de assédio/violência dentro do nosso aplicativo. Se você for a vítima, denuncie para o nosso suporte! "
+            "Nos prontificaremos a ajudar e tomar as devidas providências."),
 
-    ItemData(Colors.deepPurpleAccent, "assets/images/logo.png", "3", "Segurança",
-        "Não se precipite em fornecer informações pessoais, matenha-se sempre seguro."),
+    ItemData(Color(0XFFdf448e), "assets/images/logo.png", "3", "Segurança",
+        "Não forneça informações pessoais a outros usuários, permaneça sempre seguro. "
+            "O Unimatch garante a privacidade e segurança dos dados enviados ao sistema."),
 
-    ItemData(Colors.blueAccent, "assets/images/logo.png", "4", "Seja proativo",
-        "Sempre sinalize mau comportamento dentro do app"),
+    ItemData(Color(0XFF9c4691), "assets/images/logo.png", "4", "Seja proativo",
+        "Ajude o Unimatch a se tornar a rede social do universitário, seja proativo, "
+            "engajado e sempre sinalize mau comportamento dentro do app."),
 
-    ItemData(Colors.purpleAccent, "assets/images/logo.png", "5", "Divirta-se",
-        "Conheça pessoas novas, faça amizades, relacionamentos, parceria de breja, "
-            "festa e tudo que tiver direito. Faça sua história na Unimatch!"),
+    ItemData(Color(0XFF871f78), "assets/images/logo.png", "5", "Divirta-se",
+        "Conheça pessoas novas, encontre festas, faça amizades, "
+            "relacionamentos e quem sabe até parceiros de breja, conte com o "
+            "Unimatch para te ajudar nisso, entre nesse mundo e faça sua "
+            "história conosco!"),
   ];
 
   @override
@@ -85,25 +90,25 @@ class _WithBuilder extends State<IntroRules> {
             itemCount: data.length,
             itemBuilder: (context, index){
               return Container(
+                height: MediaQuery.of(context).size.height,
                 color: data[index].color,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Image.asset(
-                      data[index].image,
-                      fit: BoxFit.cover,
-                      height: 300,
-                    ),
-                    Expanded(
-                      child: Column(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      Image.asset(
+                        data[index].image,
+                        fit: BoxFit.cover,
+                        height: 300,
+                      ),
+                      Column(
                         children: <Widget>[
                           Text(
                             data[index].text1,
-                            style: GoogleFonts.eczar(
-                                fontSize: 35,
-                                fontWeight: FontWeight.w600,
+                            style: GoogleFonts.fredokaOne(
+                                fontSize: 45,
+                                fontWeight: FontWeight.w500,
                                 color: Colors.white
                             ),
                           ),
@@ -131,13 +136,17 @@ class _WithBuilder extends State<IntroRules> {
                           ),
                         ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
             positionSlideIcon: 0.8,
-            slideIconWidget: Icon(Icons.arrow_back_ios),
+            slideIconWidget: Icon(
+              Icons.keyboard_arrow_left,
+              color: Colors.black.withOpacity(0.3),
+              size: 35,
+            ),
             onPageChangeCallback: pageChangeCallback,
             waveType: WaveType.liquidReveal,
             liquidController: liquidController,

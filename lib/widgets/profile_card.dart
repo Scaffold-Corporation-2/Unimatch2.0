@@ -97,7 +97,7 @@ class ProfileCard extends StatelessWidget {
                               style: GoogleFonts.nunito(
                                   fontSize: this.page == 'discover' ? 32 : 22,
                                   color: Colors.white,
-                                  fontWeight: FontWeight.w500
+                                  fontWeight: FontWeight.w700
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,

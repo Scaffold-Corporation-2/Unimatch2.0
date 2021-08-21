@@ -154,7 +154,11 @@ dependencies:
     #Biblioteca para info
   fluttertoast: ^8.0.8
 
+    #Biblioteca para intro
   liquid_swipe: ^2.1.0
+
+    #Biblioteca para responsividade
+  responsive_framework: ^0.1.4
 
   #Biblioteca de visibilidade do teclado
   flutter_keyboard_visibility: ^5.0.3
@@ -230,4 +234,4 @@ flutter_icons:
 
 flutter_native_splash:
   image: assets/images/app_logo_white.png
-  color: "#e91e63"
+  color: "#FFFFFF"

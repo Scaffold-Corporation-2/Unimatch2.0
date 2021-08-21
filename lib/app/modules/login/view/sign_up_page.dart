@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:uni_match/app/modules/login/store/login_store.dart';
 import 'package:uni_match/widgets/default_button.dart';
 import 'package:uni_match/widgets/my_circular_progress.dart';
@@ -34,8 +35,9 @@ class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
               padding: const EdgeInsets.all(15),
               child: Column(
                 children: <Widget>[
+                  SizedBox(height: 20),
                   Text(controller.i18n.translate("create_account")!,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      style: GoogleFonts.nunito(fontSize: 25, fontWeight: FontWeight.bold)),
                   SizedBox(height: 20),
 
                   /// Profile photo
