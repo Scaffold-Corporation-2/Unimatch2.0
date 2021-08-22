@@ -28,7 +28,7 @@ class ShowDialogUndoMatch extends StatelessWidget {
           color: Colors.pink,
         ),
         SizedBox(width: 10),
-        Expanded(child: Text(i18n.translate("Alert")!, style: TextStyle(fontSize: 22)))
+        Expanded(child: Text(i18n.translate("Too_bad")!, style: TextStyle(fontSize: 22)))
       ],
     ),
     content: Text(
