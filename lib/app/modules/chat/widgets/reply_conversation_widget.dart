@@ -45,7 +45,7 @@ class ReplyConversationWidget extends StatelessWidget {
         children: [
           Text(
             userName == UserModel().user.userFullname ? 'Você':userName,
-            style: GoogleFonts.eczar(
+            style: GoogleFonts.nunito(
             color: Colors.black,
             fontSize:17,
             fontWeight: FontWeight.bold),
@@ -53,7 +53,7 @@ class ReplyConversationWidget extends StatelessWidget {
           ),
         ],
       ),
-      // const SizedBox(height: 2),
+      const SizedBox(height: 4),
     //this.message.substring(0,5) == 'https'?
       this.isImage?
       Card(
@@ -69,11 +69,10 @@ class ReplyConversationWidget extends StatelessWidget {
             height: 70,
             child: Image.network(message)))
           : Text(this.message,
-      style: GoogleFonts.eczar(
+      style: GoogleFonts.nunito(
         color: Colors.black,
         fontSize: 15,
         height: 1.1,
-        fontWeight: FontWeight.bold,
       ),
       textAlign: TextAlign.start,
       )

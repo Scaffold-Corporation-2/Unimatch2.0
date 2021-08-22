@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reaction_button/flutter_reaction_button.dart';
 import 'package:uni_match/app/modules/chat/widgets/reply_conversation_widget.dart';
@@ -80,7 +81,7 @@ class ChatMessage extends StatelessWidget {
                         begin: Alignment.topRight,
                         end: Alignment.bottomLeft,
                         colors: [
-                          isUserSender ? Colors.pink.shade400: Colors.purple.shade900,
+                          isUserSender ? Colors.pink.shade300: Colors.purple.shade900,
                           isUserSender ? Colors.pink.shade300 : Color(0xFF871F78),
                         ],
                       ),
@@ -116,7 +117,9 @@ class ChatMessage extends StatelessWidget {
                                     height: 200,
                                     child: Hero(
                                         tag: imageLink!,
-                                        child: Image.network(imageLink!))),
+                                        child: Image.network(imageLink!)
+                                       // Image.network(imageLink!)
+                                    )),
                               ),
                             )
                           )
@@ -131,7 +134,7 @@ class ChatMessage extends StatelessWidget {
                                 padding: const EdgeInsets.only(left:4,top: 3),
                                 child: Text(
                                   textMessage ?? "",
-                                  style: GoogleFonts.eczar(
+                                  style: GoogleFonts.nunito(
                                      height: 1.3,
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
@@ -164,7 +167,7 @@ class ChatMessage extends StatelessWidget {
               _userProfilePhoto,
               if(likeMsg)Icon(Icons.favorite,
                 color: Colors.red,
-                size: 30,
+                size: 20,
               )
             ],
           ) : Container(width: 0, height: 0),

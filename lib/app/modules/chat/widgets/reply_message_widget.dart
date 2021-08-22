@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 class ReplyMessageWidget extends StatelessWidget {
   final String message;
   final String otherUser;
@@ -44,7 +45,7 @@ class ReplyMessageWidget extends StatelessWidget {
           children: [
             Text(
               otherUser,
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15,
+              style: GoogleFonts.nunito(fontWeight: FontWeight.bold,fontSize: 18,
               ),
               textAlign: TextAlign.start,
             ),
@@ -54,11 +55,12 @@ class ReplyMessageWidget extends StatelessWidget {
               )
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
         isImage == false  ?
-        Text(this.message, style: TextStyle(color: Colors.black,
-        fontSize: 18),
-        maxLines: 5,
+
+        Text(this.message, style: GoogleFonts.nunito(color: Colors.black,
+        fontSize: 17),
+        maxLines: 4,
         textAlign: TextAlign.start,
         ):
         Card(

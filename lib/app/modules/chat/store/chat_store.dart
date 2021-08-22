@@ -9,7 +9,7 @@ class ChatStore = _ChatStore  with _$ChatStore;
 abstract class _ChatStore  with Store {
 
   final focusNode = FocusNode();
-  final focusKeyboardEmoji = FocusNode();
+  final textController = TextEditingController();
 
   @observable
   String replyMessage = '';
@@ -29,11 +29,11 @@ abstract class _ChatStore  with Store {
   @observable
   bool likeMsg = false;
 
+
   @action
   msgLiked(){
     likeMsg=!likeMsg;
   }
-
 
 @action
   void replyToMessage(String message, bool user,String? image, bool imageBool) {
@@ -62,8 +62,6 @@ abstract class _ChatStore  with Store {
   }
   //EMOJIS
 
-  final textController = TextEditingController();
-
   @action
   onEmojiSelected(Emoji emoji) {
     textController.text = textController.text + emoji.emoji;
@@ -71,11 +69,6 @@ abstract class _ChatStore  with Store {
   @action
   showEmojiKeyboard(){
     showEmoji = !showEmoji;
-  }
-
-  @action
-  changedEmojiState(bool state) {
-    showEmoji = state;
   }
 
 }

@@ -158,17 +158,6 @@ mixin _$ChatStore on _ChatStore, Store {
   }
 
   @override
-  dynamic changedEmojiState(bool state) {
-    final _$actionInfo = _$_ChatStoreActionController.startAction(
-        name: '_ChatStore.changedEmojiState');
-    try {
-      return super.changedEmojiState(state);
-    } finally {
-      _$_ChatStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
 replyMessage: ${replyMessage},

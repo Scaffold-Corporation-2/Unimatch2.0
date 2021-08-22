@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:swipe_to/swipe_to.dart';
@@ -19,7 +20,6 @@ import 'package:uni_match/app/datas/user.dart';
 import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/app/modules/chat/store/chat_store.dart';
 import 'package:uni_match/app/modules/chat/widgets/reply_message_widget.dart';
-import 'package:uni_match/app/modules/chat/widgets/show_modal_bottom.dart';
 import 'package:uni_match/app/modules/profile/view/profile_screen.dart';
 import 'package:uni_match/constants/constants.dart';
 import 'package:uni_match/dialogs/common_dialogs.dart';
@@ -103,7 +103,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
               },
             ));
   }
-
   // Send message
   Future<void> _sendMessage({
     required String type,
@@ -188,6 +187,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
   Future<void> _updateMenssage({
     required likeMsg,
     required idDoc,
+
   }) async {
     /// Save message for current user
     await _messagesApi.updateMessage(
@@ -203,14 +203,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
       likeMsg: likeMsg,
       idDoc: idDoc,
     );
-    // await _notificationsApi.sendPushNotification(
-    //     nTitle: APP_NAME,
-    ///MENSAGEM - CURTIU UMA MENSAGEM
-    //     nBody: '${UserModel().user.userFullname}, '
-    //         '${_i18n.translate("send_a_message_to_you")}',
-    //     nType: 'message',
-    //     nSenderId: UserModel().user.userId,
-    //     nUserDeviceToken: widget.user.userDeviceToken);
   }
 
   late StreamSubscription<bool> subscription;
@@ -245,7 +237,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
     ///
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     _pr = ProgressDialog(context);
-
     return Scaffold(
       ///AppBar.
       appBar: AppBar(
@@ -317,7 +308,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
 
                         /// Delete chat
                         await _messagesApi.deleteChat(widget.user.userId);
-
                         // Hide progress
                         await _pr.hide();
                       });
@@ -398,11 +388,13 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                 if (controller.replyMessage != '')
                                   Container(child: buildReply()),
                                 TextFormField(
+                                  autofocus: true,
+                                  textInputAction: TextInputAction.newline,
                                   focusNode: controller.focusNode,
                                   cursorColor: Colors.pinkAccent.shade200,
                                   cursorWidth: 2,
                                   controller: controller.textController,
-                                  maxLines:4,
+                                  maxLines: 4,
                                   minLines: 1,
                                   autocorrect: false,
                                   decoration: InputDecoration(
@@ -639,20 +631,24 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                   // Show chat bubble
                   return GestureDetector(
                     onDoubleTap: () async {
-                      await _updateMenssage(likeMsg: true, idDoc: idDoc);
-                    },
-                    onLongPress: () {
-                      if (likeMsgBool)
-                      {
-                        ShowModalBottom.show(
-                            context: context,
-                            ontap: () async {
-                              await _updateMenssage(
-                                  likeMsg: false, idDoc: idDoc);
-                            });
-                        controller.focusNode.unfocus();
+                      //controller.userLikedId = UserModel().user.userId;
+                      if (likeMsgBool && !isUserSender ) {
+                        await _updateMenssage(likeMsg: false, idDoc: idDoc);
                       }
+                      if (!likeMsgBool && !isUserSender) await _updateMenssage(likeMsg: true, idDoc: idDoc);
                     },
+                    // onLongPress: () {
+                    //   if (likeMsgBool)
+                    //   {
+                    //     ShowModalBottom.show(
+                    //         context: context,
+                    //         ontap: () async {
+                    //           await _updateMenssage(
+                    //               likeMsg: false, idDoc: idDoc,userLikedId: controller.userLikedId);
+                    //         });
+                    //     controller.focusNode.unfocus();
+                    //   }
+                    // },
                     child: SwipeTo(
                       iconColor: Colors.transparent,
                       offsetDx: 0.2,

@@ -2,11 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:uni_match/app/api/matches_api.dart';
+import 'package:uni_match/app/api/messages_api.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/api/conversations_api.dart';
 import 'package:uni_match/app/datas/user.dart';
 import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/constants/constants.dart';
+import 'package:uni_match/dialogs/common_dialogs.dart';
 import 'package:uni_match/dialogs/progress_dialog.dart';
 import 'package:uni_match/helpers/app_ad_helper.dart';
 import 'package:uni_match/widgets/badge.dart';
@@ -24,7 +27,8 @@ class _ConversationsTabState extends State<ConversationsTab> {
   final AppController i18n = Modular.get();
 
   final _conversationsApi = ConversationsApi();
-
+  final _matchesApi = MatchesApi();
+  final _messagesApi = MessagesApi();
   @override
   void initState() {
     super.initState();
@@ -107,6 +111,8 @@ class _ConversationsTabState extends State<ConversationsTab> {
                             ? Badge(text: i18n.translate("new"))
                             : null,
                         onTap: () async {
+
+                          print('cheguei aqui');
                           /// Show progress dialog
                           pr.show(i18n.translate("processing")!);
 
@@ -125,7 +131,26 @@ class _ConversationsTabState extends State<ConversationsTab> {
                           pr.hide();
 
                           /// Go to chat screen
-                          Modular.to.pushNamed('/chat', arguments: user);
+
+                          await _matchesApi.checkMatch(onMatchResult: (result) {
+                            if(result){
+                              Modular.to.pushNamed('/chat', arguments: user);
+                            }else{
+                              errorDialog(context,
+                                  //title: _i18n.translate("delete_match"),
+                                  message: 'Mensagem a ser traduzida.',
+                                  // "${_i18n.translate("are_you_sure_you_want_to_delete_your_match_with")}: "
+                                  //     "${widget.user.userFullname}?\n\n"
+                                  //     "${_i18n.translate("this_action_cannot_be_reversed")}",
+                                  positiveText: ("Ok"),
+                                  negativeText: ("Deletar Conversa"),
+                                  negativeAction: () => Navigator.of(context).pop(),
+                                  positiveAction: () async {
+                                    await _messagesApi.deleteChat(user.userId);
+                                    Navigator.of(context).pop();
+                                  });
+                            }
+                          }, userId: user.userId);
                         },
                       ),
                     );
