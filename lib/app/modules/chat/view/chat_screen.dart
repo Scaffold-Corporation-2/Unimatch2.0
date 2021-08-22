@@ -637,18 +637,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                       }
                       if (!likeMsgBool && !isUserSender) await _updateMenssage(likeMsg: true, idDoc: idDoc);
                     },
-                    // onLongPress: () {
-                    //   if (likeMsgBool)
-                    //   {
-                    //     ShowModalBottom.show(
-                    //         context: context,
-                    //         ontap: () async {
-                    //           await _updateMenssage(
-                    //               likeMsg: false, idDoc: idDoc,userLikedId: controller.userLikedId);
-                    //         });
-                    //     controller.focusNode.unfocus();
-                    //   }
-                    // },
                     child: SwipeTo(
                       iconColor: Colors.transparent,
                       offsetDx: 0.2,
