@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:uni_match/app/api/matches_api.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/api/conversations_api.dart';
 import 'package:uni_match/app/datas/user.dart';
@@ -13,6 +15,7 @@ import 'package:uni_match/widgets/badge.dart';
 import 'package:uni_match/widgets/build_title.dart';
 import 'package:uni_match/widgets/no_data.dart';
 import 'package:uni_match/widgets/processing.dart';
+import 'package:uni_match/widgets/show_dialog_undo_match.dart';
 
 class ConversationsTab extends StatefulWidget {
   // Variables
@@ -24,6 +27,7 @@ class _ConversationsTabState extends State<ConversationsTab> {
   final AppController i18n = Modular.get();
 
   final _conversationsApi = ConversationsApi();
+  final _matchesApi = MatchesApi();
 
   @override
   void initState() {
@@ -90,8 +94,8 @@ class _ConversationsTabState extends State<ConversationsTab> {
                         subtitle: conversation[MESSAGE_TYPE] == 'text'
                           ? Text(
                           conversation[LAST_MESSAGE].toString().length <= 25
-                              ? "${conversation[LAST_MESSAGE]}\n"+"${timeago.format(conversation[TIMESTAMP].toDate())}"
-                              : "${conversation[LAST_MESSAGE].toString().substring(0,22)}...\n"+"${timeago.format(conversation[TIMESTAMP].toDate())}"
+                              ? "${conversation[LAST_MESSAGE]}\n"+"${timeago.format(conversation[TIMESTAMP].toDate(),locale: 'pt_BR')}"
+                              : "${conversation[LAST_MESSAGE].toString().substring(0,22)}...\n"+"${timeago.format(conversation[TIMESTAMP].toDate(),locale: 'pt_BR')}"
 
                         )
                           : Row(
@@ -125,8 +129,23 @@ class _ConversationsTabState extends State<ConversationsTab> {
                           pr.hide();
 
                           /// Go to chat screen
-                          Modular.to.pushNamed('/chat', arguments: user);
-                        },
+
+                          await _matchesApi.checkMatch(onMatchResult: (result) {
+                            if(result){
+                              Modular.to.pushNamed('/chat', arguments: user);
+                            }else{
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) {
+                                    return ShowDialogUndoMatch(
+                                        userFullName: user.userFullname,
+                                        userId: user.userId,
+                                    );
+                                  });
+                            }
+                          }, userId: user.userId);
+                        },//await _messagesApi.deleteChat(user.userId);
                       ),
                     );
                   }),

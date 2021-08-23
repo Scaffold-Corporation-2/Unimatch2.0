@@ -55,7 +55,7 @@ class ChatMessage extends StatelessWidget {
               _userProfilePhoto,
               if(likeMsg)Icon(Icons.favorite,
                 color: Colors.red,
-                size: 30,
+                size: 20,
               )
             ],
           ) : Container(width: 0, height: 0),
@@ -78,8 +78,8 @@ class ChatMessage extends StatelessWidget {
                         begin: Alignment.topRight,
                         end: Alignment.bottomLeft,
                         colors: [
-                          isUserSender ? Colors.pink.shade600 : Colors.purple.shade900,
-                          isUserSender ? Colors.pink.shade400 : Color(0xFF871F78),
+                          isUserSender ? Colors.pink.shade300: Colors.purple.shade900,
+                          isUserSender ? Colors.pink.shade300 : Color(0xFF871F78),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(25)),
@@ -114,12 +114,15 @@ class ChatMessage extends StatelessWidget {
                                     height: 200,
                                     child: Hero(
                                         tag: imageLink!,
-                                        child: Image.network(imageLink!))),
+                                        child: Image.network(imageLink!)
+                                       // Image.network(imageLink!)
+                                    )),
                               ),
                             )
                           )
                           /// Text message
                           :
+                          //TODO verificar NULL é realizado no container.
                           Container(
                               width: replyMessage.isNotEmpty
                                   ? MediaQuery.of(context).size.width * 0.65
@@ -128,7 +131,7 @@ class ChatMessage extends StatelessWidget {
                                 padding: const EdgeInsets.only(left:4,top: 3),
                                 child: Text(
                                   textMessage ?? "",
-                                  style: GoogleFonts.eczar(
+                                  style: GoogleFonts.nunito(
                                      height: 1.3,
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
@@ -142,13 +145,15 @@ class ChatMessage extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: 3),
                 /// Message time ago
                 Container(
                     margin: const EdgeInsets.only(left: 20, right: 20),
-                    child: Text(timeAgo)
+                    child: Text(timeAgo,
+                    style: GoogleFonts.openSans(
+                      fontSize: 11,
+                    ),)
                 ),
-
               ],
             ),
           ),
@@ -159,7 +164,7 @@ class ChatMessage extends StatelessWidget {
               _userProfilePhoto,
               if(likeMsg)Icon(Icons.favorite,
                 color: Colors.red,
-                size: 30,
+                size: 20,
               )
             ],
           ) : Container(width: 0, height: 0),
