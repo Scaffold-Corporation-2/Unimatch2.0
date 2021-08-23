@@ -52,6 +52,7 @@ class ItsMatchDialog extends StatelessWidget {
                   "${i18n.translate("you_and")} "
                   "${matchedUser.userFullname.split(" ")[0]} "
                   "${i18n.translate("liked_each_other")}",
+                  textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 18, color: Colors.grey)),
               SizedBox(height: 10),
 

@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/models/user_model.dart';
+import 'package:uni_match/app/modules/profile/store/profile_store.dart';
 import 'package:uni_match/app/modules/profile/view/profile_screen.dart';
 import 'package:uni_match/dialogs/common_dialogs.dart';
 import 'package:uni_match/dialogs/progress_dialog.dart';
@@ -17,7 +19,7 @@ class EditProfileScreen extends StatefulWidget {
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditProfileScreenState extends ModularState<EditProfileScreen, ProfileStore> {
   // Variables
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -138,43 +140,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               SizedBox(height: 20),
 
-              /// School field
-              TextFormField(
-                controller: _schoolController,
-                decoration: InputDecoration(
-                    labelText: _i18n.translate("school"),
-                    hintText: _i18n.translate("enter_your_school_name"),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.all(9.0),
-                      child: SvgIcon("assets/icons/university_icon.svg"),
-                    )),
-                validator: (school) {
-                  if (school == null) {
-                    return _i18n.translate("please_enter_your_school_name");
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-
-              /// Job title field
-              TextFormField(
-                controller: _orientationController,
-                decoration: InputDecoration(
-                    labelText: _i18n.translate("job_title"),
-                    hintText: _i18n.translate("enter_your_job_title"),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: SvgIcon("assets/icons/gender_icon.svg"),
-                    )),
-                validator: (job) {
-                  if (job == null) {
-                    return _i18n.translate("please_enter_your_job_title");
-                  }
-                  return null;
-                },
+              /// User gender
+              Observer(
+                builder:(_) => DropdownButtonFormField<String>(
+                  items: controller.sexualOrientation.map((orientation) {
+                    return new DropdownMenuItem(
+                      value: orientation,
+                      child: controller.i18n.translate("lang") != 'pt_br'
+                          ? Text(
+                          '${orientation.toString()} - ${controller.i18n.translate(orientation.toString().toLowerCase())}')
+                          : Text(orientation.toString()),
+                    );
+                  }).toList(),
+                  hint: Text(controller.i18n.translate("select_orientation")!),
+                  onChanged: (orientation) {
+                    controller.selecionarOrientacao(orientation!);
+                  },
+                  validator: (String? value) {
+                    if (value == null) {
+                      return controller.i18n.translate("please_select_your_orientation");
+                    }
+                    return null;
+                  },
+                  onTap: () => FocusScope.of(context).unfocus(),
+                ),
               ),
               SizedBox(height: 20),
             ],
@@ -249,7 +238,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     /// Update uer profile
     UserModel().updateProfile(
         userSchool: _schoolController.text.trim(),
-        userOrientation: _orientationController.text.trim(),
+        userOrientation: controller.selectedOrientation!,
         userBio: _bioController.text.trim(),
         onSuccess: () {
           /// Show success message

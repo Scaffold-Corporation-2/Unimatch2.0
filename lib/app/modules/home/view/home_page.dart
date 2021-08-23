@@ -102,7 +102,6 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
                      highlightColor: Colors.transparent,
                      icon: _getNotificationCounter(),
                      onPressed: () async {
-                       // Go to Notifications Screen
                        Modular.to.pushNamed('/home/notification');
                      }),
                ],

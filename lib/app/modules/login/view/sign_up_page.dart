@@ -15,9 +15,11 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
 
+
   @override
   void initState() {
     controller.addForm();
+    controller.getUniversities();
     controller.nameBirthday();
     super.initState();
   }
@@ -155,6 +157,47 @@ class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
                             onTap: () => FocusScope.of(context).unfocus(),
                           ),
                           SizedBox(height: 20),
+                          /// School field
+                          GestureDetector(
+                              onTap: () async {
+                                FocusScope.of(context).unfocus();
+                                var response = await Modular.to.pushNamed('/login/university');
+                                if(response != null)
+                                  controller.selectedUniversity(response as String);
+                              },
+                              child: Observer(
+                                builder:(_) =>  Material(
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(28),
+                                      side: BorderSide(color: Colors.grey[500]!)
+                                  ),
+                                  child: TextFormField(
+                                    readOnly: true,
+                                    controller: controller.schoolController,
+                                    textCapitalization: TextCapitalization.characters,
+                                    decoration: InputDecoration(
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(Radius.circular(28)),
+                                          borderSide: BorderSide(width: 1.8,color: Theme.of(context).primaryColor,),
+                                        ),
+                                        labelStyle: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 18
+                                        ),
+                                        enabled: false,
+                                        hintText:  controller.i18n.translate("enter_your_school_name"),
+                                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                                        prefixIcon: Padding(
+                                          padding: const EdgeInsets.all(9.0),
+                                          child: SvgIcon("assets/icons/university_icon.svg"),
+                                        )
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ),
+                          SizedBox(height: 20),
 
                           /// Birthday card
                           Observer(
@@ -173,29 +216,6 @@ class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
                                     controller.showDatePicker(context);
                                   },
                                 )),
-                          ),
-                          SizedBox(height: 20),
-
-                          /// School field
-                          TextFormField(
-                            controller: controller.schoolController,
-                            decoration: InputDecoration(
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(28)),
-                                  borderSide: BorderSide(width: 1.8,color: Theme.of(context).primaryColor,),
-                                ),
-                                labelStyle: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontSize: 18
-                                ),
-                                labelText: controller.i18n.translate("school"),
-                                hintText: controller.i18n.translate("enter_your_school_name"),
-                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.all(9.0),
-                                  child: SvgIcon("assets/icons/university_icon.svg"),
-                                )),
-                              onTap: () => FocusScope.of(context).unfocus(),
                           ),
                           SizedBox(height: 20),
 

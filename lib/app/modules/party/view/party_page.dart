@@ -40,7 +40,10 @@ class _PartyPageState extends ModularState<PartyPage, PartyStore> {
         appBar: AppBar(
           title: Text(
             controller.i18n.translate("parties")!,
-            style: TextStyle(fontSize: 20),
+            style: TextStyle(
+                fontSize: 20,
+                color: Colors.grey[600]
+            ),
           ),
         ),
         body: Observer(
@@ -111,6 +114,15 @@ class _PartyPageState extends ModularState<PartyPage, PartyStore> {
                                 ),
                                 child: Container(
                                   alignment: Alignment.bottomLeft,
+                                  decoration: BoxDecoration(
+
+                                    gradient: LinearGradient(
+                                        begin: Alignment.bottomRight,
+                                        colors: [
+                                          Theme.of(context).primaryColor,
+                                          Colors.transparent
+                                        ]),
+                                  ),
                                   padding: const EdgeInsets.all(12.0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,

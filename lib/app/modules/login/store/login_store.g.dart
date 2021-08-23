@@ -130,6 +130,51 @@ mixin _$LoginStore on _LoginStore, Store {
     });
   }
 
+  final _$initListAtom = Atom(name: '_LoginStore.initList');
+
+  @override
+  ObservableList<University> get initList {
+    _$initListAtom.reportRead();
+    return super.initList;
+  }
+
+  @override
+  set initList(ObservableList<University> value) {
+    _$initListAtom.reportWrite(value, super.initList, () {
+      super.initList = value;
+    });
+  }
+
+  final _$showItemListAtom = Atom(name: '_LoginStore.showItemList');
+
+  @override
+  ObservableList<University> get showItemList {
+    _$showItemListAtom.reportRead();
+    return super.showItemList;
+  }
+
+  @override
+  set showItemList(ObservableList<University> value) {
+    _$showItemListAtom.reportWrite(value, super.showItemList, () {
+      super.showItemList = value;
+    });
+  }
+
+  final _$loadListAtom = Atom(name: '_LoginStore.loadList');
+
+  @override
+  bool get loadList {
+    _$loadListAtom.reportRead();
+    return super.loadList;
+  }
+
+  @override
+  set loadList(bool value) {
+    _$loadListAtom.reportWrite(value, super.loadList, () {
+      super.loadList = value;
+    });
+  }
+
   final _$emailLoginAsyncAction = AsyncAction('_LoginStore.emailLogin');
 
   @override
@@ -152,6 +197,14 @@ mixin _$LoginStore on _LoginStore, Store {
   @override
   Future getImage(BuildContext context) {
     return _$getImageAsyncAction.run(() => super.getImage(context));
+  }
+
+  final _$getUniversitiesAsyncAction =
+      AsyncAction('_LoginStore.getUniversities');
+
+  @override
+  Future getUniversities() {
+    return _$getUniversitiesAsyncAction.run(() => super.getUniversities());
   }
 
   final _$_LoginStoreActionController = ActionController(name: '_LoginStore');
@@ -223,6 +276,28 @@ mixin _$LoginStore on _LoginStore, Store {
   }
 
   @override
+  dynamic selectedUniversity(String university) {
+    final _$actionInfo = _$_LoginStoreActionController.startAction(
+        name: '_LoginStore.selectedUniversity');
+    try {
+      return super.selectedUniversity(university);
+    } finally {
+      _$_LoginStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic filterSearch(String query) {
+    final _$actionInfo = _$_LoginStoreActionController.startAction(
+        name: '_LoginStore.filterSearch');
+    try {
+      return super.filterSearch(query);
+    } finally {
+      _$_LoginStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 formKey: ${formKey},
@@ -232,7 +307,10 @@ agreeTerms: ${agreeTerms},
 selectedGender: ${selectedGender},
 selectedOrientation: ${selectedOrientation},
 birthday: ${birthday},
-imageFile: ${imageFile}
+imageFile: ${imageFile},
+initList: ${initList},
+showItemList: ${showItemList},
+loadList: ${loadList}
     ''';
   }
 }

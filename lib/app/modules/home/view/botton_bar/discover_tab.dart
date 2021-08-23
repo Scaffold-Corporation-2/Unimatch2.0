@@ -171,57 +171,57 @@ class _DiscoverTabState extends State<DiscoverTab> {
         children: [
           /// User card list
           SwipeStack(
-                  key: _swipeKey,
-                  children: _users!.map((userDoc) {
-                    // Get User object
-                    final Usuario user =
-                        Usuario.fromDocument(userDoc.data()! as Map);
-                    // Return user profile
-                    return SwiperItem(
-                        builder: (SwiperPosition position, double progress) {
-                      /// Return User Card
-                      return ProfileCard(
-                          page: 'discover', position: position, user: user);
-                    });
-                  }).toList(),
-                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-                  translationInterval: 6,
-                  scaleInterval: 0.03,
-                  stackFrom: StackFrom.None,
-                  onEnd: () => debugPrint("onEnd"),
-                  onSwipe: (int index, SwiperPosition position) async {
+            key: _swipeKey,
+            children: _users!.map((userDoc) {
+              // Get User object
+              final Usuario user = Usuario.fromDocument(userDoc.data()! as Map);
+              // Return user profile
+              return SwiperItem(
+                  builder: (SwiperPosition position, double progress) {
+                /// Return User Card
+                return ProfileCard(
+                    page: 'discover', position: position, user: user);
+              });
+            }).toList(),
+            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+            translationInterval: 6,
+            scaleInterval: 0.03,
+            stackFrom: StackFrom.None,
+            onEnd: () => debugPrint("onEnd"),
+            onSwipe: (int index, SwiperPosition position) async {
 
-                   swipeNum--;
-                    debugPrint("SwipeNum: $swipeNum");
+             swipeNum--;
+              debugPrint("SwipeNum: $swipeNum");
 
-                   await UserModel()
-                       .updateUserData(userId: UserModel().user.userId, data: {
-                     '$USER_SETTINGS.$USER_SWIPES': swipeNum});
+             await UserModel()
+                 .updateUserData(userId: UserModel().user.userId, data: {
+               '$USER_SETTINGS.$USER_SWIPES': swipeNum});
 
-                    /// Control swipe position
-                    switch (position) {
-                      case SwiperPosition.None:
-                        break;
-                      case SwiperPosition.Left:
+              /// Control swipe position
+              switch (position) {
+                case SwiperPosition.None:
+                  break;
+                case SwiperPosition.Left:
 
-                        /// Swipe Left Dislike profile
-                        _dislikesApi.dislikeUser(
-                            dislikedUserId: _users![index][USER_ID],
-                            onDislikeResult: (r) =>
-                                debugPrint('onDislikeResult: $r'));
+                  /// Swipe Left Dislike profile
+                  _dislikesApi.dislikeUser(
+                      dislikedUserId: _users![index][USER_ID],
+                      onDislikeResult: (r) =>
+                          debugPrint('onDislikeResult: $r'));
 
-                        if(swipeNum == 0)setState(() {});
-                        break;
+                  if(swipeNum == 0)setState(() {});
+                  break;
 
-                      case SwiperPosition.Right:
+                case SwiperPosition.Right:
 
-                        /// Swipe right and Like profile
-                        _likeUser(context, clickedUserDoc: _users![index]);
+                  /// Swipe right and Like profile
+                  _likeUser(context, clickedUserDoc: _users![index]);
 
-                        if(swipeNum == 0)setState(() {});
-                        break;
-                    }
-                  }),
+                  if(swipeNum == 0)setState(() {});
+                  break;
+              }
+            }
+          ),
 
         if(swipeNum == 0)
           Align(
@@ -328,8 +328,6 @@ class _DiscoverTabState extends State<DiscoverTab> {
             onTap: () {
               // Go to Disliked Profiles Screen
               Modular.to.pushNamed('/profile/dislikes');
-              // Navigator.of(context).push(MaterialPageRoute(
-              //     builder: (context) => DislikedProfilesScreen()));
             }),
 
         SizedBox(width: 20),

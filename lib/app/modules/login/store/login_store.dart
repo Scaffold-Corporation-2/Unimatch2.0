@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:mobx/mobx.dart';
 import 'package:uni_match/app/app_controller.dart';
+import 'package:uni_match/app/datas/university.dart';
 import 'package:uni_match/app/models/app_model.dart';
 import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/dialogs/progress_dialog.dart';
@@ -25,9 +26,9 @@ abstract class _LoginStore with Store {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final nameController = TextEditingController();
   final schoolController = TextEditingController();
-  final jobController = TextEditingController();
   final bioController = TextEditingController();
   final numberController = TextEditingController();
+  final editingController = TextEditingController();
 
   late ProgressDialog pr;
   String phoneCode = '+55'; // Define yor default phone code
@@ -37,54 +38,11 @@ abstract class _LoginStore with Store {
     Modular.to.navigate(nomeRota);
   }
 
-  //bug ?? talvez
   @observable
   GlobalKey<FormState>? formKey;
 
   addForm() => formKey = GlobalKey<FormState>();
 
-//******************************************************************************
-  /// Login com Número ///
-  ///
-  progress(context) {
-    pr = ProgressDialog(context, isDismissible: false);
-  }
-
-
-  /// Check and request location permission
-  Future<void> checkLocationPermission(
-      {required VoidCallback onGpsDisabled,
-      required VoidCallback onDenied,
-      required VoidCallback onGranted}) async {
-    /// Check if GPS is enabled
-    if (!(await Geolocator.isLocationServiceEnabled())) {
-      // Callback function
-      onGpsDisabled();
-      debugPrint('onGpsDisabled() -> disabled');
-    } else {
-      /// Request permission
-      final LocationPermission permission = await Geolocator.requestPermission();
-
-      switch (permission) {
-        case LocationPermission.denied:
-          onDenied();
-          debugPrint('permission: denied');
-          break;
-        case LocationPermission.deniedForever:
-          onDenied();
-          debugPrint('permission: deniedForever');
-          break;
-        case LocationPermission.whileInUse:
-          onGranted();
-          debugPrint('permission: whileInUse');
-          break;
-        case LocationPermission.always:
-          onGranted();
-          debugPrint('permission: always');
-          break;
-      }
-    }
-  }
 
   //******************************************************************************
   /// Login Email ///
@@ -136,7 +94,7 @@ abstract class _LoginStore with Store {
   @observable
   String? selectedGender;
 
-  List<String> genders = ['Homem', 'Mulher', 'Outro'];
+  List<String> genders = ['Homem', 'Mulher'];
 
   @observable
   String? selectedOrientation;
@@ -191,8 +149,6 @@ abstract class _LoginStore with Store {
   updateUserBithdayInfo(DateTime date) {
     // Update the inicial date
     initialDateTime = date;
-    // Set for label
-    // birthday = date.toString().split(' ')[0];
     birthday = UtilData.obterDataDDMMAAAA(date);
     // User birthday info
     userBirthDay = date.day;
@@ -247,6 +203,63 @@ abstract class _LoginStore with Store {
       },
     );
   }
+
+  /// University
+  @observable
+  ObservableList<University> initList = ObservableList();
+
+  @observable
+  ObservableList<University> showItemList = ObservableList();
+
+  @observable
+  bool loadList = false;
+
+  @action
+  selectedUniversity(String university) => schoolController.text = university;
+
+  @action
+  getUniversities() async {
+    loadList = true;
+
+    var response = await Dio().get('https://api-universities.herokuapp.com/universities');
+
+    if (response.statusCode == 200) {
+      for (var dados in response.data) {
+        if (dados['name'] != null) {
+            initList.add(University.fromJson(dados));
+            showItemList.add(University.fromJson(dados));
+        }
+      }
+      loadList = false;
+
+    } else {
+      print(response.statusCode);
+    }
+  }
+
+  @action
+  filterSearch(String query) {
+    List<University> searchList = [];
+    searchList.addAll(initList);
+
+    if (query.isNotEmpty) {
+      List<University> resultListData = [];
+      searchList.forEach((item) {
+        if (item.name.contains(query.toUpperCase())) {
+          resultListData.add(item);
+        }
+      });
+        showItemList.clear();
+        showItemList.addAll(resultListData);
+      return;
+
+    } else {
+        showItemList.clear();
+        showItemList.addAll(initList);
+    }
+  }
+
+
 
   /// Handle Create account
   createAccount(context) async {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/models/app_model.dart';
 import 'package:uni_match/constants/constants.dart';
 import 'package:uni_match/helpers/app_helper.dart';
-import 'package:uni_match/widgets/app_logo.dart';
 
 class AboutScreen extends StatelessWidget {
   // Variables
@@ -25,7 +25,14 @@ class AboutScreen extends StatelessWidget {
           child: Column(
             children: <Widget>[
               /// App icon
-              AppLogo(),
+              Center(
+                child: Image.asset(
+                  "assets/images/app_logo.png",
+                  width: 120,
+                  height:120,
+                  fit: BoxFit.cover,
+                ),
+              ),
               SizedBox(height: 10),
 
               /// App name
@@ -47,10 +54,11 @@ class AboutScreen extends StatelessWidget {
               SizedBox(height: 15),
               // App description
               Text(i18n.translate('about_us_description')!,
-                  style: TextStyle(
+                  style: GoogleFonts.nunito(
                     fontSize: 18,
+                    fontWeight: FontWeight.w600
                   ),
-                  textAlign: TextAlign.center),
+                  textAlign: TextAlign.justify),
               // Share app button
               SizedBox(height: 10),
               TextButton.icon(

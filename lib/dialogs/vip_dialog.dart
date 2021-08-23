@@ -141,6 +141,21 @@ class VipDialog extends StatelessWidget {
                   ),
                   Divider(height: 10, thickness: 1),
 
+                  ListTile(
+                    leading: CircleAvatar(
+                      radius: 18,
+                      backgroundColor: Colors.grey[300],
+                      child: Icon(Icons.favorite_border,
+                          size: 28,
+                          color: Theme.of(context).primaryColor),
+                    ),
+                    title: Text(i18n.translate("unlimited")!,
+                        style: TextStyle(fontSize: 18)),
+
+                    subtitle: Text(i18n.translate("have_a_thousand_unlimited_likes_to_integrate_with_everyone")!),
+                  ),
+                  Divider(height: 10, thickness: 1),
+
                   // Add more pictures
                   ListTile(
                     leading: CircleAvatar(
