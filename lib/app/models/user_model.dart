@@ -427,7 +427,7 @@ class UserModel extends Model {
       USER_SETTINGS: {
         USER_MIN_AGE: 18, // int
         USER_MAX_AGE: 100, // int
-        USER_SHOW_ME: 'everyone', // default
+        USER_SHOW_ME: null, // default
         USER_MAX_DISTANCE: AppModel().appInfo.freeAccountMaxDistance, // double
         USER_SWIPES: AppModel().appInfo.freeAccountSwipes, // int
         USER_TIME_SWIPES: dateTime
@@ -676,12 +676,10 @@ class UserModel extends Model {
   // Filter the User Gender
   Query filterUserGender(Query query) {
     // Get the opposite gender
-    final String oppositeGender = this.user.userGender == "Male" ? "Female" : "Male";
+    final String oppositeGender = this.user.userGender == "Homem" ? "Mulher" : "Homem";
 
     /// Get user settings
     final Map<String, dynamic>? settings = this.user.userSettings;
-    // Debug
-    // print('userSettings: $settings');
 
     // Handle Show Me option
     if (settings != null) {
@@ -690,13 +688,13 @@ class UserModel extends Model {
         // Control show me option
         switch (settings[USER_SHOW_ME]) {
           case 'men':
-            query = query.where(USER_GENDER, isEqualTo: 'Male');
+            query = query.where(USER_GENDER, isEqualTo: 'Homem');
             break;
           case 'women':
-            query = query.where(USER_GENDER, isEqualTo: 'Female');
+            query = query.where(USER_GENDER, isEqualTo: 'Mulher');
             break;
           case 'everyone':
-            // Do nothing - app will get everyone
+            // Não faça nada - o aplicativo levará todos
             break;
         }
       } else {

@@ -36,7 +36,7 @@ class _SplashScreenState extends ModularState<SplashScreen, AuthStore> {
                       style:
                       TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
                   SizedBox(height: 5),
-                  Text("Dê match com universitários ao seu redor",
+                  Text("Encontre universitários ao seu redor",
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 18, color: Colors.grey)),
                   SizedBox(height: 20),

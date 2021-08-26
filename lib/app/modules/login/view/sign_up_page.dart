@@ -79,6 +79,7 @@ class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
                           /// FullName field
                           TextFormField(
                             controller: controller.nameController,
+                            cursorColor: Colors.grey[700],
                             decoration: InputDecoration(
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.all(Radius.circular(28)),
@@ -223,6 +224,7 @@ class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
                           TextFormField(
                             controller: controller.bioController,
                             maxLines: 4,
+                            cursorColor: Colors.grey[700],
                             decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(28)),

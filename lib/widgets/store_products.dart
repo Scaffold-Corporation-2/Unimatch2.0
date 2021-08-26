@@ -28,7 +28,8 @@ class _StoreProductsState extends State<StoreProducts> {
   void initState() {
     super.initState();
 
-    InAppPurchaseConnection.instance.isAvailable().then((result) {
+    InAppPurchase.instance.isAvailable().then((result) {
+    // InAppPurchaseConnection.instance.isAvailable().then((result) {
       if (mounted)
         setState(() {
           _storeIsAvailable =
@@ -52,7 +53,8 @@ class _StoreProductsState extends State<StoreProducts> {
     //     .then((ProductDetailsResponse response) {
 
 
-    InAppPurchaseConnection.instance
+    // InAppPurchaseConnection.instance
+    InAppPurchase.instance
         .queryProductDetails(AppModel().appInfo.subscriptionIds.toSet())
         .then((ProductDetailsResponse response) {
 
@@ -72,8 +74,6 @@ class _StoreProductsState extends State<StoreProducts> {
 
   @override
   Widget build(BuildContext context) {
-    // Ini
-
     return _storeIsAvailable ? _showProducts() : _storeNotAvailable();
   }
 
@@ -137,12 +137,12 @@ class _StoreProductsState extends State<StoreProducts> {
                           final pParam = PurchaseParam(
                             productDetails: item,
                           );
-                          InAppPurchaseConnection.instance
-                              .buyNonConsumable(purchaseParam: pParam);
+                          // InAppPurchaseConnection.instance
+                          //     .buyNonConsumable(purchaseParam: pParam);
 
                           /// Subscribe - > Ultima versão
-                          // InAppPurchase.instance
-                          //     .buyNonConsumable(purchaseParam: pParam);
+                          InAppPurchase.instance
+                              .buyNonConsumable(purchaseParam: pParam);
                         }),
             ),
           );
