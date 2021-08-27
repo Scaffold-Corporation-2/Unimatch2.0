@@ -59,7 +59,7 @@ class ProfileCard extends StatelessWidget {
             elevation: 4.0,
             margin: EdgeInsets.all(0),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(28.0))),
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
             child: Container(
               decoration: BoxDecoration(
                 /// User profile image
@@ -76,79 +76,152 @@ class ProfileCard extends StatelessWidget {
                       colors: [
                         Theme.of(context).primaryColor,
                         Colors.transparent
-                      ]),
+                      ]
+                  ),
                 ),
 
                 /// User info container
                 child: Container(
                   alignment: Alignment.bottomLeft,
                   padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      /// User fullname
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              '${user.userFullname.split(' ')[0]}, '
-                              '${userAge.toString()}',
-                              style: GoogleFonts.nunito(
-                                  fontSize: this.page == 'discover' ? 32 : 22,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                      Expanded(
+                        flex: 10,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            /// User fullname
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '${user.userFullname.split(' ')[0]}, '
+                                    '${userAge.toString()}',
+                                    style: GoogleFonts.nunito(
+                                        fontSize: this.page == 'discover' ? 32 : 22,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
+
+                            /// User education
+                            if(this.page == 'discover')
+                            ...[
+                              Row(
+                                children: [
+                                  SvgIcon("assets/icons/university_icon.svg",
+                                      color: Colors.white, width: 22, height: 22),
+                                  SizedBox(width: 5),
+                                  Expanded(
+                                    child: Text(
+                                      user.userSchool,
+                                      style: GoogleFonts.roboto(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 5),
+
+                              Row(
+                                children: [
+                                  SvgIcon("assets/icons/gender_icon.svg",
+                                      color: Colors.white, width: 20, height: 20),
+                                  SizedBox(width: 5),
+                                  Expanded(
+                                    child: Text(
+                                      user.userOrientation,
+                                      style: GoogleFonts.roboto(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 70)
+                            ],
+                          ],
+                        ),
                       ),
 
-                      /// User education
-                      if(this.page == 'discover')
-                      ...[
-                        Row(
-                          children: [
-                            SvgIcon("assets/icons/university_icon.svg",
-                                color: Colors.white, width: 22, height: 22),
-                            SizedBox(width: 5),
-                            Expanded(
-                              child: Text(
-                                user.userSchool,
-                                style: GoogleFonts.roboto(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-
-                        Row(
-                          children: [
-                            SvgIcon("assets/icons/gender_icon.svg",
-                                color: Colors.white, width: 20, height: 20),
-                            SizedBox(width: 5),
-                            Expanded(
-                              child: Text(
-                                user.userOrientation,
-                                style: GoogleFonts.roboto(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 70)
-                      ],
+                      // Expanded(
+                      //   flex: 1,
+                      //   child: Container(
+                      //     padding: EdgeInsets.symmetric(vertical: 50.0),
+                      //     child: ListView.builder(
+                      //         itemCount: 5,
+                      //         reverse: true,
+                      //         itemBuilder: (_, index) {
+                      //           return Column(
+                      //             children: [
+                      //               Image.asset(
+                      //                   'assets/images/uniVipGold.png',
+                      //                   width: 30,
+                      //                   height: 30),
+                      //
+                      //               if(index == 0)
+                      //                 user.userIsVerified
+                      //                     ? Image.asset(
+                      //                     'assets/images/verified_badge.png',
+                      //                     width: 30,
+                      //                     height: 30)
+                      //                     : Container(width: 0, height: 0),
+                      //             ],
+                      //           );
+                      //         }
+                      //     ),
+                      //   ),
+                      // )
+                      // Column(
+                      //   crossAxisAlignment: CrossAxisAlignment.center,
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //
+                      //     // SizedBox(height: 5),
+                      //     // Image.asset(
+                      //     //     'assets/images/uniVipGold.png',
+                      //     //     width: 30,
+                      //     //     height: 30),
+                      //     //
+                      //     // SizedBox(height: 5),
+                      //     // Image.asset(
+                      //     //     'assets/images/verified_badge.png',
+                      //     //     width: 30,
+                      //     //     height: 30),
+                      //     //
+                      //
+                      //     SizedBox(height: 5),
+                      //     Image.asset(
+                      //         'assets/images/uniVipGold.png',
+                      //         width: 30,
+                      //         height: 30),
+                      //
+                      //     user.userIsVerified
+                      //         ? Image.asset(
+                      //             'assets/images/verified_badge.png',
+                      //             width: 30,
+                      //             height: 30)
+                      //         : Container(width: 0, height: 0),
+                      //
+                      //     SizedBox(height: 60)
+                      //   ],
+                      // )
                     ],
                   ),
                 ),

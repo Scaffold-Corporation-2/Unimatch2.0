@@ -35,7 +35,7 @@ class LikesApi {
 
       /// Send push notification
       await _notificationsApi.sendPushNotification(
-          nTitle: APP_NAME,
+          nTitle: UserModel().user.userFullname.split(' ')[0],
           nBody: nMessage,
           nType: 'like',
           nSenderId: UserModel().user.userId,

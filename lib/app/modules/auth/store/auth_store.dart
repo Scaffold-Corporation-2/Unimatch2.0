@@ -43,6 +43,7 @@ abstract class _AuthStore with Store{
       // Pegar o número da versão do Ios
       appCurrentVersion = IOS_APP_VERSION_NUMBER;
     }
+    print('appCurrentVersion: $appCurrentVersion');
 
     /// Comparar as duas versões
     if (storeVersion > appCurrentVersion) {

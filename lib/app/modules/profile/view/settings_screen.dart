@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:place_picker/place_picker.dart';
@@ -22,6 +24,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late RangeValues _selectedAgeRange;
   late RangeLabels _selectedAgeRangeLabels;
   late double _selectedMaxDistance;
+  String? showMe;
   bool _hideProfile = false;
   AppController _i18n = Modular.get();
 
@@ -49,22 +52,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
   }
 
-  String _showMeOption() {
+  showMeOption() {
     AppController i18n = Modular.get();
     // Variables
     final Map<String, dynamic> settings = UserModel().user.userSettings!;
-    final String? showMe = settings[USER_SHOW_ME];
+    showMe = settings[USER_SHOW_ME];
+    print(showMe);
     // Check option
     if (showMe != null) {
-      return i18n.translate(showMe)!;
+      setState(() {
+        showMe = i18n.translate(showMe!)!;
+      });
+    } else {
+      setState(() {
+        showMe = i18n.translate('opposite_gender')!;
+      });
     }
-    return i18n.translate('opposite_gender')!;
   }
 
   @override
   void initState() {
     super.initState();
     initUserSettings();
+    showMeOption();
   }
 
   // Go to Passport screen
@@ -340,8 +350,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   title: Text(_i18n.translate('show_me')!,
                       style: TextStyle(fontSize: 18)),
-                  trailing:
-                      Text(_showMeOption(), style: TextStyle(fontSize: 18)),
+                  trailing: Text(showMe!, style: TextStyle(fontSize: 18)),
                   onTap: () {
                     /// Choose Show me option
                     showDialog(
@@ -349,7 +358,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         barrierDismissible: false,
                         builder: (context) {
                           return ShowMeDialog();
-                        });
+                        }).whenComplete(() {
+                          Timer(Duration(milliseconds: 200), () {
+                        showMeOption();
+                      });
+                    });
                   },
                 ),
               ),

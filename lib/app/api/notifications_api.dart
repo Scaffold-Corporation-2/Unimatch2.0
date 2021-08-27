@@ -38,7 +38,7 @@ class NotificationsApi {
     required String nMessage,
   }) async {
     _firestore.collection(C_NOTIFICATIONS).add({
-      N_SENDER_FULLNAME: APP_NAME,
+      N_SENDER_FULLNAME: UserModel().user.userFullname.split(' ')[0],
       N_RECEIVER_ID: UserModel().user.userId,
       N_TYPE: 'alert',
       N_MESSAGE: nMessage,
@@ -122,7 +122,7 @@ class NotificationsApi {
           'notification': <String, dynamic>{
             'title': nTitle,
             'body': nBody,
-            'color': '#987dfa',
+            'color': '#E91E63',
             'sound': "default"
           },
           'priority': 'high',

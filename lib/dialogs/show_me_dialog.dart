@@ -157,10 +157,9 @@ class _ShowMeDialogState extends State<ShowMeDialog> {
                                 data: {
                                   '$USER_SETTINGS.$USER_SHOW_ME':
                                       _selectedOptionKey
-                                });
+                                }).whenComplete(() => Navigator.of(context).pop());
 
                             // Close dialog
-                            Navigator.of(context).pop();
                             debugPrint('Show me option() -> saved');
                           },
                   ),

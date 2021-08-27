@@ -45,11 +45,11 @@ dependencies:
 
 
     # FIREBASE Packages Section
-  firebase_core: ^1.5.0
-  firebase_auth: ^3.0.2
-  cloud_firestore: ^2.5.0
-  firebase_messaging: ^10.0.5
-  firebase_storage: ^10.0.2
+  firebase_core: ^1.6.0
+  firebase_auth: ^3.1.0
+  cloud_firestore: ^2.5.1
+  firebase_messaging: ^10.0.6
+  firebase_storage: ^10.0.3
 
     # GOOGLE Packages Section
   google_mobile_ads: ^0.12.1+1
@@ -66,10 +66,10 @@ dependencies:
   geoflutterfire: ^3.0.1
 
     # Usado para obter a localização do usuário por GPS
-  geolocator: ^7.4.0
+  geolocator: ^7.4.1
 
     # Used to translate User latitude and longitude coordinates into a readable address
-  geocoding: ^2.0.0
+  geocoding: ^2.0.1
 
     #Biblioteca para enviar para maps
   map_launcher: ^2.1.1

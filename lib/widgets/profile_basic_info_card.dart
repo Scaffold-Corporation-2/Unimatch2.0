@@ -108,8 +108,6 @@ class ProfileBasicInfoCard extends StatelessWidget {
                   onTap: () {
                     /// Go to profile settings
                     Modular.to.pushNamed("/profile/settings");
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    //     builder: (context) => SettingsScreen()));
                   },
                 ),
                 cicleButton(

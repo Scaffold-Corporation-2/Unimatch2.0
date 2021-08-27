@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:uni_match/app/api/dislikes_api.dart';
 import 'package:uni_match/app/api/likes_api.dart';
@@ -105,9 +106,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Text(
                                 '${widget.user.userFullname}, '
                                     '${userAge.toString()}',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
+                                style: GoogleFonts.nunito(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700),
                               ),
                             ),
 

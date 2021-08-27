@@ -176,9 +176,8 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
 
     /// Send push notification
     await _notificationsApi.sendPushNotification(
-        nTitle: APP_NAME,
-        nBody: '${UserModel().user.userFullname}, '
-            '${_i18n.translate("sent_a_message_to_you")}',
+        nTitle: UserModel().user.userFullname.split(' ')[0],
+        nBody: '${_i18n.translate("sent_a_message_to_you")}',
         nType: 'message',
         nSenderId: UserModel().user.userId,
         nUserDeviceToken: widget.user.userDeviceToken);

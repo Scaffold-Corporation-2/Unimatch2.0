@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -27,8 +26,7 @@ class _EditProfileScreenState extends ModularState<EditProfileScreen, ProfileSto
       TextEditingController(text: UserModel().user.userSchool);
 
 
-  final _orientationController =
-      TextEditingController(text: UserModel().user.userOrientation);
+  final String _orientation = UserModel().user.userOrientation;
 
   final _bioController = TextEditingController(text: UserModel().user.userBio);
   AppController _i18n = Modular.get();
@@ -117,7 +115,6 @@ class _EditProfileScreenState extends ModularState<EditProfileScreen, ProfileSto
               UserGallery(),
 
               SizedBox(height: 20),
-
               /// Bio field
               TextFormField(
                 controller: _bioController,
@@ -152,13 +149,14 @@ class _EditProfileScreenState extends ModularState<EditProfileScreen, ProfileSto
                           : Text(orientation.toString()),
                     );
                   }).toList(),
-                  hint: Text(controller.i18n.translate("select_orientation")!),
+                  hint: Text(_orientation),
                   onChanged: (orientation) {
                     controller.selecionarOrientacao(orientation!);
                   },
                   validator: (String? value) {
-                    if (value == null) {
-                      return controller.i18n.translate("please_select_your_orientation");
+                    if (value == null ) {
+                      print(_orientation);
+                      controller.selecionarOrientacao(_orientation);
                     }
                     return null;
                   },
