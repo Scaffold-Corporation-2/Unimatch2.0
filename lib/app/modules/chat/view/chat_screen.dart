@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:liquid_swipe/liquid_swipe.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:uni_match/app/api/likes_api.dart';
@@ -546,6 +547,14 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
         setState(() {
           if (controller.textController.text != '') {
             _isComposing = true;
+          }
+        });
+      },
+      onBackspacePressed: (){
+        controller.textController.text = controller.textController.text.characters.skipLast(1).toString();
+        setState(() {
+          if(controller.textController.text == ''){
+            _isComposing = false;
           }
         });
       },

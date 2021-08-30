@@ -4,10 +4,9 @@ import 'package:mobx/mobx.dart';
 
 part 'chat_store.g.dart';
 
-class ChatStore = _ChatStore  with _$ChatStore;
+class ChatStore = _ChatStore with _$ChatStore;
 
-abstract class _ChatStore  with Store {
-
+abstract class _ChatStore with Store {
   final focusNode = FocusNode();
   final textController = TextEditingController();
 
@@ -23,52 +22,53 @@ abstract class _ChatStore  with Store {
   @observable
   bool isImage = false;
 
-  @observable
-  bool showEmoji = false;
-
-  @observable
-  bool likeMsg = false;
-
+  //Reply Message
+  @action
+  void replyToMessage(
+      String message, bool user, String? image, bool imageBool) {
+    isImage = imageBool;
+    if (imageBool == true) {
+      replyMessage = image.toString();
+      replyImage = image;
+      userSend = user;
+    } else {
+      replyMessage = message;
+      userSend = user;
+    }
+  }
 
   @action
-  msgLiked(){
-    likeMsg=!likeMsg;
-  }
-
-@action
-  void replyToMessage(String message, bool user,String? image, bool imageBool) {
-  isImage = imageBool;
-  if(imageBool == true){
-    replyMessage = image.toString();
-    replyImage = image;
-    userSend = user;
-  }else{
-    replyMessage = message;
-    userSend = user;
-  }
-}
-@action
   void cancelReply() {
     replyMessage = '';
   }
 
   String comparationWhoSendM(String user, String otheruser) {
     if (userSend == true) {
-      return
-        user;
+      return user;
     } else
-      return
-        otheruser;
+      return otheruser;
   }
-  //EMOJIS
+  //Emoji
+
+  @observable
+  bool showEmoji = false;
 
   @action
   onEmojiSelected(Emoji emoji) {
     textController.text = textController.text + emoji.emoji;
   }
+
   @action
-  showEmojiKeyboard(){
+  showEmojiKeyboard() {
     showEmoji = !showEmoji;
   }
 
+  //Like Msg
+  @observable
+  bool likeMsg = false;
+
+  @action
+  msgLiked() {
+    likeMsg = !likeMsg;
+  }
 }

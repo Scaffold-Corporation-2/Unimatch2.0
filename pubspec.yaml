@@ -146,8 +146,8 @@ dependencies:
     #Biblioteca de animação
   animate_do: ^2.0.0
 
-    #Biblioteca do botao de reacao
-  flutter_reaction_button: ^1.0.8
+    #Biblioteca do botao de reacao.
+  flutter_reaction_button: ^1.0.8 #Apagar
 
     #Biblioteca para validar e-mail
   email_validator: ^2.0.1

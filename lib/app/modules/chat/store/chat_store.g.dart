@@ -102,17 +102,6 @@ mixin _$ChatStore on _ChatStore, Store {
   final _$_ChatStoreActionController = ActionController(name: '_ChatStore');
 
   @override
-  dynamic msgLiked() {
-    final _$actionInfo =
-        _$_ChatStoreActionController.startAction(name: '_ChatStore.msgLiked');
-    try {
-      return super.msgLiked();
-    } finally {
-      _$_ChatStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   void replyToMessage(
       String message, bool user, String? image, bool imageBool) {
     final _$actionInfo = _$_ChatStoreActionController.startAction(
@@ -152,6 +141,17 @@ mixin _$ChatStore on _ChatStore, Store {
         name: '_ChatStore.showEmojiKeyboard');
     try {
       return super.showEmojiKeyboard();
+    } finally {
+      _$_ChatStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic msgLiked() {
+    final _$actionInfo =
+        _$_ChatStoreActionController.startAction(name: '_ChatStore.msgLiked');
+    try {
+      return super.msgLiked();
     } finally {
       _$_ChatStoreActionController.endAction(_$actionInfo);
     }
