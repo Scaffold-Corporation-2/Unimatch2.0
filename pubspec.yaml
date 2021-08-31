@@ -167,6 +167,9 @@ dependencies:
   #Biblioteca para cache de imagem
   cached_network_image: ^3.1.0
 
+  #Biblioteca para verificar conexão
+  connectivity_plus: ^1.1.0
+
   flutter_cupertino_datetime_picker: ^2.0.1
   dio: ^4.0.0
 

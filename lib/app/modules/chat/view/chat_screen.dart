@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:liquid_swipe/liquid_swipe.dart';
+//nao apagar ainda
+//import 'package:liquid_swipe/liquid_swipe.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:uni_match/app/api/likes_api.dart';
