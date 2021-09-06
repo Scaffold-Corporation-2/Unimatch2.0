@@ -61,7 +61,6 @@ abstract class _PartyStore with Store{
   dadosCache() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     valueShared = sharedPreferences.get("tutorial");
-    print(valueShared);
 
     if(valueShared == null){
       valueShared = false;

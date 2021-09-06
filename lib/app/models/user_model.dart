@@ -34,7 +34,7 @@ class UserModel extends Model {
   /// Other variables
   ///
   late Usuario user;
-  bool userIsVip = true;
+  bool userIsVip = false;
   bool isLoading = false;
   String activeVipId = '';
 

@@ -22,7 +22,6 @@ class _SplashScreenState extends ModularState<SplashScreen, AuthStore> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          color: Colors.white,
           child: Center(
             child: SingleChildScrollView(
               child: Column(

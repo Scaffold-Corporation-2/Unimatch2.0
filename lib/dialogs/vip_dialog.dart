@@ -67,14 +67,14 @@ class VipDialog extends StatelessWidget {
                       onPressed: () {
                         /// Close Dialog
                         Navigator.of(context).pop();
-                      }),
+                      }
+                  ),
                 )
               ],
             ),
 
             /// VIP Plans
             Container(
-              color: Colors.grey.withAlpha(70),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -99,7 +99,6 @@ class VipDialog extends StatelessWidget {
 
             /// VIP Benefits
             Container(
-              color: Colors.white,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[

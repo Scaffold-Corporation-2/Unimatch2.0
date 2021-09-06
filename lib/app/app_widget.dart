@@ -82,6 +82,9 @@ ThemeData _appTheme() {
     primaryColor: APP_PRIMARY_COLOR,
     accentColor: APP_ACCENT_COLOR,
     scaffoldBackgroundColor: Colors.white,
+    primaryColorDark: Colors.black,
+    primaryColorLight: Colors.white,
+    colorScheme: ColorScheme.light(),
     iconTheme: IconThemeData(color: Colors.grey[600]),
 
     inputDecorationTheme: InputDecorationTheme(
@@ -113,6 +116,8 @@ ThemeData _appThemeDark() {
     scaffoldBackgroundColor: Colors.grey.shade900,
     colorScheme: ColorScheme.dark(),
     primaryColorDark: Colors.white,
+    primaryColorLight: Colors.black,
+
 
     inputDecorationTheme: InputDecorationTheme(
         errorStyle: TextStyle(fontSize: 16),
