@@ -84,6 +84,15 @@ class _PartyPageState extends ModularState<PartyPage, PartyStore> {
                           padding: const EdgeInsets.all(10.0),
                           child: GestureDetector(
                             onTap: () {
+                              //todo tentar colocar visualizar views
+                              int valor = listaFestas[index].quantidadeVisualizacao;
+                              valor++;
+                              print(listaFestas[index].partyId);
+
+                              controller.atualizarVisualizacoes(
+                                  partyId: listaFestas[index].partyId,
+                                  data: {'$QUANT_PARTY': valor});
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

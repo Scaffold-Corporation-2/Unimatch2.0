@@ -74,18 +74,26 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
                  IconButton(
                      splashColor: Colors.transparent,
                      highlightColor: Colors.transparent,
+                     icon: SvgIcon("assets/icons/search_icon.svg",
+                       width: 35, height: 35, color: Theme.of(context).iconTheme.color,),
+                     onPressed: (){
+                       Modular.to.pushNamed('/lifeStyle');
+                     }),
+
+                 IconButton(
+                     splashColor: Colors.transparent,
+                     highlightColor: Colors.transparent,
                      icon: SvgIcon("assets/icons/beer_icon.svg",
-                       width: 30, height: 30, color: Colors.grey[600],),
+                       width: 30, height: 30, color: Theme.of(context).iconTheme.color,),
                      onPressed: (){
                        Modular.to.pushNamed('/party');
                      }),
-
 
                  IconButton(
                      splashColor: Colors.transparent,
                      highlightColor: Colors.transparent,
                      icon: SvgIcon("assets/icons/airplane_icon.svg",
-                       width: 33, height: 33, color: Colors.grey[600],),
+                       width: 33, height: 33, color: Theme.of(context).iconTheme.color,),
                      onPressed: (){
                        if (UserModel().userIsVip) {
                          // Go to passport screen
@@ -118,7 +126,7 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
             items: [
               /// Discover Tab
               BottomNavigationBarItem(
-                  icon: SvgIcon("assets/icons/search_icon.svg",
+                  icon: SvgIcon("assets/icons/unimatch_icon.svg",
                       width: 31,
                       height: 31,
                       color: _selectedIndex == 0
@@ -161,7 +169,7 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
   /// Count unread notifications
   Widget _getNotificationCounter() {
     // Set icon
-    final icon = SvgIcon("assets/icons/bell_icon.svg", width: 30, height: 30, color: Colors.grey[600],);
+    final icon = SvgIcon("assets/icons/bell_icon.svg", width: 30, height: 30, color: Theme.of(context).iconTheme.color,);
 
     /// Handle stream
     return  StreamBuilder<QuerySnapshot>(

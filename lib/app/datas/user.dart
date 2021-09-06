@@ -27,6 +27,7 @@ class Usuario {
   final int userTotalLikes;
   final int userTotalVisits;
   final int userTotalDisliked;
+  final List userBadges;
   final Map<String, dynamic>? userGallery;
   final Map<String, dynamic>? userSettings;
 
@@ -44,6 +45,7 @@ class Usuario {
     required this.userBio,
     required this.userPhoneNumber,
     required this.userEmail,
+    required this.userBadges,
     required this.userGallery,
     required this.userCountry,
     required this.userLocality,
@@ -75,6 +77,7 @@ class Usuario {
       userBio: doc[USER_BIO] ?? '',
       userPhoneNumber: doc[USER_PHONE_NUMBER] ?? '',
       userEmail: doc[USER_EMAIL] ?? '',
+      userBadges: doc[USER_BADGES] ?? [],
       userGallery: doc[USER_GALLERY],
       userCountry: doc[USER_COUNTRY] ?? '',
       userLocality: doc[USER_LOCALITY] ?? '',

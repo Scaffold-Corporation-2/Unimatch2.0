@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:google_ml_vision/google_ml_vision.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/app/modules/profile/store/profile_store.dart';
@@ -182,9 +182,9 @@ class _EditProfileScreenState extends ModularState<EditProfileScreen, ProfileSto
 
                     _pr.show(_i18n.translate("processing")!);
 
-                    final inputImage = InputImage.fromFile(image);
-                    final faceDetector = GoogleMlKit.vision.faceDetector();
-                    final List<Face> faces = await faceDetector.processImage(inputImage);
+                    final GoogleVisionImage visionImage = GoogleVisionImage.fromFile(image);
+                    final FaceDetector faceDetector = GoogleVision.instance.faceDetector();
+                    final List<Face> faces = await faceDetector.processImage(visionImage);
 
                     debugPrint("Faces detectadas: ${faces.length}");
 

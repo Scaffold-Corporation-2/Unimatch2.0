@@ -4,6 +4,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_match/app/app_controller.dart';
+import 'package:uni_match/app/models/app_model.dart';
 import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/constants/constants.dart';
 part 'party_store.g.dart';
@@ -14,6 +15,12 @@ abstract class _PartyStore with Store{
 
   final AppController i18n = Modular.get();
   final _firestore = FirebaseFirestore.instance;
+
+  @observable
+  int valorVisualizacao = 0;
+
+  @action
+  adicionarValor(int val) => valorVisualizacao = val;
 
   @observable
   ObservableList <DocumentSnapshot> listaFestas = ObservableList();
@@ -39,7 +46,7 @@ abstract class _PartyStore with Store{
 
     for(var dados in partiesQuery.docs){
       GeoPoint geoPoint = dados.data()[PARTY_GEO_POINT];
-      if(center.distance(lat: geoPoint.latitude, lng: geoPoint.longitude) <= 80){
+      if(center.distance(lat: geoPoint.latitude, lng: geoPoint.longitude) <= AppModel().appInfo.partiesMaxDistance){
         listaFestas.add(dados);
       }
     }
@@ -54,6 +61,7 @@ abstract class _PartyStore with Store{
   dadosCache() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     valueShared = sharedPreferences.get("tutorial");
+    print(valueShared);
 
     if(valueShared == null){
       valueShared = false;
@@ -67,5 +75,9 @@ abstract class _PartyStore with Store{
     if(tipo == "string") sharedPreferences.setString(key, value);
     if(tipo == "int") sharedPreferences.setInt(key, value);
     if(tipo == "double") sharedPreferences.setDouble(key, value);
+  }
+
+  Future atualizarVisualizacoes({required String partyId, required Map<String, dynamic> data}) async {
+    await _firestore.collection(C_PARTY).doc(partyId).update(data);
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:place_picker/place_picker.dart';
 import 'package:uni_match/app/app_controller.dart';
@@ -8,6 +9,7 @@ import 'package:uni_match/app/models/app_model.dart';
 import 'package:uni_match/app/models/user_model.dart';
 import 'package:uni_match/app/modules/profile/view/passaport/passport_screen.dart';
 import 'package:uni_match/constants/constants.dart';
+import 'package:uni_match/dialogs/common_dialogs.dart';
 import 'package:uni_match/dialogs/show_me_dialog.dart';
 import 'package:uni_match/dialogs/vip_dialog.dart';
 import 'package:uni_match/widgets/show_scaffold_msg.dart';
@@ -18,7 +20,7 @@ class SettingsScreen extends StatefulWidget {
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends State<SettingsScreen> with TickerProviderStateMixin{
   // Variables
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   late RangeValues _selectedAgeRange;
@@ -72,6 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void initState() {
+    _i18n.buscarTheme();
     super.initState();
     initUserSettings();
     showMeOption();
@@ -120,9 +123,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    /// Initialization
-    AppController _i18n = Modular.get();
-
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
@@ -210,6 +210,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ],
                   )),
+
               SizedBox(height: 15),
 
               /// User Max distance
@@ -366,8 +367,82 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 ),
               ),
+              SizedBox(height: 10),
 
-              SizedBox(height: 15),
+
+              Observer(
+                builder:(_) => Card(
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.dark_mode_rounded,
+                        color: Theme.of(context).primaryColor,
+                        size: 30,
+                      ),
+                      title: Text(_i18n.translate("dark")!),
+                      trailing: InkWell(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () {
+
+                              _i18n.alterarTheme();
+                              successDialog(context,
+                                  message: _i18n.translate("restart_the_application_for_the_changes_to_tak_effect")!,
+                                  positiveAction: () {
+                                    /// Close dialog
+                                    Navigator.of(context).pop();
+                                  });
+                              HapticFeedback.lightImpact();
+                        },
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.fastLinearToSlowEaseIn,
+                          height: _i18n.isDark ? 35 : 38,
+                          width: _i18n.isDark ? 55 : 65,
+                          decoration: BoxDecoration(
+                            color: _i18n.isDark ? Color(0xffB23F3F) : Color(0xffFF4E4E),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(_i18n.isDark ? 0 : 0.3),
+                                blurRadius: _i18n.isDark ? 0 : 10,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              _i18n.isDark ? 'OFF' : 'ON',
+                              style: TextStyle(
+                                color: _i18n.isDark
+                                    ? Colors.white.withOpacity(0.5)
+                                    : Colors.white.withOpacity(0.9),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 19,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      // TextButton(
+                      //   style: ButtonStyle(
+                      //     backgroundColor: MaterialStateProperty.all<Color>(
+                      //        _i18n.isDark? Colors.white: Theme.of(context).primaryColor),
+                      //   ),
+                      //   child: Text(_i18n.translate("UPDATE")!,
+                      //       style: TextStyle(color: Colors.white)),
+                      //   onPressed: () async {
+                      //     _i18n.alterarTheme();
+                      //     successDialog(context,
+                      //         message: _i18n.translate("restart_the_application_for_the_changes_to_tak_effect")!,
+                      //         positiveAction: () {
+                      //           /// Close dialog
+                      //           Navigator.of(context).pop();
+                      //         });
+                      //   },
+                      // ),
+                    )),
+              ),
+              SizedBox(height: 10),
 
               /// Hide user profile setting
               Card(

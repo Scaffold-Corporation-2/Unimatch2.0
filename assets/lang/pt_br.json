@@ -74,6 +74,7 @@
   "_EditProfileScreen": "* Editar traduções da tela do perfil *",
   "edit_profile": "Editar Perfil",
   "profile_updated_successfully": "Perfil atualizado com sucesso",
+  "restart_the_application_for_the_changes_to_tak_effect": "Reinicie o aplicativo para que as alterações sejam aplicadas",
   "an_error_occurred_while_updating_your_profile": "Ocorreu um erro ao atualizar o seu perfil. \nPor favor, tente novamente mais tarde!",
   "photo_will_be_deleted": "A foto será excluída e esta ação não pode ser revertida!",
 
@@ -109,7 +110,7 @@
   "see_people_who_liked_you": "Ver pessoas que gostaram de você",
   "unravel_the_mystery_and_find_out_who_liked_you": "Desvende o mistério e descubra quem deu like em você e consiga mais matches.",
   "see_people_who_visited_your_profile": "Veja as pessoas que visitaram seu perfil",
-  "have_a_thousand_unlimited_likes_to_integrate_with_everyone": "Tenha likes ilimitados para integrar com todo mundo!",
+  "have_a_thousand_unlimited_likes_to_integrate_with_everyone": "Tenha swipes ilimitados para integrar com todo mundo!",
   "unravel_the_mystery_and_find_out_who_visited_your_profile": "Desvende o mistério e descubra quem visitou o seu perfil.",
   "see_people_you_have_rejected": "Veja as pessoas que você deu dislike",
   "retrieve_and_review_all_profiles": "Recupere e reveja todos os perfis que você deu dislike",
@@ -155,10 +156,15 @@
   "all_notifications_will_be_deleted": "Todas as notificações serão excluídas!",
 
   "parties": "Festas",
+  "lifestyle": "LifeStyle",
+  "cafes": "Cafés",
+  "pubs": "Bares",
+  "rest": "Restaurantes",
+  "movies": "Filmes para os",
 
   "_ProfileLikesScreen": "* ProfileLikes Screen Translations *",
   "likes": "Likes",
-  "users_who_liked_you": "Usuários que deram like você",
+  "users_who_liked_you": "Usuários que deram like em você",
   "liked_your_profile_click_and_see": "Deu like no seu perfil, clique e veja ...",
   "like_sent_to": "Like enviado para:",
 
@@ -220,11 +226,13 @@
   "no_conversation": "Sem conversas",
   "no_notification": "Sem Notificações",
   "no_party": "Sem Festas",
+  "no_add": "Ainda não foi adicionado!",
   "no_like": "Sem Likes",
   "no_visit": "Sem Visitas",
   "no_dislike": "Sem Dislikes",
   "new": "Novo",
   "photo": "Foto",
+  "dark": "Dark mode:",
   "UPDATE": "ATUALIZAR",
 
   "_New_Version_1.0.2": "* New version 1.0.2 Translations *",

@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_match/constants/constants.dart';
 part 'app_controller.g.dart';
 
 class AppController = _AppController with _$AppController;
 
 abstract class _AppController with Store{
+
 
   @observable
   Locale locale = SUPPORTED_LOCALES.first;
@@ -29,4 +31,36 @@ abstract class _AppController with Store{
     return localizedStrings![key] ==  null ? '' : localizedStrings![key];
   }
 
+
+  @observable
+  bool isDark = false;
+
+  @action
+  buscarTheme() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var response = sharedPreferences.get('dark');
+    print(response);
+
+    if(response == null){
+      isDark = false;
+      sharedPreferences.setBool('dark', false);
+    }
+    else if(response == true) isDark = true;
+
+    else isDark = false;
+  }
+
+  @action
+  alterarTheme() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var response = sharedPreferences.get("dark");
+    if(response != null){
+      sharedPreferences.setBool('dark', response == true ? false : true);
+    }else{
+      sharedPreferences.setBool('dark', false);
+    }
+
+    isDark = response == true ? false : true;
+    print("Dark Theme: $isDark");
+  }
 }

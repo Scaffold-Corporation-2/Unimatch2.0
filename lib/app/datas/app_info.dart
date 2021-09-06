@@ -6,6 +6,8 @@ class AppInfo {
   final int iosAppCurrentVersion;
   final int freeAccountSwipes;
   final int vipAccountSwipes;
+  final int partiesMaxDistance;
+  final int lifeStyleMaxDistance;
   final String androidPackageName;
   final String iOsAppId;
   final String appEmail;
@@ -32,6 +34,8 @@ class AppInfo {
       required this.vipAccountMaxDistance,
       required this.freeAccountSwipes,
       required this.vipAccountSwipes,
+      required this.partiesMaxDistance,
+      required this.lifeStyleMaxDistance,
       });
 
   /// factory AppInfo object
@@ -58,6 +62,12 @@ class AppInfo {
       vipAccountSwipes: doc[VIP_ACCOUNT_SWIPES] == null
             ? 10
             : doc[VIP_ACCOUNT_SWIPES],
-     );
+      lifeStyleMaxDistance: doc[LIFESTYLE_MAX_DISTANCE] == null
+          ? 60
+          : doc[LIFESTYLE_MAX_DISTANCE],
+      partiesMaxDistance: doc[PARTIES_MAX_DISTANCE] == null
+          ? 60
+          : doc[PARTIES_MAX_DISTANCE],
+    );
   }
 }

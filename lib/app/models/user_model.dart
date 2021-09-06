@@ -34,7 +34,7 @@ class UserModel extends Model {
   /// Other variables
   ///
   late Usuario user;
-  bool userIsVip = false;
+  bool userIsVip = true;
   bool isLoading = false;
   String activeVipId = '';
 
@@ -234,7 +234,7 @@ class UserModel extends Model {
         /// if exists check status and take action
         if (userDoc.exists) {
           /// Check User Account Status
-          if (userDoc[USER_STATUS] == 'blocked' || userDoc[USER_STATUS] == 'flagged') {
+          if (userDoc[USER_STATUS] == 'blocked') {
             // Go to blocked user account screen
             blockedScreen!();
           } else {

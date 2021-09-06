@@ -1,3 +1,4 @@
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -35,8 +36,7 @@ class GalleryImageCard extends StatelessWidget {
             child: Center(
               child: Container(
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: boxFit, image: imageProvider),
+                  image: DecorationImage(fit: boxFit, image: imageProvider),
                   color: Colors.grey.withAlpha(70),
                 ),
               ),
@@ -81,8 +81,7 @@ class GalleryImageCard extends StatelessWidget {
     /// Check user vip account
     if (!UserModel().userIsVip && index > 3) {
       /// Show VIP dialog
-      showDialog(context: context,
-        builder: (context) => VipDialog());
+      showDialog(context: context, builder: (context) => VipDialog());
       debugPrint('You need to activate vip account');
       return;
     }
@@ -92,19 +91,24 @@ class GalleryImageCard extends StatelessWidget {
         builder: (context) => ImageSourceSheet(
               onImageSelected: (image) async {
                 if (image != null) {
+                  print(image);
+
                   /// Show progress dialog
                   pr.show(i18n.translate("processing")!);
 
                   /// Update gallery image
-                  await UserModel().updateProfileImage(
-                      imageFile: image,
-                      oldImageUrl: imageUrl,
-                      path: 'gallery',
-                      index: index);
-                  // Hide dialog
-                  pr.hide();
-                  // close modal
-                  Navigator.of(context).pop();
+                  await UserModel()
+                      .updateProfileImage(
+                          imageFile: image,
+                          oldImageUrl: imageUrl,
+                          path: 'gallery',
+                          index: index)
+                      .whenComplete(() {
+                    Timer(Duration(milliseconds: 200), () {
+                      Modular.to.popAndPushNamed('/profile/edit');
+                      pr.hide();
+                    });
+                  });
                 }
               },
             ));
@@ -119,8 +123,7 @@ class GalleryImageCard extends StatelessWidget {
     /// Check user vip account
     if (!UserModel().userIsVip && index > 3) {
       /// Show VIP dialog
-      showDialog(context: context,
-         builder: (context) => VipDialog());
+      showDialog(context: context, builder: (context) => VipDialog());
       debugPrint('You need to activate vip account');
       return;
     }
@@ -136,12 +139,12 @@ class GalleryImageCard extends StatelessWidget {
 
           /// Delete image
           await UserModel()
-              .deleteGalleryImage(imageUrl: imageUrl!, index: index);
-
-          // Hide progress dialog
-          pr.hide();
-          // Hide confirm dialog
-          Navigator.of(context).pop();
+              .deleteGalleryImage(imageUrl: imageUrl!, index: index).whenComplete(() {
+            Timer(Duration(milliseconds: 200), () {
+              Modular.to.popAndPushNamed('/profile/edit');
+              pr.hide();
+            });
+          });
         });
   }
 }

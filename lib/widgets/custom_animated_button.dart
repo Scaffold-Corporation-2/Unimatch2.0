@@ -96,10 +96,11 @@ class _CustomAnimatedButtonState extends State<CustomAnimatedButton> with Single
             ? Row(
               children: [
                 Expanded(
-                  flex: 3,
+                  flex: 4,
                   child: Center(
                     child: Text(
                         widget.text,
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 22,
                           color: Colors.white,

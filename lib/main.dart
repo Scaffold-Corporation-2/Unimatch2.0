@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'app/app_module.dart';
 import 'app/app_widget.dart';
@@ -39,6 +40,11 @@ void main()async{
     );
   }
 
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+  var resultadoTheme = sharedPreferences.get('dark');
+  print(resultadoTheme);
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,
     DeviceOrientation.portraitUp,
@@ -46,7 +52,7 @@ void main()async{
     runApp(
         ModularApp(
           module: AppModule(),
-          child: AppWidget(),
+          child: AppWidget(isDark: resultadoTheme == null ? false : resultadoTheme as bool,),
         )
     );
   });

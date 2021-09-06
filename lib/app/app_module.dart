@@ -1,5 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:uni_match/app/modules/chat/modulo/chat_module.dart';
+import 'package:uni_match/app/modules/life/modulo/life_module.dart';
 import 'package:uni_match/app/modules/party/modulo/party_module.dart';
 import 'package:uni_match/app/modules/profile/modulo/profile_module.dart';
 import 'modules/home/modulo/home_module.dart';
@@ -21,6 +22,7 @@ class AppModule extends Module {
     ModuleRoute('/profile', module: ProfileModule()),
     ModuleRoute('/chat', module: ChatModule()),
     ModuleRoute('/party', module: PartyModule()),
+    ModuleRoute('/lifeStyle', module: LifeModule()),
   ];
 
 }

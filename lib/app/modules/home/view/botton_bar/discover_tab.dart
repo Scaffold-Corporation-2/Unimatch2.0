@@ -88,8 +88,10 @@ class _DiscoverTabState extends State<DiscoverTab> {
         setState(() => swipeNum = AppModel().appInfo.freeAccountSwipes);
       } else {
         setState(() {
-          swipeTime = Duration(hours: 24) - dateTime.difference(UserModel().user.userSettings![USER_TIME_SWIPES].toDate());
-          swipeNum = UserModel().user.userSettings![USER_SWIPES] == null
+          swipeTime = Duration(hours: 24) - dateTime.difference(
+              UserModel().user.userSettings![USER_TIME_SWIPES].toDate());
+
+          swipeNum  = UserModel().user.userSettings![USER_SWIPES] == null
               ? 10
               : UserModel().user.userSettings![USER_SWIPES];
         });
@@ -190,12 +192,12 @@ class _DiscoverTabState extends State<DiscoverTab> {
             onEnd: () => debugPrint("onEnd"),
             onSwipe: (int index, SwiperPosition position) async {
 
-             swipeNum--;
+              swipeNum--;
               debugPrint("SwipeNum: $swipeNum");
 
-             await UserModel()
-                 .updateUserData(userId: UserModel().user.userId, data: {
-               '$USER_SETTINGS.$USER_SWIPES': swipeNum});
+              await UserModel()
+                  .updateUserData(userId: UserModel().user.userId, data: {
+                '$USER_SETTINGS.$USER_SWIPES': swipeNum});
 
               /// Control swipe position
               switch (position) {
@@ -203,7 +205,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                   break;
                 case SwiperPosition.Left:
 
-                  /// Swipe Left Dislike profile
+                /// Swipe Left Dislike profile
                   _dislikesApi.dislikeUser(
                       dislikedUserId: _users![index][USER_ID],
                       onDislikeResult: (r) =>
@@ -214,7 +216,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
 
                 case SwiperPosition.Right:
 
-                  /// Swipe right and Like profile
+                /// Swipe right and Like profile
                   _likeUser(context, clickedUserDoc: _users![index]);
 
                   if(swipeNum == 0)setState(() {});

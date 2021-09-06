@@ -72,6 +72,7 @@
   "_EditProfileScreen": "*** Edit Profile Screen Translations ***",
   "edit_profile": "Edit profile",
   "profile_updated_successfully": "Profile updated successfully",
+  "restart_the_application_for_the_changes_to_tak_effect": "Restart the application for the changes to take effect",
   "an_error_occurred_while_updating_your_profile": "An error occurred while updating your profile.\nPlease try again later!",
   "photo_will_be_deleted": "Photo will be deleted, and this action cannot be reversed!", 
 
@@ -153,6 +154,11 @@
   "all_notifications_will_be_deleted": "All notifications will be deleted!",
 
   "parties": "Parties",
+  "lifestyle": "LifeStyle",
+  "cafes": "Cafes",
+  "pubs": "Pubs",
+  "rest": "Restaurants",
+  "movies": "Movies to",
 
   "_ProfileLikesScreen": "*** ProfileLikes Screen Translations ***",
   "likes": "Likes",
@@ -218,11 +224,13 @@
   "no_conversation": "No Conversation",
   "no_notification": "No Notification",
   "no_party": "No Party",
+  "no_add": "No add",
   "no_like": "No Like",
   "no_visit": "No Visit",
   "no_dislike": "No Dislike",
   "new": "New",
   "photo": "Photo",
+  "dark": "Dark mode:",
   "UPDATE": "UPDATE",
 
   "_New_Version_1.0.2": "*** New version 1.0.2 Translations ***",

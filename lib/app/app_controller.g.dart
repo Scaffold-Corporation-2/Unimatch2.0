@@ -39,11 +39,40 @@ mixin _$AppController on _AppController, Store {
     });
   }
 
+  final _$isDarkAtom = Atom(name: '_AppController.isDark');
+
+  @override
+  bool get isDark {
+    _$isDarkAtom.reportRead();
+    return super.isDark;
+  }
+
+  @override
+  set isDark(bool value) {
+    _$isDarkAtom.reportWrite(value, super.isDark, () {
+      super.isDark = value;
+    });
+  }
+
   final _$loadAsyncAction = AsyncAction('_AppController.load');
 
   @override
   Future<dynamic> load() {
     return _$loadAsyncAction.run(() => super.load());
+  }
+
+  final _$buscarThemeAsyncAction = AsyncAction('_AppController.buscarTheme');
+
+  @override
+  Future buscarTheme() {
+    return _$buscarThemeAsyncAction.run(() => super.buscarTheme());
+  }
+
+  final _$alterarThemeAsyncAction = AsyncAction('_AppController.alterarTheme');
+
+  @override
+  Future alterarTheme() {
+    return _$alterarThemeAsyncAction.run(() => super.alterarTheme());
   }
 
   final _$_AppControllerActionController =
@@ -64,7 +93,8 @@ mixin _$AppController on _AppController, Store {
   String toString() {
     return '''
 locale: ${locale},
-localizedStrings: ${localizedStrings}
+localizedStrings: ${localizedStrings},
+isDark: ${isDark}
     ''';
   }
 }

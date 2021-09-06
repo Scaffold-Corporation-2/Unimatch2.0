@@ -29,7 +29,6 @@ const String IOS_INTERSTITIAL_ID = "ca-app-pub-2236562881766006/4868383683";
 ///
 const List<Locale> SUPPORTED_LOCALES = [
   Locale('pt_br'),
-  Locale('en'),
 ];
 ///
 /// END APP SETINGS - SECTION
@@ -55,6 +54,8 @@ const String C_DISLIKES = "Dislikes";
 const String C_MESSAGES = "Mensagens";
 const String C_NOTIFICATIONS = "Notificacoes";
 const String C_PARTY = "Festas";
+const String C_LIFESTYLE = "LifeStyle";
+const String C_MOVIES = "Filmes";
 const String C_ATHLETIC = "Atleticas";
 
 /// NOME DE CAMPOS PARA AppInfo COLLECTION  ///
@@ -72,6 +73,8 @@ const String FREE_ACCOUNT_MAX_DISTANCE = "free_account_max_distance";
 const String FREE_ACCOUNT_SWIPES = "free_account_swipes";
 const String VIP_ACCOUNT_MAX_DISTANCE = "vip_account_max_distance";
 const String VIP_ACCOUNT_SWIPES = "vip_account_swipes";
+const String PARTIES_MAX_DISTANCE = "parties_max_distance";
+const String LIFESTYLE_MAX_DISTANCE = "lifestyle_max_distance";
 // Admob variables
 const String ADMOB_APP_ID = "admob_app_id";
 const String ADMOB_INTERSTITIAL_AD_ID = "admob_interstitial_ad_id";
@@ -91,6 +94,7 @@ const String USER_BIO = "usuario_bio";
 const String USER_PHONE_NUMBER = "usuario_numero_telefone";
 const String USER_EMAIL = "usuario_email";
 const String USER_GALLERY = "usuario_galeria";
+const String USER_BADGES = "usuario_emblemas";
 const String USER_COUNTRY = "usuario_pais";
 const String USER_LOCALITY = "usuario_localidade";
 const String USER_GEO_POINT = "usuario_geo_point";
@@ -158,9 +162,29 @@ const String DISLIKED_BY_USER_ID = 'disliked_por_usuario_id';
 const String VISITED_USER_ID = 'visitado_usuario_id';
 const String VISITED_BY_USER_ID = 'visitado_por_usuario_id';
 
+/// DATABASE FIELDS FOR LifeStyle COLLECTION
+/// NUNCA NULL
+const String NAME_LIFESTYLE = "nome_lifeStyle";
+const String TYPE_LIFESTYLE = "tipo_lifeStyle";
+const String LOCAL_LIFESTYLE = "localizacao_lifeStyle";
+const String LIFESTYLE_GEO_POINT = "local_lifeStyle";
+const String IMAGES_LIFESTYLE = "images_lifeStyle"; //nunca deixar chegar null
+const String MENU_LIFESTYLE = "cardapio_lifeStyle";//nunca deixar chegar null
+const String DESC_LIFESTYLE = "descricao_lifeStyle";
+const String DATE_LIFESTYLE = "data_create_lifestyle";
+const String PRICE_LIFESTYLE = "preco_medio_lifestyle";
+const String OPEN_LIFESTYLE = "horario_abertos_lifeStyle";//nunca deixar chegar null
+
+/// DATABASE FIELDS FOR Parties COLLECTION
+/// NUNCA NULL
+const String NAME_MOVIE = "nome_filme";
+const String TYPE_MOVIE = "tipo_filme";
+const String LOCAL_MOVIE= "local_filme";
+const String DATE_MOVIE = "data_create_movie";
+
 /// DATABASE FIELDS FOR Parties COLLECTION
 ///
-
+const String ID_PARTY = "id_festa";
 const String NAME_PARTY = "nome_festa";
 const String DATE_PARTY = "data_festa";
 const String TIME_PARTY = "hora_festa";
@@ -170,6 +194,7 @@ const String IMAGES_PARTY = "images_festa";
 const String DESC_PARTY = "descricao_festa";
 const String BUY_PARTY = "ingresso_festa";
 const String COR_PARTY = "cor_festa";
+const String QUANT_PARTY = "quantidade_visualizacao_festa";
 
 /// DATABASE FIELDS FOR Atletica COLLECTION
 ///

@@ -21,8 +21,8 @@ class NotificationCounter extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: new Text(
-              '$counter',
-              style: new TextStyle(color: Colors.white, fontSize: 15),
+              counter > 9 ? "9+" : "$counter",
+              style: new TextStyle(color: Colors.white, fontSize: counter > 9 ? 12 : 15),
               textAlign: TextAlign.center,
             ),
           ),

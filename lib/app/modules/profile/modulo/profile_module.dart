@@ -22,8 +22,9 @@ class ProfileModule extends Module{
     ChildRoute('/likes', child: (_, args) => ProfileLikesScreen()),
     ChildRoute('/dislikes', child: (_, args) => DislikedProfilesScreen()),
     ChildRoute('/about', child: (_, args) => AboutScreen()),
-    ChildRoute('/settings', child: (_, args) => SettingsScreen()),
     ChildRoute('/passaport', child: (_, args) =>  PassportScreen()),
     ChildRoute('/edit', child: (_, args) =>  EditProfileScreen()),
+    ChildRoute('/settings', child: (_, args) => SettingsScreen(),
+      transition: TransitionType.noTransition, ),
   ];
 }

@@ -38,7 +38,6 @@ class ProfileCard extends StatelessWidget {
        userPhoto = NetworkImage(user.userProfilePhoto);
     }
 
-    //
     // Get User Birthday
     final DateTime userBirthday = DateTime(
         user.userBirthYear,
@@ -59,7 +58,7 @@ class ProfileCard extends StatelessWidget {
             elevation: 4.0,
             margin: EdgeInsets.all(0),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+                borderRadius: BorderRadius.all(Radius.circular(22.0))),
             child: Container(
               decoration: BoxDecoration(
                 /// User profile image
@@ -97,6 +96,15 @@ class ProfileCard extends StatelessWidget {
                             /// User fullname
                             Row(
                               children: [
+                                user.userIsVerified
+                                    ? Padding(
+                                      padding: const EdgeInsets.only(right: 5),
+                                      child: Image.asset(
+                                      'assets/images/verified_badge.png',
+                                      width: 27,
+                                      height: 27),
+                                    )
+                                    : Container(width: 0, height: 0),
                                 Expanded(
                                   child: Text(
                                     '${user.userFullname.split(' ')[0]}, '
@@ -160,68 +168,24 @@ class ProfileCard extends StatelessWidget {
                         ),
                       ),
 
-                      // Expanded(
-                      //   flex: 1,
-                      //   child: Container(
-                      //     padding: EdgeInsets.symmetric(vertical: 50.0),
-                      //     child: ListView.builder(
-                      //         itemCount: 5,
-                      //         reverse: true,
-                      //         itemBuilder: (_, index) {
-                      //           return Column(
-                      //             children: [
-                      //               Image.asset(
-                      //                   'assets/images/uniVipGold.png',
-                      //                   width: 30,
-                      //                   height: 30),
-                      //
-                      //               if(index == 0)
-                      //                 user.userIsVerified
-                      //                     ? Image.asset(
-                      //                     'assets/images/verified_badge.png',
-                      //                     width: 30,
-                      //                     height: 30)
-                      //                     : Container(width: 0, height: 0),
-                      //             ],
-                      //           );
-                      //         }
-                      //     ),
-                      //   ),
-                      // )
-                      // Column(
-                      //   crossAxisAlignment: CrossAxisAlignment.center,
-                      //   mainAxisAlignment: MainAxisAlignment.end,
-                      //   children: [
-                      //
-                      //     // SizedBox(height: 5),
-                      //     // Image.asset(
-                      //     //     'assets/images/uniVipGold.png',
-                      //     //     width: 30,
-                      //     //     height: 30),
-                      //     //
-                      //     // SizedBox(height: 5),
-                      //     // Image.asset(
-                      //     //     'assets/images/verified_badge.png',
-                      //     //     width: 30,
-                      //     //     height: 30),
-                      //     //
-                      //
-                      //     SizedBox(height: 5),
-                      //     Image.asset(
-                      //         'assets/images/uniVipGold.png',
-                      //         width: 30,
-                      //         height: 30),
-                      //
-                      //     user.userIsVerified
-                      //         ? Image.asset(
-                      //             'assets/images/verified_badge.png',
-                      //             width: 30,
-                      //             height: 30)
-                      //         : Container(width: 0, height: 0),
-                      //
-                      //     SizedBox(height: 60)
-                      //   ],
-                      // )
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.only(bottom: 65.0, top: 50.0),
+                          child: ListView.builder(
+                              itemCount:user.userBadges.length,
+                              reverse: true,
+                              itemBuilder: (_, index) {
+                                return user.userBadges.isNotEmpty?
+                                      Image.network(
+                                          user.userBadges[index]["emblema"],
+                                          width: 30,
+                                          height: 30)
+                                    : Container(width: 0, height: 0);
+                              }
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),

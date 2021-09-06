@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_ml_vision/google_ml_vision.dart';
 import 'package:mobx/mobx.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/datas/university.dart';
@@ -136,10 +137,44 @@ abstract class _LoginStore with Store {
     await showModalBottomSheet(
         context: context,
         builder: (context) => ImageSourceSheet(
-              onImageSelected: (image) {
+              onImageSelected: (image) async  {
                 if (image != null) {
-                  imageFile = image;
-                  Navigator.of(context).pop();
+                  if (Platform.isAndroid) {
+
+                    final GoogleVisionImage visionImage = GoogleVisionImage.fromFile(image);
+                    final FaceDetector faceDetector = GoogleVision.instance.faceDetector();
+                    final List<Face> faces = await faceDetector.processImage(visionImage);
+                    debugPrint("Faces detectadas: ${faces.length}");
+
+                    if(faces.length == 1){
+
+                      imageFile = image;
+                      Navigator.of(context).pop();
+
+                    }else if(faces.length > 1){
+
+                      debugPrint('Varias pessoas na foto');
+
+                      infoDialog(
+                          context,
+                          message: "Não utilize foto em grupo no seu perfil da Unimatch. Isso é prejudicial para você mesmo!");
+
+                    }else{
+                      debugPrint('Pessoa não identificada');
+
+                      infoDialog(
+                          context,
+                          message: "Não foi possível identificar você na foto. "
+                              "Se você estiver na imagem, tente novamente mais tarde ou tente adicionar outra foto,  "
+                              "mas se o problema persistir, entre em contato conosco via instagram: @unimatch.app");
+                    }
+
+                    faceDetector.close();
+                  }
+                  //para IOS a versão mínima é a 10.0(validar quando for IOS
+                  else if (Platform.isIOS){
+
+                  }
                 }
               },
             ));

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -90,6 +91,136 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             .getUserProfileImages(widget.user)
                             .map((url) => NetworkImage(url))
                             .toList()),
+                  ),
+                  Container(
+                    height: widget.user.userBadges.isNotEmpty ? 50 : 0,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Colors.deepPurpleAccent,
+                          Colors.purpleAccent,
+                          Color(0XFFFB40BD),
+                          Colors.pinkAccent,
+                        ],
+                      ),
+                    ),
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount:widget.user.userBadges.length,
+                        itemBuilder: (_, index) {
+                          return widget.user.userBadges.isNotEmpty?
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: GestureDetector(
+                              child: Image.network(
+                                  widget.user.userBadges[index]["emblema"],
+                                  width: 35,
+                                  height: 35
+                              ),
+                              onTap: (){
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25),
+                                    ),
+                                    contentPadding: EdgeInsets.zero,
+                                    content: Container(
+                                      height: 230,
+                                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25),
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            Colors.deepPurpleAccent,
+                                            Colors.purpleAccent,
+                                            Color(0XFFFB40BD),
+                                            Colors.pinkAccent,
+                                          ],
+                                        ),
+                                      ),
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: IconButton(
+                                              padding: EdgeInsets.zero,
+                                              icon: Icon(
+                                                Icons.close,
+                                                color: Colors.white.withOpacity(0.8),
+                                                size: 30,
+                                              ),
+                                              onPressed: () {
+                                                Modular.to.pop();
+                                              },
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Image.network(
+                                                      widget.user.userBadges[index]["emblema"],
+                                                      width: 50,
+                                                      height: 50,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  SizedBox(width: 10.0),
+
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                                    child: Text(
+                                                      widget.user.userBadges[index]["titulo"],
+                                                      style: GoogleFonts.nunito(
+                                                          fontSize: 25,
+                                                          color: Colors.white,
+                                                          fontWeight: FontWeight.w600
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 5.0,),
+
+                                          Expanded(
+                                            flex: 2,
+                                              child: SingleChildScrollView(
+                                                child: Text(
+                                                  widget.user.userBadges[index]["desc"],
+                                                  textAlign: TextAlign.justify,
+                                                  style: GoogleFonts.nunito(
+                                                      fontSize: 18,
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.w400
+                                                  ),
+                                                ),
+                                              ),
+                                          ),
+
+                                          SizedBox(width: 2.0,),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                              : Container(width: 0, height: 0);
+                        }
+                    ),
                   ),
 
                   /// Profile details
