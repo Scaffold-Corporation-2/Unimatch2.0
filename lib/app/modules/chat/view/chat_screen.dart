@@ -10,8 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-//nao apagar ainda
-//import 'package:liquid_swipe/liquid_swipe.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:uni_match/app/api/likes_api.dart';
@@ -52,6 +50,21 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
   final _likesApi = LikesApi();
   final _notificationsApi = NotificationsApi();
   final String replyMessage = '';
+
+  bool connect = true;
+  _testerede() async {
+    try {
+      await FirebaseFirestore.instance
+          .runTransaction((Transaction tx) async {})
+          .timeout(Duration(seconds: 3));
+      return connect = true;
+    } on PlatformException catch (_) {
+      // May be thrown on Airplane mode
+      return connect = false;
+    } on TimeoutException catch (_) {
+      return connect = false;
+    }
+  }
 
   void dismissKeyboard(BuildContext context) {
     FocusScope.of(context).unfocus();
@@ -263,6 +276,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
   Widget build(BuildContext context) {
     /// Initialization
     ///
+    final pr = ProgressDialog(context);
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     _pr = ProgressDialog(context);
     return Scaffold(
@@ -395,9 +409,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             /// how message list
-            Expanded(
-                child:
-                    Container(color: Colors.white54, child: _showMessages())),
+            Expanded(child: Container(child: _showMessages())),
 
             /// Text Composer
             ///
@@ -513,8 +525,11 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                 highlightColor: Colors.transparent,
                                 onPressed: _isComposing
                                     ? () async {
-                                        if (controller.statusConnection ==
-                                            'online') {
+                                        pr.show(i18n.translate("processing")!);
+                                        await _testerede();
+                                        if (connect == true) {
+                                          Navigator.of(context).pop();
+
                                           /// Get text
                                           final text = controller
                                               .textController.text
@@ -550,8 +565,8 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                           /// Update scroll
                                           _scrollMessageList();
                                         }
-                                        if (controller.statusConnection ==
-                                            'offiline') {
+                                        if (connect == false) {
+                                          Navigator.of(context).pop();
                                           showDialog(
                                               context: context,
                                               builder: (context) {
@@ -606,7 +621,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
         verticalSpacing: 0,
         horizontalSpacing: 0,
         initCategory: Category.RECENT,
-        bgColor: Colors.white54,
+        bgColor: Colors.white,
         indicatorColor: Colors.pinkAccent,
         iconColor: Colors.pink.shade100,
         iconColorSelected: Colors.pink,
@@ -629,8 +644,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
 
   /// _showMessages
   Widget _showMessages() {
-    return //showMessages( messages: _messages);
-        Container(
+    return Container(
       child: StreamBuilder<QuerySnapshot>(
           stream: _messages,
           builder: (context, snapshot) {

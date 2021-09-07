@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
@@ -50,58 +49,6 @@ class _ConversationsTabState extends State<ConversationsTab> {
       return connect = false;
     }
   }
-
-  // Future<bool> _checkInternetAccess() {
-  //   /// We use a mix of IPV4 and IPV6 here in case some networks only accept one of the types.
-  //   /// Only tested with an IPV4 only network so far (I don't have access to an IPV6 network).
-  //   final List<InternetAddress> dnss = [
-  //     InternetAddress('8.8.8.8', type: InternetAddressType.IPv4), // Google
-  //     InternetAddress('2001:4860:4860::8888',
-  //         type: InternetAddressType.IPv6), // Google
-  //     InternetAddress('1.1.1.1', type: InternetAddressType.IPv4), // CloudFlare
-  //     InternetAddress('2606:4700:4700::1111',
-  //         type: InternetAddressType.IPv6), // CloudFlare
-  //     InternetAddress('208.67.222.222',
-  //         type: InternetAddressType.IPv4), // OpenDNS
-  //     InternetAddress('2620:0:ccc::2',
-  //         type: InternetAddressType.IPv6), // OpenDNS
-  //   ];
-  //
-  //   final Completer<bool> completer = Completer<bool>();
-  //
-  //   int callsReturned = 0;
-  //   void onCallReturned(bool isAlive) {
-  //     if (completer.isCompleted) return;
-  //
-  //     if (isAlive) {
-  //       completer.complete(true);
-  //     } else {
-  //       callsReturned++;
-  //       if (callsReturned >= dnss.length) {
-  //         completer.complete(false);
-  //       }
-  //     }
-  //   }
-  //
-  //   dnss.forEach((dns) => _pingDns(dns).then(onCallReturned));
-  //   return completer.future;
-  // }
-  //
-  // Future<bool> _pingDns(InternetAddress dnsAddress) async {
-  //   const int dnsPort = 53;
-  //   const Duration timeout = Duration(seconds: 3);
-  //
-  //   var socket;
-  //   try {
-  //     socket = await Socket.connect(dnsAddress, dnsPort, timeout: timeout);
-  //     socket?.destroy();
-  //     return connect = true;
-  //   } on SocketException {
-  //     socket?.destroy();
-  //   }
-  //
-  //   return connect = false;
-  // }
 
   _updateConnectionStatus() async {
     try {
