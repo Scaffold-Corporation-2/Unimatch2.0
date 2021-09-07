@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 class HowToSignUpScreen extends StatelessWidget {
   const HowToSignUpScreen({Key? key}) : super(key: key);
 
-  Future<void> OpenUrl() async {
+  Future<void> openUrl() async {
     const url =
         "https://docs.google.com/forms/d/1VC-zGmikCJEGK3Xxm3MWvgCXlgr6uTrP8Eml2wXco_A/viewform?edit_requested=true";
     if (await canLaunch(url)) {
@@ -133,7 +133,7 @@ class HowToSignUpScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: CustomAnimatedButton(
                 onTap: () async {
-                  OpenUrl();
+                  openUrl();
                 },
                 widhtMultiply: 0.8,
                 height: 53,
