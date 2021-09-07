@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +11,9 @@ import 'package:uni_match/app/modules/login/widgets/custom_animated_button.dart'
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/modules/login/widgets/custom_text_field.dart';
 import 'package:uni_match/app/modules/login/widgets/custom_text_field_password.dart';
+import 'package:uni_match/dialogs/progress_dialog.dart';
 import 'package:uni_match/widgets/app_logo.dart';
+import 'package:uni_match/widgets/show_dialog_undo_match.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -29,6 +33,9 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final pr = ProgressDialog(context);
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -206,10 +213,13 @@ class _SignInScreenState extends State<SignInScreen> {
                       CustomAnimatedButton(
                         onTap: () async {
                           FocusScope.of(context).unfocus();
+
                           if (_email.text.isEmpty || _password.text.isEmpty)
                             Fluttertoast.showToast(msg: 'Preencha todos os campos!');
                           else
+                            pr.show(i18n.translate("processing")!);
                             await _loginStore.emailLogin(_email.text.trim(), _password.text.trim());
+                            pr.hide();
                         },
                         widhtMultiply: 1,
                         height: 53,
