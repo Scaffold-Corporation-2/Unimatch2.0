@@ -164,35 +164,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                           Expanded(
                                             flex: 1,
-                                            child: SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Image.network(
-                                                      widget.user.userBadges[index]["emblema"],
-                                                      width: 50,
-                                                      height: 50,
-                                                    fit: BoxFit.cover,
+                                            child: ListTile(
+                                              contentPadding: EdgeInsets.zero,
+                                              title: Padding(
+                                                padding: const EdgeInsets.only(right: 4.0),
+                                                child: Text(
+                                                  widget.user.userBadges[index]["titulo"],
+                                                  softWrap: true,
+                                                  style: GoogleFonts.fredokaOne(
+                                                      fontSize: 28,
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.w500
                                                   ),
-                                                  SizedBox(width: 10.0),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                              leading: Image.network(
+                                                widget.user.userBadges[index]["emblema"],
+                                                width: 50,
+                                                height: 50,
+                                                fit: BoxFit.cover,
+                                              ),
 
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                                    child: Text(
-                                                      widget.user.userBadges[index]["titulo"],
-                                                      style: GoogleFonts.nunito(
-                                                          fontSize: 25,
-                                                          color: Colors.white,
-                                                          fontWeight: FontWeight.w600
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
+                                              trailing: Image.network(
+                                                widget.user.userBadges[index]["emblema"],
+                                                width: 50,
+                                                height: 50,
+                                                fit: BoxFit.cover,
                                               ),
                                             ),
                                           ),
-                                          SizedBox(width: 5.0,),
+                                          SizedBox(width: 8.0,),
 
                                           Expanded(
                                             flex: 2,

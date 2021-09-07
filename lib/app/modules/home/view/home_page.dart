@@ -74,7 +74,7 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
                  IconButton(
                      splashColor: Colors.transparent,
                      highlightColor: Colors.transparent,
-                     icon: SvgIcon("assets/icons/search_icon.svg",
+                     icon: SvgIcon("assets/icons/lifeStyle.svg",
                        width: 35, height: 35, color: Theme.of(context).iconTheme.color,),
                      onPressed: (){
                        Modular.to.pushNamed('/lifeStyle');

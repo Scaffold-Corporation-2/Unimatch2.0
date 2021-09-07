@@ -42,7 +42,6 @@ class AppWidget extends StatelessWidget {
                   ],
                   background: Container(color: Color(0xFFF5F5F5))),
               localizationsDelegates: [
-                // AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
               ],

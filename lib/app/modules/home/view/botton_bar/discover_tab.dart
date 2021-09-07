@@ -165,8 +165,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
       return NoData(
           animated: true,
           svgName: 'search_icon',
-          text: _i18n
-              .translate("no_user_found_around_you_please_try_again_later")!);
+          text: _i18n.translate("no_user_found_around_you_please_try_again_later")!);
     } else {
       return Stack(
         fit: StackFit.expand,
