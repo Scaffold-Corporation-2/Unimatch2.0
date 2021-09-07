@@ -180,6 +180,8 @@ dev_dependencies:
   #Biblioteca de acoes do teclado
   keyboard_actions: ^3.4.4
 
+
+
   flutter_modular_test: ^1.0.1
   flutter_test:
     sdk: flutter

@@ -8,6 +8,7 @@ import 'package:uni_match/app/modules/login/store/login_store.dart';
 import 'package:uni_match/app/modules/login/widgets/custom_animated_button.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/modules/login/widgets/custom_text_field.dart';
+import 'package:uni_match/app/modules/login/widgets/custom_text_field_password.dart';
 import 'package:uni_match/widgets/app_logo.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -95,7 +96,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       SizedBox(height: 20),
 
                       ///Password
-                      CustomTextField(
+                      CustomTextFieldPassword(
                           hintText: 'Senha',
                           icon: Icon(
                             Icons.lock,
