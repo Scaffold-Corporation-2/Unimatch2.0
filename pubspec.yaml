@@ -151,8 +151,8 @@ dependencies:
     #Biblioteca de animação
   animate_do: ^2.0.0
 
-    #Biblioteca do botao de reacao
-  flutter_reaction_button: ^1.0.8
+    #Biblioteca do botao de reacao.
+  flutter_reaction_button: ^1.0.8 #Apagar
 
     #Biblioteca para validar e-mail
   email_validator: ^2.0.1
@@ -171,7 +171,13 @@ dependencies:
 
   intl: ^0.17.0
 
+  #Biblioteca para verificar conexão
+  connectivity_plus: ^1.1.0
+
   flutter_cupertino_datetime_picker: ^2.0.1
+
+  http: ^0.13.3
+
   dio: ^4.0.0
 
 dev_dependencies:

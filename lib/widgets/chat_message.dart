@@ -50,15 +50,19 @@ class ChatMessage extends StatelessWidget {
       child: Row(
         children: <Widget>[
           /// User receiver photo Left
-          !isUserSender ? Column(
-            children: [
-              _userProfilePhoto,
-              if(likeMsg)Icon(Icons.favorite,
-                color: Colors.red,
-                size: 20,
-              )
-            ],
-          ) : Container(width: 0, height: 0),
+          !isUserSender
+              ? Column(
+                  children: [
+                    _userProfilePhoto,
+                    if (likeMsg)
+                      Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                        size: 20,
+                      )
+                  ],
+                )
+              : Container(width: 0, height: 0),
 
           SizedBox(width: 10),
 
@@ -78,21 +82,29 @@ class ChatMessage extends StatelessWidget {
                         begin: Alignment.topRight,
                         end: Alignment.bottomLeft,
                         colors: [
-                          isUserSender ? Colors.pink.shade300: Colors.purple.shade900,
-                          isUserSender ? Colors.pink.shade300 : Color(0xFF871F78),
+                          isUserSender
+                              ? Colors.pink.shade300
+                              : Colors.purple.shade900,
+                          isUserSender
+                              ? Colors.pink.shade300
+                              : Color(0xFF871F78),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(25)),
                   child: Column(
                     children: [
-                       replyMessage.isNotEmpty? Container(
-                           width: replyMessage.isNotEmpty
-                               ? MediaQuery.of(context).size.width * 0.65
-                               : null,
-                           child: buildReply()) : Container(width: 0,),
+                      replyMessage.isNotEmpty
+                          ? Container(
+                              width: replyMessage.isNotEmpty
+                                  ? MediaQuery.of(context).size.width * 0.65
+                                  : null,
+                              child: buildReply())
+                          : Container(
+                              width: 0,
+                            ),
                       isImage
                           ? Container(
-                            child: GestureDetector(
+                              child: GestureDetector(
                               onTap: () {
                                 // Show full image
                                 Navigator.of(context).push(
@@ -115,11 +127,11 @@ class ChatMessage extends StatelessWidget {
                                     child: Hero(
                                         tag: imageLink!,
                                         child: Image.network(imageLink!)
-                                       // Image.network(imageLink!)
-                                    )),
+                                        // Image.network(imageLink!)
+                                        )),
                               ),
-                            )
-                          )
+                            ))
+
                           /// Text message
                           :
                           //TODO verificar NULL é realizado no container.
@@ -128,16 +140,20 @@ class ChatMessage extends StatelessWidget {
                                   ? MediaQuery.of(context).size.width * 0.65
                                   : null,
                               child: Padding(
-                                padding: const EdgeInsets.only(left:4,top: 3),
-                                child: Text(
+                                padding: const EdgeInsets.only(left: 4, top: 3),
+                                child: SelectableText(
                                   textMessage ?? "",
                                   style: GoogleFonts.nunito(
-                                     height: 1.3,
+                                      height: 1.3,
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
                                       color: isUserSender
                                           ? Colors.white
                                           : Colors.white),
+                                  toolbarOptions: ToolbarOptions(
+                                    selectAll: true,
+                                    copy: true,
+                                  ),
                                   textAlign: TextAlign.start,
                                 ),
                               ),
@@ -146,28 +162,35 @@ class ChatMessage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 3),
+
                 /// Message time ago
                 Container(
                     margin: const EdgeInsets.only(left: 20, right: 20),
-                    child: Text(timeAgo,
-                    style: GoogleFonts.openSans(
-                      fontSize: 11,
-                    ),)
-                ),
+                    child: Text(
+                      timeAgo,
+                      style: GoogleFonts.openSans(
+                        fontSize: 11,
+                      ),
+                    )),
               ],
             ),
           ),
           SizedBox(width: 1),
+
           /// Current User photo right
-          isUserSender ? Column(
-            children: [
-              _userProfilePhoto,
-              if(likeMsg)Icon(Icons.favorite,
-                color: Colors.red,
-                size: 20,
-              )
-            ],
-          ) : Container(width: 0, height: 0),
+          isUserSender
+              ? Column(
+                  children: [
+                    _userProfilePhoto,
+                    if (likeMsg)
+                      Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                        size: 20,
+                      )
+                  ],
+                )
+              : Container(width: 0, height: 0),
         ],
       ),
     );
