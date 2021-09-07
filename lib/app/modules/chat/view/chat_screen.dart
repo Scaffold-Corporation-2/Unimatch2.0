@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ import 'package:uni_match/dialogs/progress_dialog.dart';
 import 'package:uni_match/widgets/chat_message.dart';
 import 'package:uni_match/widgets/image_source_sheet.dart';
 import 'package:uni_match/widgets/my_circular_progress.dart';
+import 'package:uni_match/widgets/show_lost_connection.dart';
 import 'package:uni_match/widgets/svg_icon.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
@@ -105,6 +107,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
               },
             ));
   }
+
   // Send message
   Future<void> _sendMessage({
     required String type,
@@ -188,7 +191,6 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
   Future<void> _updateMenssage({
     required likeMsg,
     required idDoc,
-
   }) async {
     /// Save message for current user
     await _messagesApi.updateMessage(
@@ -197,6 +199,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
       likeMsg: likeMsg,
       idDoc: idDoc,
     );
+
     /// Save copy message for receiver
     await _messagesApi.updateMessage(
       senderId: widget.user.userId,
@@ -206,14 +209,38 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
     );
   }
 
-  late StreamSubscription<bool> subscription;
+  _updateConnectionStatus() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+        controller.statusConnection = 'online';
+      }
+    } on SocketException catch (_) {
+      print('not connected');
+      controller.statusConnection = 'offiline';
+    }
+  }
 
+  late StreamSubscription<bool> subscription;
+  var subscriptionConect;
   @override
   void initState() {
     super.initState();
+
+    subscriptionConect = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) async {
+      if (result != ConnectivityResult.none) {
+        _updateConnectionStatus();
+      } else {
+        setState(() {
+          controller.statusConnection = 'offiline';
+        });
+      }
+    });
     subscription =
         KeyboardVisibilityController().onChange.listen((isVisible) {});
-
     _messages = _messagesApi.getMessages(widget.user.userId);
     controller.focusNode.addListener(() {
       controller.textController.text = controller.textController.text;
@@ -486,38 +513,51 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                 highlightColor: Colors.transparent,
                                 onPressed: _isComposing
                                     ? () async {
-                                        /// Get text
-                                        final text = controller
-                                            .textController.text
-                                            .trim();
-                                        final replyText =
-                                            controller.replyMessage;
-                                        final replyType = controller.isImage
-                                            ? 'image'
-                                            : 'text';
+                                        if (controller.statusConnection ==
+                                            'online') {
+                                          /// Get text
+                                          final text = controller
+                                              .textController.text
+                                              .trim();
+                                          final replyText =
+                                              controller.replyMessage;
+                                          final replyType = controller.isImage
+                                              ? 'image'
+                                              : 'text';
 
-                                        /// clear input text
-                                        controller.textController.clear();
-                                        setState(() {
-                                          controller.cancelReply();
-                                          _isComposing = false;
-                                        });
+                                          /// clear input text
+                                          controller.textController.clear();
+                                          setState(() {
+                                            controller.cancelReply();
+                                            _isComposing = false;
+                                          });
 
-                                        /// Send text message
-                                        await _sendMessage(
-                                          type: 'text',
-                                          text: text,
-                                          replyType: replyType,
-                                          replyText: replyText,
-                                          userReplyMsg:
-                                              controller.comparationWhoSendM(
-                                                  UserModel().user.userFullname,
-                                                  widget.user.userFullname),
-                                          likeMsg: controller.likeMsg,
-                                        );
+                                          /// Send text message
+                                          await _sendMessage(
+                                            type: 'text',
+                                            text: text,
+                                            replyType: replyType,
+                                            replyText: replyText,
+                                            userReplyMsg:
+                                                controller.comparationWhoSendM(
+                                                    UserModel()
+                                                        .user
+                                                        .userFullname,
+                                                    widget.user.userFullname),
+                                            likeMsg: controller.likeMsg,
+                                          );
 
-                                        /// Update scroll
-                                        _scrollMessageList();
+                                          /// Update scroll
+                                          _scrollMessageList();
+                                        }
+                                        if (controller.statusConnection ==
+                                            'offiline') {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return ShowDialogLostConnection();
+                                              });
+                                        }
                                       }
                                     : null),
                           ),
@@ -551,10 +591,11 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
           }
         });
       },
-      onBackspacePressed: (){
-        controller.textController.text = controller.textController.text.characters.skipLast(1).toString();
+      onBackspacePressed: () {
+        controller.textController.text =
+            controller.textController.text.characters.skipLast(1).toString();
         setState(() {
-          if(controller.textController.text == ''){
+          if (controller.textController.text == '') {
             _isComposing = false;
           }
         });
@@ -641,10 +682,11 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                   return GestureDetector(
                     onDoubleTap: () async {
                       //controller.userLikedId = UserModel().user.userId;
-                      if (likeMsgBool && !isUserSender ) {
+                      if (likeMsgBool && !isUserSender) {
                         await _updateMenssage(likeMsg: false, idDoc: idDoc);
                       }
-                      if (!likeMsgBool && !isUserSender) await _updateMenssage(likeMsg: true, idDoc: idDoc);
+                      if (!likeMsgBool && !isUserSender)
+                        await _updateMenssage(likeMsg: true, idDoc: idDoc);
                     },
                     child: SwipeTo(
                       iconColor: Colors.transparent,

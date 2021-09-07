@@ -11,6 +11,9 @@ abstract class _ChatStore with Store {
   final textController = TextEditingController();
 
   @observable
+  String statusConnection = 'online';
+
+  @observable
   String replyMessage = '';
 
   @observable

@@ -170,7 +170,15 @@ dependencies:
   #Biblioteca para verificar conexão
   connectivity_plus: ^1.1.0
 
+
+  #Biblioteca para ckecar conexao
+  internet_connection_checker: ^0.0.1+2
+
+
   flutter_cupertino_datetime_picker: ^2.0.1
+
+  http: ^0.13.3
+
   dio: ^4.0.0
 
 dev_dependencies:

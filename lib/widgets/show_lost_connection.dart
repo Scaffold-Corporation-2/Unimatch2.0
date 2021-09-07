@@ -8,14 +8,10 @@ import 'default_card_border.dart';
 final _messagesApi = MessagesApi();
 final AppController i18n = Modular.get();
 
-class ShowDialogUndoMatch extends StatelessWidget {
-  final String userFullName;
-  final String userId;
+class ShowDialogLostConnection extends StatelessWidget {
 
-  const ShowDialogUndoMatch({
-    required this.userFullName,
-    required this.userId,
-  });
+
+  const ShowDialogLostConnection();
 
 
   @override
@@ -28,19 +24,22 @@ class ShowDialogUndoMatch extends StatelessWidget {
           color: Colors.pink,
         ),
         SizedBox(width: 10),
-        Expanded(child: Text(i18n.translate("Too_bad")!, style: TextStyle(fontSize: 22)))
+        Expanded(child: Text(i18n.translate("Alert")!, style: TextStyle(fontSize: 22))),
       ],
+
     ),
-    content: Text(
-      userFullName +' '+ i18n.translate("deleted_the_match_with_you")!+'!',
-      style: TextStyle(fontSize: 18),
+    content: Padding(
+      padding: const EdgeInsets.only(top:10),
+      child: Text(
+        i18n.translate("Check_your_internet_connection")!+'!',
+        style: TextStyle(fontSize: 18),
+      ),
     ),
     actions: [
       /// Negative button
       TextButton(
           onPressed: () async {
             Navigator.of(context).pop();
-            await _messagesApi.deleteChat(userId);
           },
           child: Text(("OK"),
               style: TextStyle(fontSize: 18, color: Colors.pinkAccent))),
