@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextFieldPassword extends StatelessWidget {
   final String hintText;
   final Icon icon;
+  final bool? visualizar;
   final bool password;
   final Function? onTapPassword;
   final bool obscureText;
   final TextInputType textInputType;
   final TextEditingController controller;
 
-  const CustomTextField(
+  const CustomTextFieldPassword(
       {Key? key,
         required this.hintText,
         required this.icon,
@@ -17,6 +18,7 @@ class CustomTextField extends StatelessWidget {
         required this.controller,
         this.password = false,
         this.obscureText = false,
+        this.visualizar,
         this.onTapPassword,
       })
       : super(key: key);
@@ -40,7 +42,16 @@ class CustomTextField extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 15),
           child: icon,
         ),
-        contentPadding:EdgeInsets.fromLTRB(0, 18, 20, 18),
+        suffixIcon: password ? GestureDetector(
+          onTap: (){
+            onTapPassword!();
+          },
+          child: Icon(
+            visualizar! ? Icons.visibility_off : Icons.visibility,
+            color: Colors.grey[700],
+          ),
+        ): null,
+        contentPadding:EdgeInsets.fromLTRB(0, 18, 0, 18),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25),
         ),
