@@ -176,6 +176,7 @@ class _EditProfileScreenState extends ModularState<EditProfileScreen, ProfileSto
     await showModalBottomSheet(
         context: context,
         builder: (context) => ImageSourceSheet(
+              tipoImagem: "auth",
               onImageSelected: (image) async {
                 if (image != null) {
                   if (Platform.isAndroid) {

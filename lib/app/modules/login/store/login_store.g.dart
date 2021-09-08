@@ -100,6 +100,21 @@ mixin _$LoginStore on _LoginStore, Store {
     });
   }
 
+  final _$firstTimeAtom = Atom(name: '_LoginStore.firstTime');
+
+  @override
+  bool get firstTime {
+    _$firstTimeAtom.reportRead();
+    return super.firstTime;
+  }
+
+  @override
+  set firstTime(bool value) {
+    _$firstTimeAtom.reportWrite(value, super.firstTime, () {
+      super.firstTime = value;
+    });
+  }
+
   final _$birthdayAtom = Atom(name: '_LoginStore.birthday');
 
   @override
@@ -210,6 +225,17 @@ mixin _$LoginStore on _LoginStore, Store {
   final _$_LoginStoreActionController = ActionController(name: '_LoginStore');
 
   @override
+  dynamic changeFirstTime() {
+    final _$actionInfo = _$_LoginStoreActionController.startAction(
+        name: '_LoginStore.changeFirstTime');
+    try {
+      return super.changeFirstTime();
+    } finally {
+      _$_LoginStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic nameBirthday() {
     final _$actionInfo = _$_LoginStoreActionController.startAction(
         name: '_LoginStore.nameBirthday');
@@ -276,17 +302,6 @@ mixin _$LoginStore on _LoginStore, Store {
   }
 
   @override
-  dynamic selectedUniversity(String university) {
-    final _$actionInfo = _$_LoginStoreActionController.startAction(
-        name: '_LoginStore.selectedUniversity');
-    try {
-      return super.selectedUniversity(university);
-    } finally {
-      _$_LoginStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   dynamic filterSearch(String query) {
     final _$actionInfo = _$_LoginStoreActionController.startAction(
         name: '_LoginStore.filterSearch');
@@ -306,6 +321,7 @@ initialDateTime: ${initialDateTime},
 agreeTerms: ${agreeTerms},
 selectedGender: ${selectedGender},
 selectedOrientation: ${selectedOrientation},
+firstTime: ${firstTime},
 birthday: ${birthday},
 imageFile: ${imageFile},
 initList: ${initList},

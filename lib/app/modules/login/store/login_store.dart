@@ -26,14 +26,11 @@ abstract class _LoginStore with Store {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final nameController = TextEditingController();
-  final schoolController = TextEditingController();
   final bioController = TextEditingController();
   final numberController = TextEditingController();
   final editingController = TextEditingController();
 
   late ProgressDialog pr;
-  String phoneCode = '+55'; // Define yor default phone code
-  String initialSelection = 'BR'; // Define yor default country code
 
   void _navegarPaginas(String nomeRota) {
     Modular.to.navigate(nomeRota);
@@ -115,6 +112,12 @@ abstract class _LoginStore with Store {
   ];
 
   @observable
+  bool firstTime = true;
+
+  @action
+  changeFirstTime() => firstTime = false;
+
+  @observable
   String? birthday;
 
   @observable
@@ -139,6 +142,7 @@ abstract class _LoginStore with Store {
     await showModalBottomSheet(
         context: context,
         builder: (context) => ImageSourceSheet(
+              tipoImagem: "auth",
               onImageSelected: (image) async  {
                 if (image != null) {
                   if (Platform.isAndroid) {
@@ -252,9 +256,6 @@ abstract class _LoginStore with Store {
   bool loadList = false;
 
   @action
-  selectedUniversity(String university) => schoolController.text = university;
-
-  @action
   getUniversities() async {
     loadList = true;
 
@@ -334,14 +335,6 @@ abstract class _LoginStore with Store {
           context: context, message: i18n.translate("enter_your_fullname")!, bgcolor: Colors.red);
 
       /// Validate form
-    } else if (schoolController.text.isEmpty) {
-      // Show error message
-      showScaffoldMessage(
-          context: context,
-          message: i18n.translate("please_enter_your_school_name")!,
-          bgcolor: Colors.red);
-
-      /// Validate form
     } else if (UserModel().calculateUserAge(initialDateTime) < 18) {
       // Show error message
       showScaffoldMessage(
@@ -363,7 +356,6 @@ abstract class _LoginStore with Store {
           userBirthDay: userBirthDay,
           userBirthMonth: userBirthMonth,
           userBirthYear: userBirthYear,
-          userSchool: schoolController.text.trim(),
           userOrientation: selectedOrientation!,
           userBio: bioController.text.trim(),
           onSuccess: () async {

@@ -356,7 +356,6 @@ class UserModel extends Model {
     required int userBirthDay,
     required int userBirthMonth,
     required int userBirthYear,
-    required String userSchool,
     required String userOrientation,
     required String userBio,
     // Callback functions
@@ -407,7 +406,6 @@ class UserModel extends Model {
       USER_BIRTH_DAY: userBirthDay,
       USER_BIRTH_MONTH: userBirthMonth,
       USER_BIRTH_YEAR: userBirthYear,
-      USER_SCHOOL: userSchool,
       USER_ORIENTATION: userOrientation,
       USER_BIO: userBio,
       USER_PHONE_NUMBER: this.getFirebaseUser!.phoneNumber ?? '',

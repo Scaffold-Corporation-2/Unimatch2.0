@@ -104,6 +104,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
     await showModalBottomSheet(
         context: context,
         builder: (context) => ImageSourceSheet(
+              tipoImagem: "chat",
               onImageSelected: (image) async {
                 if (image != null) {
                   Navigator.of(context).pop();

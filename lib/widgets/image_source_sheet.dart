@@ -7,11 +7,14 @@ import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/widgets/svg_icon.dart';
 
 class ImageSourceSheet extends StatelessWidget {
-  // Constructor
-  ImageSourceSheet({required this.onImageSelected});
 
   // Callback function to return image file
   final Function(File?) onImageSelected;
+  final String tipoImagem;
+
+  // Constructor
+  ImageSourceSheet({required this.onImageSelected, this.tipoImagem = ""});
+
   // ImagePicker instance
   final picker = ImagePicker();
   final AppController i18n = Modular.get();
@@ -22,8 +25,13 @@ class ImageSourceSheet extends StatelessWidget {
     if (image != null) {
       final croppedImage = await ImageCropper.cropImage(
           sourcePath: image.path,
-          cropStyle: CropStyle.circle,
-          aspectRatioPresets: [CropAspectRatioPreset.square,],
+          cropStyle: tipoImagem == "auth" ? CropStyle.circle : CropStyle.rectangle,
+          aspectRatioPresets: tipoImagem == "chat"
+              ? [CropAspectRatioPreset.original, CropAspectRatioPreset.square,
+                 CropAspectRatioPreset.ratio3x2, CropAspectRatioPreset.ratio4x3,
+                 CropAspectRatioPreset.ratio16x9]
+              : [CropAspectRatioPreset.square,],
+
           maxWidth: 400,
           maxHeight: 400,
           androidUiSettings: AndroidUiSettings(
@@ -49,7 +57,6 @@ class ImageSourceSheet extends StatelessWidget {
                   label: Text(i18n.translate("gallery")!,
                       style: TextStyle(fontSize: 16, color: Theme.of(context).iconTheme.color)),
                   onPressed: () async {
-                    // Get image from device gallery
                     // ignore: deprecated_member_use
                     final pickedFile = await picker.getImage(
                       source: ImageSource.gallery,

@@ -383,15 +383,14 @@ class _SettingsScreenState extends State<SettingsScreen> with TickerProviderStat
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         onTap: () {
-
-                              _i18n.alterarTheme();
-                              successDialog(context,
-                                  message: _i18n.translate("restart_the_application_for_the_changes_to_tak_effect")!,
-                                  positiveAction: () {
-                                    /// Close dialog
-                                    Navigator.of(context).pop();
-                                  });
-                              HapticFeedback.lightImpact();
+                          _i18n.alterarTheme();
+                          successDialog(context,
+                              message: _i18n.translate("restart_the_application_for_the_changes_to_tak_effect")!,
+                              positiveAction: () {
+                                /// Close dialog
+                                Navigator.of(context).pop();
+                              });
+                          HapticFeedback.lightImpact();
                         },
                         child: AnimatedContainer(
                           duration: Duration(milliseconds: 300),
@@ -423,24 +422,8 @@ class _SettingsScreenState extends State<SettingsScreen> with TickerProviderStat
                           ),
                         ),
                       ),
-                      // TextButton(
-                      //   style: ButtonStyle(
-                      //     backgroundColor: MaterialStateProperty.all<Color>(
-                      //        _i18n.isDark? Colors.white: Theme.of(context).primaryColor),
-                      //   ),
-                      //   child: Text(_i18n.translate("UPDATE")!,
-                      //       style: TextStyle(color: Colors.white)),
-                      //   onPressed: () async {
-                      //     _i18n.alterarTheme();
-                      //     successDialog(context,
-                      //         message: _i18n.translate("restart_the_application_for_the_changes_to_tak_effect")!,
-                      //         positiveAction: () {
-                      //           /// Close dialog
-                      //           Navigator.of(context).pop();
-                      //         });
-                      //   },
-                      // ),
-                    )),
+                    )
+                ),
               ),
               SizedBox(height: 10),
 

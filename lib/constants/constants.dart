@@ -6,7 +6,6 @@ const String APP_NAME = "Unimatch";
 const Color APP_PRIMARY_COLOR = Colors.pink;
 const Color APP_ACCENT_COLOR = Colors.pinkAccent;
 const String APP_VERSION_NAME = "v1.0.0";
-//todo voltar para 1
 const int ANDROID_APP_VERSION_NUMBER = 0; // Google Play Version Number
 const int IOS_APP_VERSION_NUMBER = 0; // App Store Version Number
 //

@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uni_match/app/modules/login/store/login_store.dart';
+import 'package:uni_match/dialogs/common_dialogs.dart';
 import 'package:uni_match/widgets/default_button.dart';
 import 'package:uni_match/widgets/my_circular_progress.dart';
 import 'package:uni_match/widgets/svg_icon.dart';
@@ -15,7 +16,6 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
-
 
   @override
   void initState() {
@@ -110,7 +110,6 @@ class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
                             ),
                             SizedBox(height: 20),
 
-                            /// User gender
                             DropdownButtonFormField<String>(
                               items: controller.genders.map((gender) {
                                 return new DropdownMenuItem(
@@ -135,8 +134,6 @@ class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
                             ),
                             SizedBox(height: 20),
 
-
-                            /// User gender
                             DropdownButtonFormField<String>(
                               items: controller.sexualOrientation.map((orientation) {
                                 return new DropdownMenuItem(
@@ -158,47 +155,6 @@ class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
                                 return null;
                               },
                               onTap: () => FocusScope.of(context).unfocus(),
-                            ),
-                            SizedBox(height: 20),
-                            /// School field
-                            GestureDetector(
-                                onTap: () async {
-                                  FocusScope.of(context).unfocus();
-                                  var response = await Modular.to.pushNamed('/login/university');
-                                  if(response != null)
-                                    controller.selectedUniversity(response as String);
-                                },
-                                child: Observer(
-                                  builder:(_) =>  Material(
-                                    color: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(28),
-                                        side: BorderSide(color: Colors.grey[500]!)
-                                    ),
-                                    child: TextFormField(
-                                      readOnly: true,
-                                      controller: controller.schoolController,
-                                      textCapitalization: TextCapitalization.characters,
-                                      decoration: InputDecoration(
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(Radius.circular(28)),
-                                            borderSide: BorderSide(width: 1.8,color: Theme.of(context).primaryColor,),
-                                          ),
-                                          labelStyle: TextStyle(
-                                              color: Colors.grey[600],
-                                              fontSize: 18
-                                          ),
-                                          enabled: false,
-                                          hintText:  controller.i18n.translate("enter_your_school_name"),
-                                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                                          prefixIcon: Padding(
-                                            padding: const EdgeInsets.all(9.0),
-                                            child: SvgIcon("assets/icons/university_icon.svg"),
-                                          )
-                                      ),
-                                    ),
-                                  ),
-                                ),
                             ),
                             SizedBox(height: 20),
 
@@ -266,7 +222,17 @@ class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
                                 onPressed: () {
                                   /// Cadastrar
                                   FocusScope.of(context).unfocus();
-                                  controller.createAccount(context);
+                                  if(controller.firstTime){
+                                    infoDialog(
+                                        context,
+                                        positiveAction: (){
+                                          Navigator.of(context).pop();
+                                        },
+                                        message: "Certifique-se de que seu nome, gênero sexual e data de nascimento estão corretos, "
+                                            "pois você não poderá alterá-los no futuro.");
+                                    controller.changeFirstTime();
+                                  }
+                                  else controller.createAccount(context);
                                 },
                               ),
                             ),
