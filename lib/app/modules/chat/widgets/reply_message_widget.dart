@@ -2,11 +2,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 class ReplyMessageWidget extends StatelessWidget {
+  final BuildContext context;
   final String message;
   final String otherUser;
   final VoidCallback onCancelReply;
   final bool isImage;
   const ReplyMessageWidget({
+    required this.context,
     required this.message,
     required this.otherUser,
     required  this.onCancelReply,
@@ -58,8 +60,10 @@ class ReplyMessageWidget extends StatelessWidget {
         const SizedBox(height: 4),
         isImage == false  ?
 
-        Text(this.message, style: GoogleFonts.nunito(color: Colors.black,
-        fontSize: 17),
+        Text(this.message, style: GoogleFonts.nunito(
+            color: Theme.of(context).primaryColorDark,
+            fontSize: 17
+        ),
         maxLines: 4,
         textAlign: TextAlign.start,
         ):

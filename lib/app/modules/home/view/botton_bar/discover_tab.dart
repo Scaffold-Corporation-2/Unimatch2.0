@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
@@ -167,149 +168,149 @@ class _DiscoverTabState extends State<DiscoverTab> {
           svgName: 'search_icon',
           text: _i18n.translate("no_user_found_around_you_please_try_again_later")!);
     } else {
-      return Stack(
-        fit: StackFit.expand,
-        children: [
-          /// User card list
-          SwipeStack(
-            key: _swipeKey,
-            children: _users!.map((userDoc) {
-              // Get User object
-              final Usuario user = Usuario.fromDocument(userDoc.data()! as Map);
-              // Return user profile
-              return SwiperItem(
-                  builder: (SwiperPosition position, double progress) {
-                /// Return User Card
-                return ProfileCard(
-                    page: 'discover', position: position, user: user);
-              });
-            }).toList(),
-            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-            translationInterval: 6,
-            scaleInterval: 0.03,
-            stackFrom: StackFrom.None,
-            onEnd: () => debugPrint("onEnd"),
-            onSwipe: (int index, SwiperPosition position) async {
+      return FadeIn(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            /// User card list
+            SwipeStack(
+              key: _swipeKey,
+              children: _users!.map((userDoc) {
+                final Usuario user = Usuario.fromDocument(userDoc.data()! as Map);
+                return SwiperItem(
+                    builder: (SwiperPosition position, double progress) {
+                  /// Return User Card
+                  return ProfileCard(
+                      page: 'discover', position: position, user: user);
+                });
+              }).toList(),
+              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+              translationInterval: 6,
+              scaleInterval: 0.03,
+              stackFrom: StackFrom.None,
+              onEnd: () => debugPrint("onEnd"),
+              onSwipe: (int index, SwiperPosition position) async {
 
-              swipeNum--;
-              debugPrint("SwipeNum: $swipeNum");
+                swipeNum--;
+                debugPrint("SwipeNum: $swipeNum");
 
-              await UserModel()
-                  .updateUserData(userId: UserModel().user.userId, data: {
-                '$USER_SETTINGS.$USER_SWIPES': swipeNum});
+                await UserModel()
+                    .updateUserData(userId: UserModel().user.userId, data: {
+                  '$USER_SETTINGS.$USER_SWIPES': swipeNum});
 
-              /// Control swipe position
-              switch (position) {
-                case SwiperPosition.None:
-                  break;
-                case SwiperPosition.Left:
+                /// Control swipe position
+                switch (position) {
+                  case SwiperPosition.None:
+                    break;
+                  case SwiperPosition.Left:
 
-                /// Swipe Left Dislike profile
-                  _dislikesApi.dislikeUser(
-                      dislikedUserId: _users![index][USER_ID],
-                      onDislikeResult: (r) =>
-                          debugPrint('onDislikeResult: $r'));
+                  /// Swipe Left Dislike profile
+                    _dislikesApi.dislikeUser(
+                        dislikedUserId: _users![index][USER_ID],
+                        onDislikeResult: (r) =>
+                            debugPrint('onDislikeResult: $r'));
 
-                  if(swipeNum == 0)setState(() {});
-                  break;
+                    if(swipeNum == 0)setState(() {});
+                    break;
 
-                case SwiperPosition.Right:
+                  case SwiperPosition.Right:
 
-                /// Swipe right and Like profile
-                  _likeUser(context, clickedUserDoc: _users![index]);
+                  /// Swipe right and Like profile
+                    _likeUser(context, clickedUserDoc: _users![index]);
 
-                  if(swipeNum == 0)setState(() {});
-                  break;
+                    if(swipeNum == 0)setState(() {});
+                    break;
+                }
               }
-            }
-          ),
+            ),
 
-        if(swipeNum == 0)
-          Align(
-            alignment: Alignment.center,
-            child: InkWell(
-                child: Container(
-                  color: Colors.white.withOpacity(.25),
-                  child: Dialog(
-                    insetAnimationCurve: Curves.bounceInOut,
-                    insetAnimationDuration: Duration(seconds: 2),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    backgroundColor: Colors.white,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      height: MediaQuery.of(context).size.height * .55,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+          if(swipeNum == 0)
+            Align(
+              alignment: Alignment.center,
+              child: InkWell(
+                  child: Container(
+                    color: Colors.white.withOpacity(.25),
+                    child: Dialog(
+                      insetAnimationCurve: Curves.bounceInOut,
+                      insetAnimationDuration: Duration(seconds: 2),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      backgroundColor: Colors.white,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 20.0),
+                        height: MediaQuery.of(context).size.height * .55,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
 
-                          Icon(
-                            Icons.lock_outline,
-                            size: 80,
-                            color: Colors.pinkAccent,
-                          ),
-                          Text(
-                            "Você já usou o número máximo de Swipes gratuitos disponíveis por 24 horas.",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey[600],
-                                fontSize: 20),
-                          ),
+                            Icon(
+                              Icons.lock_outline,
+                              size: 80,
+                              color: Colors.pinkAccent,
+                            ),
+                            Text(
+                              "Você já usou o número máximo de Swipes gratuitos disponíveis por 24 horas.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[600],
+                                  fontSize: 20),
+                            ),
 
-                          Column(
-                            children: [
-                              Text(
-                                "RESTA APENAS",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[500],
-                                    fontSize: 14),
-                              ),
-                              SizedBox(height: 2,),
-                              CustomTimer(
-                                from: swipeTime!,
-                                to: Duration(hours: 0),
-                                onBuildAction: CustomTimerAction.auto_start,
-                                builder: (CustomTimerRemainingTime remaining) {
-                                  return Text(
-                                    "${remaining.hours}:${remaining.minutes}:${remaining.seconds}",
-                                    style: TextStyle(fontSize: 30.0, color: Colors.grey[500]),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "Para descolar mais universitários, basta assinar nossos planos UniVips.",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.pinkAccent,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                        ],
+                            Column(
+                              children: [
+                                Text(
+                                  "RESTA APENAS",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[500],
+                                      fontSize: 14),
+                                ),
+                                SizedBox(height: 2,),
+                                CustomTimer(
+                                  from: swipeTime!,
+                                  to: Duration(hours: 0),
+                                  onBuildAction: CustomTimerAction.auto_start,
+                                  builder: (CustomTimerRemainingTime remaining) {
+                                    return Text(
+                                      "${remaining.hours}:${remaining.minutes}:${remaining.seconds}",
+                                      style: TextStyle(fontSize: 30.0, color: Colors.grey[500]),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                            Text(
+                              "Para descolar mais universitários, basta assinar nossos planos UniVips.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.pinkAccent,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                onTap: () {
-                  showDialog(context: context,
-                      builder: (context) => VipDialog());
-                }),
-          ),
-          /// Swipe buttons
-          if(swipeNum != 0)
-            Container(
-              margin: const EdgeInsets.only(bottom: 20),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: swipeButtons(context),
-              )
-          )
-        ],
+                  onTap: () {
+                    showDialog(context: context,
+                        builder: (context) => VipDialog());
+                  }),
+            ),
+            /// Swipe buttons
+            if(swipeNum != 0)
+              Container(
+                margin: const EdgeInsets.only(bottom: 20),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: swipeButtons(context),
+                )
+            )
+          ],
+        ),
       );
     }
   }

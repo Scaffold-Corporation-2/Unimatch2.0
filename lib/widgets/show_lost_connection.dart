@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:uni_match/app/api/messages_api.dart';
 import 'package:uni_match/app/app_controller.dart';
 
 import 'default_card_border.dart';
 
-final _messagesApi = MessagesApi();
 final AppController i18n = Modular.get();
 
 class ShowDialogLostConnection extends StatelessWidget {

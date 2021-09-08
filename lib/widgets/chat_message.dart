@@ -106,7 +106,6 @@ class ChatMessage extends StatelessWidget {
                           ? Container(
                               child: GestureDetector(
                               onTap: () {
-                                // Show full image
                                 Navigator.of(context).push(
                                     new MaterialPageRoute(
                                         builder: (context) =>
@@ -134,7 +133,6 @@ class ChatMessage extends StatelessWidget {
 
                           /// Text message
                           :
-                          //TODO verificar NULL é realizado no container.
                           Container(
                               width: replyMessage.isNotEmpty
                                   ? MediaQuery.of(context).size.width * 0.65
@@ -208,9 +206,9 @@ class _ShowFullImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Container(
-        color: Colors.grey.shade200,
-        margin: EdgeInsets.only(bottom: 50),
+      body: InteractiveViewer(
+        boundaryMargin: EdgeInsets.all(0),
+        maxScale: 10.0,
         child: Center(
           child: Hero(
             tag: imageUrl,

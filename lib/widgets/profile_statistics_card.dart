@@ -4,7 +4,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/models/user_model.dart';
-import 'package:uni_match/app/modules/profile/view/profile_likes_screen.dart';
 import 'package:uni_match/widgets/default_card_border.dart';
 import 'package:uni_match/widgets/svg_icon.dart';
 

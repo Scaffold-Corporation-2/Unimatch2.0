@@ -47,7 +47,7 @@ class ImageSourceSheet extends StatelessWidget {
                 TextButton.icon(
                   icon: Icon(Icons.photo_library, color: Colors.grey, size: 27),
                   label: Text(i18n.translate("gallery")!,
-                      style: TextStyle(fontSize: 16)),
+                      style: TextStyle(fontSize: 16, color: Theme.of(context).iconTheme.color)),
                   onPressed: () async {
                     // Get image from device gallery
                     // ignore: deprecated_member_use
@@ -64,7 +64,7 @@ class ImageSourceSheet extends StatelessWidget {
                   icon: SvgIcon("assets/icons/camera_icon.svg",
                       width: 20, height: 20),
                   label: Text(i18n.translate("camera")!,
-                      style: TextStyle(fontSize: 16)),
+                      style: TextStyle(fontSize: 16, color: Theme.of(context).iconTheme.color)),
                   onPressed: () async {
                     // Capture image from camera
                     // ignore: deprecated_member_use

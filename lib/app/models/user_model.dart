@@ -230,28 +230,27 @@ class UserModel extends Model {
     if (getFirebaseUser != null) {
       /// Get current user in database
       await getUser(getFirebaseUser!.uid).then((userDoc) {
-        /// Check user account in database
-        /// if exists check status and take action
+        print(getFirebaseUser!.uid);
+
         if (userDoc.exists) {
-          /// Check User Account Status
-          if (userDoc[USER_STATUS] == 'blocked') {
-            // Go to blocked user account screen
-            blockedScreen!();
+          if (userDoc[USER_FULLNAME] != null && userDoc[USER_FULLNAME] != "") {
+            /// Check User Account Status
+            if (userDoc[USER_STATUS] == 'blocked') {
+              blockedScreen!();
+            } else {
+              updateUserObject(userDoc.data()! as Map);
+              updateUserDeviceToken();
+              print(Timestamp.now().toDate().subtract(Duration(days: 1)));
+              homeScreen();
+            }
+            debugPrint("firebaseUser existe");
+
           } else {
-            // Update UserModel for current user
-            updateUserObject(userDoc.data()! as Map);
-            // Update user device token and subscribe to fcm topic
-            updateUserDeviceToken();
-            // Go to home screen
-            print(Timestamp.now().toDate().subtract(Duration(days: 1)));
-            homeScreen();
+            debugPrint("firebaseUser existe, mas não cadastrado");
+            signUpScreen();
           }
-          // Debug
-          debugPrint("firebaseUser existe");
         } else {
-          // Debug
           debugPrint("firebaseUser não existe");
-          // Go to Sign Up Screen
           signUpScreen();
         }
       });
@@ -400,7 +399,7 @@ class UserModel extends Model {
     DateTime dateTime = await NTP.now();
 
     /// Save user information in database
-    await _firestore.collection(C_USERS).doc(this.getFirebaseUser!.uid).set(<String, dynamic>{
+    await _firestore.collection(C_USERS).doc(this.getFirebaseUser!.uid).update(<String, dynamic>{
       USER_ID: this.getFirebaseUser!.uid,
       USER_PROFILE_PHOTO: imageProfileUrl,
       USER_FULLNAME: userFullName,

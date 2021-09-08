@@ -9,6 +9,21 @@ part of 'chat_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ChatStore on _ChatStore, Store {
+  final _$statusConnectionAtom = Atom(name: '_ChatStore.statusConnection');
+
+  @override
+  String get statusConnection {
+    _$statusConnectionAtom.reportRead();
+    return super.statusConnection;
+  }
+
+  @override
+  set statusConnection(String value) {
+    _$statusConnectionAtom.reportWrite(value, super.statusConnection, () {
+      super.statusConnection = value;
+    });
+  }
+
   final _$replyMessageAtom = Atom(name: '_ChatStore.replyMessage');
 
   @override
@@ -160,6 +175,7 @@ mixin _$ChatStore on _ChatStore, Store {
   @override
   String toString() {
     return '''
+statusConnection: ${statusConnection},
 replyMessage: ${replyMessage},
 userSend: ${userSend},
 replyImage: ${replyImage},
