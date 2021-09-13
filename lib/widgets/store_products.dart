@@ -28,31 +28,16 @@ class _StoreProductsState extends State<StoreProducts> {
   void initState() {
     super.initState();
 
-    // InAppPurchase.instance.isAvailable().then((result) {
-    // // InAppPurchaseConnection.instance.isAvailable().then((result) {
-    //   if (mounted)
-    //     setState(() {
-    //       _storeIsAvailable =
-    //           result; // if false the store can not be reached or accessed
-    //     });
-    // });
-
-    /// Ultima versao
-    //Check google play services // Ultima versao
-    InAppPurchaseConnection.instance.isAvailable().then((result) {
+    InAppPurchase.instance.isAvailable().then((result) {
       if (mounted)
         setState(() {
           _storeIsAvailable =
               result; // if false the store can not be reached or accessed
         });
     });
-
-
-    InAppPurchaseConnection.instance
-    // InAppPurchase.instance
+    InAppPurchase.instance
         .queryProductDetails(AppModel().appInfo.subscriptionIds.toSet())
         .then((ProductDetailsResponse response) {
-          print(response.productDetails);
       /// Update UI
       if (mounted)
         setState(() {
@@ -129,12 +114,12 @@ class _StoreProductsState extends State<StoreProducts> {
                           final pParam = PurchaseParam(
                             productDetails: item,
                           );
-                          InAppPurchaseConnection.instance
-                              .buyNonConsumable(purchaseParam: pParam);
+                          // InAppPurchaseConnection.instance
+                          //     .buyNonConsumable(purchaseParam: pParam);
 
                           /// Subscribe - > Ultima versão
-                          // InAppPurchase.instance
-                          //     .buyNonConsumable(purchaseParam: pParam);
+                          InAppPurchase.instance
+                              .buyNonConsumable(purchaseParam: pParam);
                         }),
             ),
           );
