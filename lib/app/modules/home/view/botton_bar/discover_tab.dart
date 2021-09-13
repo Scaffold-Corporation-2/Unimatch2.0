@@ -411,7 +411,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
     /// Check match first
     await _matchesApi.checkMatch(
         userId: clickedUserDoc[USER_ID],
-        onMatchResult: (result) {
+        onMatchResult: (result)async{
           if (result) {
             /// It`s match - show dialog to ask user to chat or continue playing
             showDialog(
@@ -424,16 +424,26 @@ class _DiscoverTabState extends State<DiscoverTab> {
                         Usuario.fromDocument(clickedUserDoc.data()! as Map),
                   );
                 });
-          }
-        });
 
-    /// like profile
-    await _likesApi.likeUser(
-        likedUserId: clickedUserDoc[USER_ID],
-        userDeviceToken: clickedUserDoc[USER_DEVICE_TOKEN],
-        nMessage: "${_i18n.translate("liked_your_profile_click_and_see")}",
-        onLikeResult: (result) {
-          print('likeResult: $result');
+            /// like profile
+            await _likesApi.likeUser(
+                likedUserId: clickedUserDoc[USER_ID],
+                userDeviceToken: clickedUserDoc[USER_DEVICE_TOKEN],
+                nMessage: "${_i18n.translate("match_your_profile_click_and_see")}",
+                onLikeResult: (result) {
+                  print('likeResult: $result');
+                });
+          }
+          else{
+            /// like profile
+            await _likesApi.likeUser(
+                likedUserId: clickedUserDoc[USER_ID],
+                userDeviceToken: clickedUserDoc[USER_DEVICE_TOKEN],
+                nMessage: "${_i18n.translate("liked_your_profile_click_and_see")}",
+                onLikeResult: (result) {
+                  print('likeResult: $result');
+                });
+          }
         });
   }
 }

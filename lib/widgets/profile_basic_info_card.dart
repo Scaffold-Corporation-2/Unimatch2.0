@@ -97,7 +97,7 @@ class ProfileBasicInfoCard extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ProfileScreen(
-                            user: UserModel().user, showButtons: false)));
+                            user: UserModel().user, showButtons: false, myUser: true,)));
                   },
                 ),
                 cicleButton(

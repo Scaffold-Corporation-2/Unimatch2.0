@@ -23,6 +23,7 @@ import 'package:uni_match/widgets/svg_icon.dart';
 class ProfileScreen extends StatefulWidget {
   /// Params
   final Usuario user;
+  final bool myUser;
   final bool showButtons;
   final bool hideDislikeButton;
   final bool fromDislikesScreen;
@@ -31,6 +32,7 @@ class ProfileScreen extends StatefulWidget {
   ProfileScreen(
       {required this.user,
         this.showButtons = true,
+        this.myUser = false,
         this.hideDislikeButton = false,
         this.fromDislikesScreen = false
       });
@@ -370,6 +372,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 iconTheme:
                 IconThemeData(color: Theme.of(context).primaryColor),
                 actions: <Widget>[
+                  if(widget.myUser != true)
                   IconButton(
                     icon: Icon(Icons.flag,
                         color: Theme.of(context).primaryColor, size: 30),

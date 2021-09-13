@@ -177,6 +177,7 @@ const String OPEN_LIFESTYLE = "horario_abertos_lifeStyle";//nunca deixar chegar 
 /// DATABASE FIELDS FOR Parties COLLECTION
 /// NUNCA NULL
 const String NAME_MOVIE = "nome_filme";
+const String URL_MOVIE = "url_filme";
 const String TYPE_MOVIE = "tipo_filme";
 const String LOCAL_MOVIE= "local_filme";
 const String DATE_MOVIE = "data_create_movie";

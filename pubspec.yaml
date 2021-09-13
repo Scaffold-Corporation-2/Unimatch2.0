@@ -59,7 +59,7 @@ dependencies:
   # END
 
     # Este plugin nos ajuda a vender planos de assinatura VIP no aplicativo
-  in_app_purchase: ^1.0.8
+  in_app_purchase: ^0.5.2
 
     # Este plugin nos ajuda a consultar usuários por centro de geolocalização
   geoflutterfire: ^3.0.1
@@ -176,6 +176,9 @@ dependencies:
 
   #Biblioteca para request
   dio: ^4.0.0
+
+    #Biblioteca para acessar web
+  webview_flutter: ^2.0.13
 
 dev_dependencies:
   #Biblioteca para splash_screen nativo

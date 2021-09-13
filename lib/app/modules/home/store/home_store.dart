@@ -48,26 +48,24 @@ abstract class _HomeStore with Store{
   /// Check current User VIP Account status
   Future<void> checkUserVipStatus() async {
     // Query past subscriptions
-    ///Ultima versão
-    InAppPurchase.instance.restorePurchases.call();
 
-    // InAppPurchaseConnection.instance
-    //     .queryPastPurchases()
-    //     .then((QueryPurchaseDetailsResponse pastPurchases) {
-    //   // Chek past purchases result
-    //   if (pastPurchases.pastPurchases.isNotEmpty) {
-    //     for (var purchase in pastPurchases.pastPurchases) {
-    //       /// Update User VIP Status to true
-    //       UserModel().setUserVip();
-    //       // Set Vip Subscription Id
-    //       UserModel().setActiveVipId(purchase.productID);
-    //       // Debug
-    //       print('Active VIP SKU: ${purchase.productID}');
-    //     }
-    //   } else {
-    //     print('No Active VIP Subscription');
-    //   }
-    // });
+    InAppPurchaseConnection.instance
+        .queryPastPurchases()
+        .then((QueryPurchaseDetailsResponse pastPurchases) {
+      // Chek past purchases result
+      if (pastPurchases.pastPurchases.isNotEmpty) {
+        for (var purchase in pastPurchases.pastPurchases) {
+          /// Update User VIP Status to true
+          UserModel().setUserVip();
+          // Set Vip Subscription Id
+          UserModel().setActiveVipId(purchase.productID);
+          // Debug
+          print('Active VIP SKU: ${purchase.productID}');
+        }
+      } else {
+        print('No Active VIP Subscription');
+      }
+    });
   }
 
   /// Handle in-app purchases upates
@@ -77,11 +75,8 @@ abstract class _HomeStore with Store{
     ///Ultima versão
     //inAppPurchaseStream = InAppPurchase
 
-    inAppPurchaseStream = // InAppPurchaseConnection
-    ///Ultima versão
-    InAppPurchase
-    .instance.purchaseStream
-        // .instance.purchaseUpdatedStream
+    inAppPurchaseStream =
+    InAppPurchaseConnection.instance.purchaseUpdatedStream
         .listen((purchases) async {
       // Loop incoming purchases
       for (var purchase in purchases) {
@@ -118,10 +113,7 @@ abstract class _HomeStore with Store{
 
             if (purchase.pendingCompletePurchase) {
               /// Complete pending purchase
-
-              ///TODO mudar para Ultima versão
-              InAppPurchase.instance.completePurchase(purchase);
-              // InAppPurchaseConnection.instance.completePurchase(purchase);
+              InAppPurchaseConnection.instance.completePurchase(purchase);
               print('Success pending purchase completed!');
             }
             break;

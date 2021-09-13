@@ -163,8 +163,9 @@
   "_ProfileLikesScreen": "*** ProfileLikes Screen Translations ***",
   "likes": "Likes",
   "users_who_liked_you": "Users who liked you",
-  "liked_your_profile_click_and_see": "liked your profile click and see...",
-  "like_sent_to": "Like sent to:", 
+  "match_your_profile_click_and_see": "you have a new match, click and see...",
+  "liked_your_profile_click_and_see": "liked your profile, click and see...",
+  "like_sent_to": "Like sent to:",
 
   "_ProfileVisitsScreen": "*** Profile Visits Screen Translations ***",
   "visits": "Visits",

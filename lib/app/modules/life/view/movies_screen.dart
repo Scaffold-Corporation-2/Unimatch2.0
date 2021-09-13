@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -6,6 +8,7 @@ import 'package:uni_match/app/modules/life/store/life_store.dart';
 import 'package:uni_match/widgets/default_card_border.dart';
 import 'package:uni_match/widgets/no_data.dart';
 import 'package:uni_match/widgets/processing.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class MoviesScreen extends StatefulWidget {
   final String tipoFilme;
@@ -21,6 +24,7 @@ class _MoviesScreenState extends State<MoviesScreen> {
   @override
   void initState() {
     controller.filtrarFilmes(widget.tipoFilme);
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     super.initState();
   }
   @override
@@ -58,7 +62,24 @@ class _MoviesScreenState extends State<MoviesScreen> {
                             padding: const EdgeInsets.all(10.0),
                             child: GestureDetector(
                               onTap: () {
-                                //adicionar nova feature para click
+                                print(controller.listaFilmesFiltrados[index].urlFilme);
+                                showDialog(
+                                    context: context, builder: (_) =>
+                                    Scaffold(
+                                      appBar: AppBar(
+                                        title: Text(
+                                          widget.tipoFilme,
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.grey[600]
+                                          ),
+                                        ),
+                                      ),
+                                      body: WebView(
+                                        initialUrl: controller.listaFilmesFiltrados[index].urlFilme,
+                                      ),
+                                  )
+                                );
                               },
                               child: Card(
                                 clipBehavior: Clip.antiAlias,
