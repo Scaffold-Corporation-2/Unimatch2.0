@@ -7,7 +7,6 @@ import 'package:uni_match/app/datas/party.dart';
 import 'package:uni_match/app/modules/party/store/party_store.dart';
 import 'package:uni_match/app/modules/party/view/party_story.dart';
 import 'package:uni_match/constants/constants.dart';
-import 'package:uni_match/helpers/app_ad_helper.dart';
 import 'package:uni_match/widgets/default_card_border.dart';
 import 'package:uni_match/widgets/no_data.dart';
 import 'package:uni_match/widgets/processing.dart';
@@ -25,13 +24,6 @@ class _PartyPageState extends ModularState<PartyPage, PartyStore> {
   void initState() {
     super.initState();
     controller.getParties();
-    AppAdHelper.showInterstitialAd();
-  }
-
-  @override
-  void dispose() {
-    AppAdHelper.disposeInterstitialAd();
-    super.dispose();
   }
 
   @override

@@ -52,18 +52,25 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
   final _notificationsApi = NotificationsApi();
   final String replyMessage = '';
 
-  bool connect = true;
   _testerede() async {
     try {
       await FirebaseFirestore.instance
           .runTransaction((Transaction tx) async {})
-          .timeout(Duration(seconds: 3));
-      return connect = true;
+          .timeout(Duration(milliseconds: 1500));
+
     } on PlatformException catch (_) {
-      // May be thrown on Airplane mode
-      return connect = false;
+      showDialog(
+          context: context,
+          builder: (context) {
+            return ShowDialogLostConnection();
+          });
+
     } on TimeoutException catch (_) {
-      return connect = false;
+      showDialog(
+          context: context,
+          builder: (context) {
+            return ShowDialogLostConnection();
+          });
     }
   }
 
@@ -243,6 +250,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
   @override
   void initState() {
     super.initState();
+    _testerede();
 
     subscriptionConect = Connectivity()
         .onConnectivityChanged
@@ -414,8 +422,8 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
 
             /// Text Composer
             ///
-            Observer(
-              builder: (_) => ListTile(
+          Observer(
+              builder: (_) =>ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 0),
                 title: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -441,9 +449,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                     maxLines: 4,
                                     minLines: 1,
                                     style: GoogleFonts.nunito(
-                                      color: Colors.black,
-                                      fontSize: 17
-                                    ),
+                                        color: Colors.black, fontSize: 17),
                                     autocorrect: false,
                                     decoration: InputDecoration(
                                       focusedBorder: OutlineInputBorder(
@@ -452,16 +458,18 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                           topLeft: controller.replyMessage != ''
                                               ? Radius.zero
                                               : Radius.circular(25),
-                                          topRight: controller.replyMessage != ''
-                                              ? Radius.zero
-                                              : Radius.circular(25),
+                                          topRight:
+                                              controller.replyMessage != ''
+                                                  ? Radius.zero
+                                                  : Radius.circular(25),
                                           bottomLeft: Radius.circular(25),
                                           bottomRight: Radius.circular(25),
                                         ),
                                       ),
                                       prefixIcon: Padding(
-                                        padding: const EdgeInsetsDirectional.only(
-                                            bottom: 0),
+                                        padding:
+                                            const EdgeInsetsDirectional.only(
+                                                bottom: 0),
                                         child: IconButton(
                                             iconSize: 30,
                                             icon: Icon(
@@ -493,7 +501,8 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                           }),
                                       filled: true,
                                       fillColor: Colors.grey[100],
-                                      hintText: _i18n.translate("type_a_message"),
+                                      hintText:
+                                          _i18n.translate("type_a_message"),
                                       hintMaxLines: 1,
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide.none,
@@ -501,9 +510,10 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                           topLeft: controller.replyMessage != ''
                                               ? Radius.zero
                                               : Radius.circular(25),
-                                          topRight: controller.replyMessage != ''
-                                              ? Radius.zero
-                                              : Radius.circular(25),
+                                          topRight:
+                                              controller.replyMessage != ''
+                                                  ? Radius.zero
+                                                  : Radius.circular(25),
                                           bottomLeft: Radius.circular(25),
                                           bottomRight: Radius.circular(25),
                                         ),
@@ -514,8 +524,7 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                         if (text == ' ') {
                                           controller.textController.clear();
                                         }
-                                        _isComposing =
-                                            text.isNotEmpty && text != ' ';
+                                        _isComposing = text.trim().isNotEmpty;
                                       });
                                     },
                                   ),
@@ -533,50 +542,37 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                                   highlightColor: Colors.transparent,
                                   onPressed: _isComposing
                                       ? () async {
-                                          await _testerede();
-                                          if (connect == true) {
+                                          final text = controller.textController.text.trim();
 
-                                            final text = controller
-                                                .textController.text
-                                                .trim();
-                                            final replyText =
-                                                controller.replyMessage;
-                                            final replyType = controller.isImage
-                                                ? 'image'
-                                                : 'text';
+                                          final replyText = controller.replyMessage;
+                                          final replyType = controller.isImage
+                                              ? 'image'
+                                              : 'text';
 
-                                            /// clear input text
-                                            controller.textController.clear();
-                                            setState(() {
-                                              controller.cancelReply();
-                                              _isComposing = false;
-                                            });
+                                          /// clear input text
+                                          controller.textController.clear();
+                                          setState(() {
+                                            controller.cancelReply();
+                                            _isComposing = false;
+                                          });
 
-                                            /// Send text message
-                                            await _sendMessage(
-                                              type: 'text',
-                                              text: text,
-                                              replyType: replyType,
-                                              replyText: replyText,
-                                              userReplyMsg:
-                                                  controller.comparationWhoSendM(
-                                                      UserModel()
-                                                          .user
-                                                          .userFullname,
-                                                      widget.user.userFullname),
-                                              likeMsg: controller.likeMsg,
-                                            );
+                                          /// Send text message
+                                          await _sendMessage(
+                                            type: 'text',
+                                            text: text,
+                                            replyType: replyType,
+                                            replyText: replyText,
+                                            userReplyMsg:
+                                                controller.comparationWhoSendM(
+                                                    UserModel()
+                                                        .user
+                                                        .userFullname,
+                                                    widget.user.userFullname),
+                                            likeMsg: controller.likeMsg,
+                                          );
 
-                                            /// Update scroll
-                                            _scrollMessageList();
-                                          }
-                                          if (connect == false) {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return ShowDialogLostConnection();
-                                                });
-                                          }
+                                          /// Update scroll
+                                          _scrollMessageList();
                                         }
                                       : null),
                             ),
@@ -586,13 +582,10 @@ class _ChatScreenState extends ModularState<ChatScreen, ChatStore> {
                     ),
                     !isKeyboard && controller.showEmoji == true
                         ? FadeInUp(
-                            child:
-                                Container(
-                                    height: 250,
-                                    width: double.maxFinite,
-                                    child: emojibuilder()
-                                )
-                              )
+                            child: Container(
+                                height: 250,
+                                width: double.maxFinite,
+                                child: emojibuilder()))
                         : SizedBox(),
                   ],
                 ),

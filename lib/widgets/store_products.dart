@@ -28,8 +28,18 @@ class _StoreProductsState extends State<StoreProducts> {
   void initState() {
     super.initState();
 
-    InAppPurchase.instance.isAvailable().then((result) {
-    // InAppPurchaseConnection.instance.isAvailable().then((result) {
+    // InAppPurchase.instance.isAvailable().then((result) {
+    // // InAppPurchaseConnection.instance.isAvailable().then((result) {
+    //   if (mounted)
+    //     setState(() {
+    //       _storeIsAvailable =
+    //           result; // if false the store can not be reached or accessed
+    //     });
+    // });
+
+    /// Ultima versao
+    //Check google play services // Ultima versao
+    InAppPurchaseConnection.instance.isAvailable().then((result) {
       if (mounted)
         setState(() {
           _storeIsAvailable =
@@ -37,35 +47,17 @@ class _StoreProductsState extends State<StoreProducts> {
         });
     });
 
-    /// Ultima versao
-    // Check google play services // Ultima versao
-    // InAppPurchase.instance.isAvailable().then((result) {
-    //   if (mounted)
-    //     setState(() {
-    //       _storeIsAvailable =
-    //           result; // if false the store can not be reached or accessed
-    //     });
-    // });
-    //
-    // // Get product subscriptions from google play store / apple store
+
+    InAppPurchaseConnection.instance
     // InAppPurchase.instance
-    //     .queryProductDetails(AppModel().appInfo.subscriptionIds.toSet())
-    //     .then((ProductDetailsResponse response) {
-
-
-    // InAppPurchaseConnection.instance
-    InAppPurchase.instance
         .queryProductDetails(AppModel().appInfo.subscriptionIds.toSet())
         .then((ProductDetailsResponse response) {
-
+          print(response.productDetails);
       /// Update UI
       if (mounted)
         setState(() {
-          // Get product list
           _products = response.productDetails;
-          // Check result
           if (_products!.isNotEmpty) {
-            // Order by price ASC
             _products!.sort((a, b) => a.price.compareTo(b.price));
           }
         });
@@ -137,12 +129,12 @@ class _StoreProductsState extends State<StoreProducts> {
                           final pParam = PurchaseParam(
                             productDetails: item,
                           );
-                          // InAppPurchaseConnection.instance
-                          //     .buyNonConsumable(purchaseParam: pParam);
+                          InAppPurchaseConnection.instance
+                              .buyNonConsumable(purchaseParam: pParam);
 
                           /// Subscribe - > Ultima versão
-                          InAppPurchase.instance
-                              .buyNonConsumable(purchaseParam: pParam);
+                          // InAppPurchase.instance
+                          //     .buyNonConsumable(purchaseParam: pParam);
                         }),
             ),
           );

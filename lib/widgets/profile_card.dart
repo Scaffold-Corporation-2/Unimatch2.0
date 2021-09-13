@@ -168,6 +168,7 @@ class ProfileCard extends StatelessWidget {
                         ),
                       ),
 
+                      if(this.page == 'discover')
                       Expanded(
                         flex: 1,
                         child: Container(

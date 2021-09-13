@@ -1,10 +1,6 @@
-import 'dart:async';
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:uni_match/app/api/matches_api.dart';
@@ -20,7 +16,6 @@ import 'package:uni_match/widgets/build_title.dart';
 import 'package:uni_match/widgets/no_data.dart';
 import 'package:uni_match/widgets/processing.dart';
 import 'package:uni_match/widgets/show_dialog_undo_match.dart';
-import 'package:uni_match/widgets/show_lost_connection.dart';
 
 class ConversationsTab extends StatefulWidget {
   // Variables
@@ -33,67 +28,23 @@ class _ConversationsTabState extends State<ConversationsTab> {
 
   final _conversationsApi = ConversationsApi();
   final _matchesApi = MatchesApi();
-  var subscription;
   String status = 'loading';
   bool connect = true;
-
-  _testerede() async {
-    try {
-      await FirebaseFirestore.instance
-          .runTransaction((Transaction tx) async {})
-          .timeout(Duration(seconds: 3));
-      return connect = true;
-    } on PlatformException catch (_) {// May be thrown on Airplane mode
-      return connect = false;
-    } on TimeoutException catch (_) {
-      return connect = false;
-    }
-  }
-
-  _updateConnectionStatus() async {
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        print('connected');
-        setState(() {
-          status = 'online';
-        });
-      }
-    } on SocketException catch (_) {
-      print('not connected');
-      setState(() {
-        status = 'offline';
-      });
-    }
-  }
 
   @override
   void initState() {
     super.initState();
     AppAdHelper.showInterstitialAd();
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) async {
-      if (result != ConnectivityResult.none) {
-        _updateConnectionStatus();
-      } else {
-       setState(() {
-         status = 'offline';
-       });
-      }
-    });
   }
 
   @override
   void dispose() {
     AppAdHelper.disposeInterstitialAd();
     super.dispose();
-    subscription.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    /// Initialization
     final pr = ProgressDialog(context);
 
     return Column(
@@ -165,68 +116,34 @@ class _ConversationsTabState extends State<ConversationsTab> {
 
                           onTap: () async {
                             pr.show(i18n.translate("processing")!);
-                            await _testerede();
+                            final DocumentSnapshot userDoc = await UserModel().getUser(conversation[USER_ID]);
+                            final Usuario user = Usuario.fromDocument(userDoc.data()! as Map);
 
-                            if (status == 'online') {
-                              if (connect == true) {
-                                /// 1.) Set conversation read = true
-
-                                await conversation.reference
-                                    .update({MESSAGE_READ: true});
-
-                                /// 2.) Get updated user info
-                                final DocumentSnapshot userDoc =
-                                    await UserModel()
-                                        .getUser(conversation[USER_ID]);
-
-                                /// 3.) Get user object
-                                final Usuario user = Usuario.fromDocument(
-                                    userDoc.data()! as Map);
-
-                                /// Hide progrees
-                                pr.hide();
-                                print('CHEGUEI AQUI');
-
-                                /// Go to chat screen
-
-                                await _matchesApi.checkMatch(
-                                    onMatchResult: (result) {
-                                      if (result) {
-                                        Modular.to.pushNamed('/chat',
-                                            arguments: user);
-                                      } else {
-                                        showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (context) {
-                                              return ShowDialogUndoMatch(
-                                                userFullName: user.userFullname,
-                                                userId: user.userId,
-                                              );
-                                            });
-                                      }
-                                    },
-                                    userId: user.userId);
-                                print('Conctado');
-                              }
-                              if (connect == false) {
-                                pr.hide();
-                                print('conect == false');
-                                showDialog(
-                                  context: context,
-                                  builder: (_) => ShowDialogLostConnection(),
-                                );
-                              }
+                            pr.hide();
+                            await _matchesApi.checkMatch(
+                                onMatchResult: (result) {
+                                  if (result) {
+                                    Modular.to.pushNamed('/chat', arguments: user);
+                                  } else {
+                                    showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (context) {
+                                          return ShowDialogUndoMatch(
+                                            userFullName: user.userFullname,
+                                            userId: user.userId,
+                                          );
+                                        }
+                                    );
+                                  }
+                                }, userId: user.userId);
+                            try{
+                              await conversation.reference.update({MESSAGE_READ: true});
+                            }catch (error){
+                              print("ERROR: $error");
                             }
-                            if (status == "offline") {
-                              Navigator.of(context).pop();
-                              print('Sem Conexão');
-                              showDialog(
-                                context: context,
-                                builder: (_) => ShowDialogLostConnection(),
-                              );
-                            }
-                          }, //await _messagesApi.deleteChat(user.userId);
+                            pr.hide();
+                          },
                         ),
                       );
                     }),

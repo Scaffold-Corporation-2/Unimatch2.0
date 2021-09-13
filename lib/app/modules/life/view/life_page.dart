@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:uni_match/app/modules/life/store/life_store.dart';
 import 'package:uni_match/app/modules/life/widgets/custom_card.dart';
-import 'package:uni_match/helpers/app_ad_helper.dart';
 
 class LifePage extends StatefulWidget {
   const LifePage({Key? key}) : super(key: key);
@@ -18,13 +17,6 @@ class _LifePageState extends ModularState<LifePage, LifeStore> {
     super.initState();
     controller.getMovies();
     controller.getPlaces();
-    AppAdHelper.showInterstitialAd();
-  }
-
-  @override
-  void dispose() {
-    AppAdHelper.disposeInterstitialAd();
-    super.dispose();
   }
 
   @override
