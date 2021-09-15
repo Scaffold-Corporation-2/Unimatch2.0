@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:scoped_model/scoped_model.dart';
 import 'package:uni_match/app/app_controller.dart';
 import 'package:uni_match/app/models/app_model.dart';
 import 'package:uni_match/app/models/user_model.dart';
@@ -24,36 +23,32 @@ class _StoreProductsState extends State<StoreProducts> {
   List<ProductDetails>? _products;
   AppController _i18n = Modular.get();
 
-  _getAvailable()async{
-    bool resp = await InAppPurchase.instance.isAvailable();
-    setState(() {
-      print("Resp: $resp");
-      _storeIsAvailable = resp;
-    });
-  }
 
   @override
   void initState() {
-    _getAvailable();
     super.initState();
-    // InAppPurchase.instance.isAvailable().then((result) {
-    //   if (mounted)
-    //     setState(() {
-    //       print("ÏN: $result");
-    //       _storeIsAvailable =
-    //           result; // if false the store can not be reached or accessed
-    //     });
-    // });
+    // Check google play services
+    InAppPurchaseConnection.instance.isAvailable().then((result) {
+      if (mounted)
+        setState(() {
+          _storeIsAvailable =
+              result; // if false the store can not be reached or accessed
+        });
+    });
 
-
-    InAppPurchase.instance
+    // Get product subscriptions from google play store / apple store
+    InAppPurchaseConnection.instance
         .queryProductDetails(AppModel().appInfo.subscriptionIds.toSet())
         .then((ProductDetailsResponse response) {
+
       /// Update UI
       if (mounted)
         setState(() {
+          // Get product list
           _products = response.productDetails;
+          // Check result
           if (_products!.isNotEmpty) {
+            // Order by price ASC
             _products!.sort((a, b) => a.price.compareTo(b.price));
           }
         });
@@ -123,11 +118,7 @@ class _StoreProductsState extends State<StoreProducts> {
                       final pParam = PurchaseParam(
                         productDetails: item,
                       );
-                      // InAppPurchaseConnection.instance
-                      //     .buyNonConsumable(purchaseParam: pParam);
-
-                      /// Subscribe - > Ultima versão
-                      InAppPurchase.instance
+                      InAppPurchaseConnection.instance
                           .buyNonConsumable(purchaseParam: pParam);
                     }),
               ),
