@@ -24,22 +24,31 @@ class _StoreProductsState extends State<StoreProducts> {
   List<ProductDetails>? _products;
   AppController _i18n = Modular.get();
 
+  _getAvailable()async{
+    bool resp = await InAppPurchase.instance.isAvailable();
+    setState(() {
+      print("Resp: $resp");
+      _storeIsAvailable = resp;
+    });
+  }
+
   @override
   void initState() {
+    _getAvailable();
     super.initState();
-    InAppPurchaseConnection.instance.isAvailable().then((result) {
-      if (mounted)
-        setState(() {
-          _storeIsAvailable =
-              result; // if false the store can not be reached or accessed
-        });
-    });
+    // InAppPurchase.instance.isAvailable().then((result) {
+    //   if (mounted)
+    //     setState(() {
+    //       print("ÏN: $result");
+    //       _storeIsAvailable =
+    //           result; // if false the store can not be reached or accessed
+    //     });
+    // });
 
 
-    InAppPurchaseConnection.instance
+    InAppPurchase.instance
         .queryProductDetails(AppModel().appInfo.subscriptionIds.toSet())
         .then((ProductDetailsResponse response) {
-          print(response.productDetails);
       /// Update UI
       if (mounted)
         setState(() {
@@ -76,57 +85,54 @@ class _StoreProductsState extends State<StoreProducts> {
       );
     } else if (_products!.isNotEmpty) {
       // Show Subscriptions
-      return ScopedModelDescendant<UserModel>(
-          builder: (context, child, userModel) {
-        return Column(
-            children: _products!.map<Widget>((item) {
-          return Card(
-            margin: const EdgeInsets.only(bottom: 10),
-            child: ListTile(
-              enabled: userModel.activeVipId == item.id ? false : true,
-              leading: widget.icon,
-              title: Text(item.title,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              subtitle: Text(item.price,
-                  style: TextStyle(
-                      fontSize: 19,
-                      color: widget.priceColor,
-                      fontWeight: FontWeight.bold)),
-              trailing: ElevatedButton(
-                  style: ButtonStyle(
-                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                          const EdgeInsets.all(8)),
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          userModel.activeVipId == item.id
-                              ? Colors.grey
-                              : widget.priceColor),
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
-                          RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ))),
-                  child: userModel.activeVipId == item.id
-                      ? Text(_i18n.translate("ACTIVE")!,
-                          style: TextStyle(color: Colors.white))
-                      : Text(_i18n.translate("SUBSCRIBE")!,
-                          style: TextStyle(color: Colors.white)),
-                  onPressed: userModel.activeVipId == item.id
-                      ? null
-                      : () async {
-                          // Purchase parameters
-                          final pParam = PurchaseParam(
-                            productDetails: item,
-                          );
-                          InAppPurchaseConnection.instance
-                              .buyNonConsumable(purchaseParam: pParam);
+      return Column(
+          children: _products!.map<Widget>((item) {
+            return Card(
+              margin: const EdgeInsets.only(bottom: 10),
+              child: ListTile(
+                enabled: UserModel().activeVipId == item.id ? false : true,
+                leading: widget.icon,
+                title: Text(item.title,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                subtitle: Text(item.price,
+                    style: TextStyle(
+                        fontSize: 19,
+                        color: widget.priceColor,
+                        fontWeight: FontWeight.bold)),
+                trailing: ElevatedButton(
+                    style: ButtonStyle(
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                            const EdgeInsets.all(8)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            UserModel().activeVipId == item.id
+                                ? Colors.grey
+                                : widget.priceColor),
+                        shape: MaterialStateProperty.all<OutlinedBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ))),
+                    child: UserModel().activeVipId == item.id
+                        ? Text(_i18n.translate("ACTIVE")!,
+                        style: TextStyle(color: Colors.white))
+                        : Text(_i18n.translate("SUBSCRIBE")!,
+                        style: TextStyle(color: Colors.white)),
+                    onPressed: UserModel().activeVipId == item.id
+                        ? null
+                        : () async {
+                      // Purchase parameters
+                      final pParam = PurchaseParam(
+                        productDetails: item,
+                      );
+                      // InAppPurchaseConnection.instance
+                      //     .buyNonConsumable(purchaseParam: pParam);
 
-                          /// Subscribe - > Ultima versão
-                          // InAppPurchase.instance
-                          //     .buyNonConsumable(purchaseParam: pParam);
-                        }),
-            ),
-          );
-        }).toList());
-      });
+                      /// Subscribe - > Ultima versão
+                      InAppPurchase.instance
+                          .buyNonConsumable(purchaseParam: pParam);
+                    }),
+              ),
+            );
+          }).toList());
     } else {
       return Center(
         child: Padding(

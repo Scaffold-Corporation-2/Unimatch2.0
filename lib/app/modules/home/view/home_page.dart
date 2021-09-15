@@ -100,8 +100,10 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
                          controller.goToPassportScreen(context);
                        } else {
                          /// Show VIP dialog
-                         showDialog(context: context,
-                             builder: (context) => VipDialog());
+                         // showDialog(context: context,
+                         //     builder: (context) => VipDialog());
+                         Navigator.of(context).push(MaterialPageRoute(
+                             builder: (context) => VipDialog()));
                        }
                      }),
 
