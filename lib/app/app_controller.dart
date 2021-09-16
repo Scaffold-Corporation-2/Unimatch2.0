@@ -39,7 +39,6 @@ abstract class _AppController with Store{
   buscarTheme() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var response = sharedPreferences.get('dark');
-    print(response);
 
     if(response == null){
       isDark = false;

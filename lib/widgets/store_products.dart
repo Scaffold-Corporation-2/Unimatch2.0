@@ -115,11 +115,12 @@ class _StoreProductsState extends State<StoreProducts> {
                         ? null
                         : () async {
                       // Purchase parameters
-                      final pParam = PurchaseParam(
-                        productDetails: item,
-                      );
-                      InAppPurchaseConnection.instance
-                          .buyNonConsumable(purchaseParam: pParam);
+                      setState(() {
+                        final pParam = PurchaseParam(
+                          productDetails: item,
+                        );
+                        InAppPurchaseConnection.instance.buyNonConsumable(purchaseParam: pParam);
+                      });
                     }),
               ),
             );

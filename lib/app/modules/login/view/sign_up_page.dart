@@ -156,7 +156,7 @@ class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
                               },
                               onTap: () => FocusScope.of(context).unfocus(),
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: 18),
 
                             /// Birthday card
                             Observer(
@@ -175,6 +175,43 @@ class _SignUpScreenState extends ModularState<SignUpScreen, LoginStore> {
                                       controller.showDatePicker(context);
                                     },
                                   )),
+                            ),
+                            SizedBox(height: 18),
+
+                            GestureDetector(
+                              onTap: () {
+                                controller.interestsList.clear();
+                                Modular.to.pushNamed('/login/interests')
+                                    .then((value){
+                                  if(value != null ){
+                                    print(value);
+                                    controller.addListInterests(value as List);
+                                  }
+                                }
+                                );
+                              },
+                              child: SizedBox(
+                                width: double.maxFinite,
+                                child: Observer(
+                                  builder:(_) => Card(
+                                    clipBehavior: Clip.antiAlias,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(28),
+                                      side: BorderSide(color: Colors.grey[350] as Color)
+                                    ),
+                                    child: ListTile(
+                                      leading: Icon(Icons.bubble_chart_outlined),
+                                      title: Text("Meus Interesses",
+                                          style: TextStyle(color: Colors.grey, fontSize: 16)),
+
+                                      trailing: Icon(
+                                        Icons.check,
+                                        color: controller.interestsList.length >= 5
+                                            ? Colors.pinkAccent : Colors.transparent,),
+                                    )
+                                  ),
+                                ),
+                              ),
                             ),
                             SizedBox(height: 20),
 

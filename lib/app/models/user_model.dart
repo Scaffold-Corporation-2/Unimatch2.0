@@ -11,7 +11,6 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:ntp/ntp.dart';
 import 'package:place_picker/entities/location_result.dart';
 import 'package:place_picker/place_picker.dart';
-import 'package:scoped_model/scoped_model.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:uni_match/app/datas/user.dart';
 import 'package:uni_match/constants/constants.dart';
@@ -19,7 +18,7 @@ import 'package:uni_match/helpers/app_helper.dart';
 
 import 'app_model.dart';
 
-class UserModel extends Model {
+class UserModel{
   /// Final Variables
   ///
   final _firebaseAuth = fireAuth.FirebaseAuth.instance;
@@ -78,7 +77,6 @@ class UserModel extends Model {
   /// Update user object [Usuario]
   void updateUserObject(Map<dynamic, dynamic> userDoc) {
     this.user = Usuario.fromDocument(userDoc);
-    notifyListeners();
     debugPrint('User object -> updated!');
   }
 
@@ -111,13 +109,11 @@ class UserModel extends Model {
   /// Set user VIP true
   void setUserVip() {
     this.userIsVip = true;
-    notifyListeners();
   }
 
   /// Set Active VIP Subscription ID
   void setActiveVipId(String subscriptionId) {
     this.activeVipId = subscriptionId;
-    notifyListeners();
   }
 
   /// Calculate user current age
@@ -357,6 +353,7 @@ class UserModel extends Model {
     required int userBirthMonth,
     required int userBirthYear,
     required String userOrientation,
+    required List userInterestsList,
     required String userBio,
     // Callback functions
     required VoidCallback onSuccess,
@@ -364,7 +361,6 @@ class UserModel extends Model {
   }) async {
     // Notify
     isLoading = true;
-    notifyListeners();
 
     // Variables
     String country = '';
@@ -396,6 +392,7 @@ class UserModel extends Model {
 
     /// Pegar hora em GTM
     DateTime dateTime = await NTP.now();
+    print(userInterestsList);
 
     /// Save user information in database
     await _firestore.collection(C_USERS).doc(this.getFirebaseUser!.uid).update(<String, dynamic>{
@@ -407,6 +404,7 @@ class UserModel extends Model {
       USER_BIRTH_MONTH: userBirthMonth,
       USER_BIRTH_YEAR: userBirthYear,
       USER_ORIENTATION: userOrientation,
+      USER_INTERESTS: userInterestsList,
       USER_BIO: userBio,
       USER_PHONE_NUMBER: this.getFirebaseUser!.phoneNumber ?? '',
       USER_EMAIL: this.getFirebaseUser!.email ?? '',
@@ -440,14 +438,12 @@ class UserModel extends Model {
 
       /// Update loading status
       isLoading = false;
-      notifyListeners();
       debugPrint('signUp() -> success');
 
       /// Callback function
       onSuccess();
     }).catchError((onError) {
       isLoading = false;
-      notifyListeners();
       debugPrint('signUp() -> error');
       // Callback function
       onError(onError);
@@ -470,13 +466,11 @@ class UserModel extends Model {
       USER_BIO: userBio,
     }).then((_) {
       isLoading = false;
-      notifyListeners();
       debugPrint('updateProfile() -> success');
       // Callback function
       onSuccess();
     }).catchError((onError) {
       isLoading = false;
-      notifyListeners();
       debugPrint('updateProfile() -> error');
       // Callback function
       onError(onError);
@@ -663,7 +657,6 @@ class UserModel extends Model {
   Future<void> signOut() async {
     try {
       await _firebaseAuth.signOut();
-      notifyListeners();
       print("signOut() -> success");
     } catch (e) {
       print(e);

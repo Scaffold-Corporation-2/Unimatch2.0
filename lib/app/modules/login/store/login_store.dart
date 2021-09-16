@@ -80,8 +80,6 @@ abstract class _LoginStore with Store {
   int userBirthMonth = 0;
   int userBirthYear = DateTime.now().year;
 
-  // End
-
   @observable
   bool isLoading = false;
 
@@ -116,6 +114,12 @@ abstract class _LoginStore with Store {
 
   @action
   changeFirstTime() => firstTime = false;
+
+  @observable
+  ObservableList interestsList = ObservableList();
+
+  @action
+  addListInterests(List lista) => interestsList.addAll(lista);
 
   @observable
   String? birthday;
@@ -317,6 +321,12 @@ abstract class _LoginStore with Store {
           bgcolor: Colors.red);
 
       /// Validate form
+    } else if (nameController.text.isEmpty) {
+      // Show error message
+      showScaffoldMessage(
+          context: context, message: i18n.translate("enter_your_fullname")!, bgcolor: Colors.red);
+
+      /// Validate form
     } else if (selectedGender == null) {
       // Show error message
       showScaffoldMessage(
@@ -329,20 +339,20 @@ abstract class _LoginStore with Store {
           context: context, message: i18n.translate("select_orientation")!, bgcolor: Colors.red);
 
       /// Validate form
-    } else if (nameController.text.isEmpty) {
-      // Show error message
-      showScaffoldMessage(
-          context: context, message: i18n.translate("enter_your_fullname")!, bgcolor: Colors.red);
-
-      /// Validate form
-    } else if (UserModel().calculateUserAge(initialDateTime) < 18) {
+    }  else if (UserModel().calculateUserAge(initialDateTime) < 18) {
       // Show error message
       showScaffoldMessage(
           context: context,
           duration: Duration(seconds: 7),
           message: i18n.translate("only_18_years_old_and_above_are_allowed_to_create_an_account")!,
           bgcolor: Colors.red);
-    } else if (!formKey!.currentState!.validate()) {
+    } else if (interestsList.length < 5) {
+      // Show error message
+      showScaffoldMessage(
+          context: context, message: i18n.translate("select_interests")!, bgcolor: Colors.red);
+
+      /// Validate form
+    }else if (!formKey!.currentState!.validate()) {
     } else {
       /// Call all input onSaved method
       formKey!.currentState!.save();
@@ -357,6 +367,7 @@ abstract class _LoginStore with Store {
           userBirthMonth: userBirthMonth,
           userBirthYear: userBirthYear,
           userOrientation: selectedOrientation!,
+          userInterestsList: interestsList,
           userBio: bioController.text.trim(),
           onSuccess: () async {
             // Show success message

@@ -70,9 +70,9 @@ abstract class _HomeStore with Store{
   /// Handle in-app purchases upates
   void handlePurchaseUpdates() {
     // listen purchase updates
-
     inAppPurchaseStream = InAppPurchaseConnection.instance.purchaseUpdatedStream
         .listen((purchases) async {
+
       // Loop incoming purchases
       for (var purchase in purchases) {
         // Control purchase status
@@ -96,13 +96,12 @@ abstract class _HomeStore with Store{
                 data: {USER_IS_VERIFIED: true});
 
             // User first name
-            final String userFirstname =
-            UserModel().user.userFullname.split(' ')[0];
+            final String userFirstname = UserModel().user.userFullname.split(' ')[0];
 
             /// Save notification in database for user
             notificationsApi.onPurchaseNotification(
               nMessage: '${_i18n.translate("hello")} $userFirstname, '
-                  '${_i18n.translate("your_vip_account_is_active")}\n '
+                  '${_i18n.translate("your_vip_account_is_active")}\n'
                   '${_i18n.translate("thanks_for_buying")}',
             );
 

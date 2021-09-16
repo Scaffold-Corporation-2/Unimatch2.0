@@ -6,8 +6,8 @@ const String APP_NAME = "Unimatch";
 const Color APP_PRIMARY_COLOR = Colors.pink;
 const Color APP_ACCENT_COLOR = Colors.pinkAccent;
 const String APP_VERSION_NAME = "v1.0.0";
-const int ANDROID_APP_VERSION_NUMBER = 0; // Google Play Version Number
-const int IOS_APP_VERSION_NUMBER = 0; // App Store Version Number
+const int ANDROID_APP_VERSION_NUMBER = 1; // Google Play Version Number
+const int IOS_APP_VERSION_NUMBER = 1; // App Store Version Number
 //
 // Add Google Maps - API KEY required for Passport feature
 //
@@ -89,6 +89,7 @@ const String USER_BIRTH_MONTH = "usuario_mes_aniversario";
 const String USER_BIRTH_YEAR = "usuario_ano_aniversario";
 const String USER_SCHOOL = "usuario_universidade";
 const String USER_ORIENTATION = "usuario_orientacao_sexual";
+const String USER_INTERESTS = "usuario_interesses";
 const String USER_BIO = "usuario_bio";
 const String USER_PHONE_NUMBER = "usuario_numero_telefone";
 const String USER_EMAIL = "usuario_email";

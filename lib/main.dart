@@ -11,12 +11,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'app/app_module.dart';
 import 'app/app_widget.dart';
-// import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 void main()async{
 
   if (defaultTargetPlatform == TargetPlatform.android) {
-    // InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
     InAppPurchaseConnection.enablePendingPurchases();
   }
 

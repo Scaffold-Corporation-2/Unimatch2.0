@@ -622,7 +622,7 @@ packages:
       name: geolocator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.6.0"
+    version: "7.6.1"
   geolocator_android:
     dependency: transitive
     description:
@@ -741,7 +741,7 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.4"
+    version: "0.8.4+1"
   image_picker_for_web:
     dependency: transitive
     description:
@@ -1071,13 +1071,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.27.2"
-  scoped_model:
-    dependency: "direct main"
-    description:
-      name: scoped_model
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0-nullsafety.0"
   share:
     dependency: "direct main"
     description:

@@ -65,7 +65,7 @@ dependencies:
   geoflutterfire: ^3.0.1
 
     # Usado para obter a localização do usuário por GPS
-  geolocator: ^7.6.0
+  geolocator: ^7.6.1
 
     # Used to translate User latitude and longitude coordinates into a readable address
   geocoding: ^2.0.1
@@ -76,11 +76,8 @@ dependencies:
     # Este plugin nos ajuda a usar ícones SVG personalizados
   flutter_svg: ^0.22.0
 
-    # Usado para gerenciar o estado do aplicativo Bloc**
-  scoped_model: ^2.0.0-nullsafety.0
-
     # Usado para selecionar imagens do celular
-  image_picker: ^0.8.4
+  image_picker: ^0.8.4+1
 
     # Usado para cortar / girar imagens selecionadas do dispositivo do usuário
   image_cropper: ^1.4.1

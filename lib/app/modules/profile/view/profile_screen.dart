@@ -343,6 +343,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         Divider(),
 
+                        if(widget.user.userInterests.isNotEmpty)
+                        Container(
+                          height: 60,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Wrap(
+                              alignment: WrapAlignment.center,
+                              children: companyPosition.toList(),
+                            ),
+                          ),
+                        ),
+
+                        Divider(),
+
                         /// Profile bio
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -488,5 +502,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
           });
     });
+  }
+
+  Iterable<Widget> get companyPosition sync* {
+    for (String company in widget.user.userInterests) {
+      yield Padding(
+        padding: const EdgeInsets.all(6.0),
+        child: Chip(
+          elevation: 5.0,
+          backgroundColor: Colors.pinkAccent.shade100,
+          label: Text(
+            company,
+            style: GoogleFonts.nunito(
+                fontSize: 16,
+                fontWeight: FontWeight.w500
+            ),
+          ),
+        ),
+      );
+    }
   }
 }

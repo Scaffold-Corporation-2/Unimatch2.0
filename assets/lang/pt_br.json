@@ -19,7 +19,7 @@
   "profile": "Perfil",
   "your_vip_account_is_active": "sua conta VIP está 'ativa' comece a desfrutar de todos os seus benefícios.",
   "thanks_for_buying": "Obrigado por comprar!",
-  "no_user_found_around_you_please_try_again_later": "Nenhum universitário encontrado perto de você. \nPor favor, tente novamente mais tarde!",
+  "no_user_found_around_you_please_try_again_later": "Nenhum universitário\nencontrado perto de você. \nPor favor, tente novamente mais tarde!",
 
   "_SignInScreen": "* Traduções da tela de login *",
   "welcome_back": "Bem-vindo",
@@ -49,6 +49,7 @@
   "enter_your_fullname": "Escreva seu primeiro nome",
   "please_enter_your_fullname": "Por favor digite seu primeiro nome",
   "select_gender": "Selecione seu gênero",
+  "select_interests": "Selecione seus interesses",
   "select_orientation": "Selecione sua orientação sexual",
   "male": "Homem",
   "female": "Mulher",

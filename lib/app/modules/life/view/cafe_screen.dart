@@ -106,7 +106,7 @@ class CafeScreen extends StatelessWidget {
                                             Expanded(
                                               child: Text(
                                                 controller.listaCafes[index]
-                                                    .horarioAberto[DateFormat('EEEE').format(DateTime.now())],
+                                                    .horarioAberto[DateFormat('EEEE').format(DateTime.now())] ?? "",
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 16,

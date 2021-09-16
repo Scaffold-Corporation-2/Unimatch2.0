@@ -8,6 +8,7 @@ class CustomAnimatedButton extends StatefulWidget {
   final IconData? icon;
   final bool? iconBool;
   final Color? color;
+  final Color? colorText;
   final Function? onTap;
   final double fontSize;
   CustomAnimatedButton(
@@ -16,6 +17,7 @@ class CustomAnimatedButton extends StatefulWidget {
       this.text = "",
       this.icon,
       this.color,
+      this.colorText = Colors.pinkAccent,
       this.onTap,
       this.iconBool,
       this.fontSize = 22});
@@ -92,7 +94,7 @@ class _CustomAnimatedButtonState extends State<CustomAnimatedButton>
                     style: GoogleFonts.openSans(
                       fontSize: widget.fontSize,
                       fontWeight: FontWeight.w600,
-                      color: Colors.pinkAccent,
+                      color: widget.colorText,
                     ),
                   ),
           ),

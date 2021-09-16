@@ -1,7 +1,6 @@
-import 'package:scoped_model/scoped_model.dart';
 import 'package:uni_match/app/datas/app_info.dart';
 
-class AppModel extends Model {
+class AppModel{
   // Variables
   late AppInfo appInfo;
 
@@ -17,7 +16,6 @@ class AppModel extends Model {
   /// Set data to AppInfo object
   void setAppInfo(Map<dynamic, dynamic> appDoc) {
     this.appInfo = AppInfo.fromDocument(appDoc);
-    notifyListeners();
     print('AppInfo object -> updated!');
   }
 }
