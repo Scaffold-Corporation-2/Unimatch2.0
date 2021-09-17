@@ -44,12 +44,19 @@ abstract class _HomeStore with Store{
       UserModel().updateUserObject(userEvent.data()!  as Map);
     });
   }
-
+  @observable
+  int cont = 0;
   /// Check current User VIP Account status
+  ///
+  @action
   Future<void> checkUserVipStatus() async {
+
     // Query past subscriptions
     QueryPurchaseDetailsResponse pastPurchases =
         await InAppPurchaseConnection.instance.queryPastPurchases();
+
+    print("Teste ******* $cont");
+    print(pastPurchases.pastPurchases.length);
 
     if (pastPurchases.pastPurchases.isNotEmpty) {
       for (var purchase in pastPurchases.pastPurchases) {
@@ -61,20 +68,29 @@ abstract class _HomeStore with Store{
         print('Active VIP SKU: ${purchase.productID}');
       }
     } else {
-      print('No Active VIP Subscription');
+      cont++;
+      if(cont < 5 && pastPurchases.pastPurchases.isEmpty){
+        checkUserVipStatus();
+      } else {
+        await UserModel().updateUserData(
+            userId: UserModel().user.userId,
+            data: {USER_IS_VERIFIED: false});
+        print('No Active VIP Subscription');
+      }
     }
   }
 
   /// Handle in-app purchases updates
   void handlePurchaseUpdates() {
+    print("****first");
     // listen purchase updates
     inAppPurchaseStream = InAppPurchaseConnection
         .instance.purchaseUpdatedStream
         .listen((purchases) async {
       // Loop incoming purchases
       for (var purchase in purchases) {
-        // Control purchase status
         switch (purchase.status) {
+
           case PurchaseStatus.pending:
           // Handle this case.
             break;

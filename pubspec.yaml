@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.1
 
 ## Slidy Scripts
 vars:
@@ -65,7 +65,7 @@ dependencies:
   geoflutterfire: ^3.0.1
 
     # Usado para obter a localização do usuário por GPS
-  geolocator: ^7.6.1
+  geolocator: ^7.6.2
 
     # Used to translate User latitude and longitude coordinates into a readable address
   geocoding: ^2.0.1
