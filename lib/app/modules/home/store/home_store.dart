@@ -48,35 +48,32 @@ abstract class _HomeStore with Store{
   /// Check current User VIP Account status
   Future<void> checkUserVipStatus() async {
     // Query past subscriptions
-    InAppPurchaseConnection.instance
-        .queryPastPurchases()
-        .then((QueryPurchaseDetailsResponse pastPurchases) {
-      // Chek past purchases result
-      if (pastPurchases.pastPurchases.isNotEmpty) {
-        for (var purchase in pastPurchases.pastPurchases) {
-          /// Update User VIP Status to true
-          UserModel().setUserVip();
-          // Set Vip Subscription Id
-          UserModel().setActiveVipId(purchase.productID);
-          // Debug
-          print('Active VIP SKU: ${purchase.productID}');
-        }
-      } else {
-        print('No Active VIP Subscription');
+    QueryPurchaseDetailsResponse pastPurchases =
+        await InAppPurchaseConnection.instance.queryPastPurchases();
+
+    if (pastPurchases.pastPurchases.isNotEmpty) {
+      for (var purchase in pastPurchases.pastPurchases) {
+        /// Updae User VIP Status to true
+        UserModel().setUserVip();
+        // Set Vip Subscription Id
+        UserModel().setActiveVipId(purchase.productID);
+        // Debug
+        print('Active VIP SKU: ${purchase.productID}');
       }
-    });
+    } else {
+      print('No Active VIP Subscription');
+    }
   }
 
-  /// Handle in-app purchases upates
+  /// Handle in-app purchases updates
   void handlePurchaseUpdates() {
     // listen purchase updates
-    inAppPurchaseStream = InAppPurchaseConnection.instance.purchaseUpdatedStream
+    inAppPurchaseStream = InAppPurchaseConnection
+        .instance.purchaseUpdatedStream
         .listen((purchases) async {
-
       // Loop incoming purchases
       for (var purchase in purchases) {
         // Control purchase status
-        // ignore: missing_enum_constant_in_switch
         switch (purchase.status) {
           case PurchaseStatus.pending:
           // Handle this case.

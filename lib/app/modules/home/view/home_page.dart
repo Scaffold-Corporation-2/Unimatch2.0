@@ -44,10 +44,10 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeStore> {
 
     /// Check User VIP Status
     controller.checkUserVipStatus();
+    controller.handlePurchaseUpdates();
 
     /// Init streams
     controller.getCurrentUserUpdates();
-    controller.handlePurchaseUpdates();
     controller.initFirebaseMessage(context);
 
     /// Request permission for IOS
