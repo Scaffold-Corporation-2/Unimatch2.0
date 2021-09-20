@@ -11,14 +11,9 @@ if (flutterRoot == null) {
     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '2'
-}
-
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0.1'
+    flutterVersionName = '1.0.2'
 }
 
 apply plugin: 'com.android.application'
@@ -45,7 +40,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         multiDexEnabled true
-        versionCode 6
+        versionCode 7
         versionName flutterVersionName
     }
     signingConfigs {

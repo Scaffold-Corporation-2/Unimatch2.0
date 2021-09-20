@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:mobx/mobx.dart';
+import 'package:ntp/ntp.dart';
 import 'package:place_picker/entities/location_result.dart';
 import 'package:uni_match/app/api/conversations_api.dart';
 import 'package:uni_match/app/api/notifications_api.dart';
@@ -60,7 +61,7 @@ abstract class _HomeStore with Store{
 
     if (pastPurchases.pastPurchases.isNotEmpty) {
       for (var purchase in pastPurchases.pastPurchases) {
-        /// Updae User VIP Status to true
+        /// Update User VIP Status to true
         UserModel().setUserVip();
         // Set Vip Subscription Id
         UserModel().setActiveVipId(purchase.productID);
@@ -71,18 +72,57 @@ abstract class _HomeStore with Store{
       cont++;
       if(cont < 5 && pastPurchases.pastPurchases.isEmpty){
         checkUserVipStatus();
+
       } else {
-        await UserModel().updateUserData(
-            userId: UserModel().user.userId,
-            data: {USER_IS_VERIFIED: false});
-        print('No Active VIP Subscription');
+        if(UserModel().user.userUnivip != null && UserModel().user.userUnivip!.isNotEmpty){
+          bool userIsVip = false;
+          DateTime dateTime = await NTP.now();
+          int duration = dateTime.difference(UserModel().user.userUnivip![USER_UNIVIP_DATE].toDate()).inDays;
+
+          switch (UserModel().user.userUnivip![USER_UNIVIP_TYPE]) {
+            case "univip1":
+              userIsVip = duration <= 7 ? true : false;
+              break;
+
+            case "univip2":
+              userIsVip = duration <= 30 ? true : false;
+              break;
+
+            case "univip3":
+              userIsVip = duration <= 365 ? true : false;
+              break;
+
+            case "univip4":
+              userIsVip = duration <= 180 ? true : false;
+              break;
+          }
+          print(userIsVip);
+
+          if(userIsVip){
+            /// Update User VIP Status to true
+            UserModel().setUserVip();
+            UserModel().setActiveVipId(UserModel().user.userUnivip![USER_UNIVIP_TYPE]);
+            print('Active VIP SKU: ${UserModel().user.userUnivip![USER_UNIVIP_TYPE]}');
+
+          }else{
+            await UserModel().updateUserData(
+                userId: UserModel().user.userId, data: {
+                  USER_IS_VERIFIED: false,
+                  USER_UNIVIP: {}
+            });
+          }
+        }
+        else {
+          await UserModel().updateUserData(
+              userId: UserModel().user.userId, data: {USER_IS_VERIFIED: false});
+          print('No Active VIP Subscription');
+        }
       }
     }
   }
 
   /// Handle in-app purchases updates
   void handlePurchaseUpdates() {
-    print("****first");
     // listen purchase updates
     inAppPurchaseStream = InAppPurchaseConnection
         .instance.purchaseUpdatedStream
@@ -103,10 +143,19 @@ abstract class _HomeStore with Store{
             // Set Vip Subscription Id
             UserModel().setActiveVipId(purchase.productID);
 
+            DateTime dateTime = await NTP.now();
+
             /// Update user verified status
             await UserModel().updateUserData(
                 userId: UserModel().user.userId,
-                data: {USER_IS_VERIFIED: true});
+                data: {
+                  USER_IS_VERIFIED: true,
+                  USER_UNIVIP: {
+                    USER_UNIVIP_DATE: dateTime,
+                    USER_UNIVIP_TYPE: purchase.productID,
+                    USER_UNIVIP_INFO: purchase.verificationData.localVerificationData
+                  }
+                });
 
             // User first name
             final String userFirstname = UserModel().user.userFullname.split(' ')[0];

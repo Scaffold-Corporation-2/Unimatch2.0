@@ -31,6 +31,7 @@ class Usuario {
   final List userInterests;
   final Map<String, dynamic>? userGallery;
   final Map<String, dynamic>? userSettings;
+  final Map<String, dynamic>? userUnivip;
 
   // Constructor
   Usuario({
@@ -53,6 +54,7 @@ class Usuario {
     required this.userLocality,
     required this.userGeoPoint,
     required this.userSettings,
+    required this.userUnivip,
     required this.userStatus,
     required this.userLevel,
     required this.userIsVerified,
@@ -86,6 +88,7 @@ class Usuario {
       userLocality: doc[USER_LOCALITY] ?? '',
       userGeoPoint: doc[USER_GEO_POINT]['geopoint'],
       userSettings: doc[USER_SETTINGS],
+      userUnivip:  doc[USER_UNIVIP],
       userStatus: doc[USER_STATUS],
       userIsVerified: doc[USER_IS_VERIFIED] ?? false,
       userLevel: doc[USER_LEVEL],

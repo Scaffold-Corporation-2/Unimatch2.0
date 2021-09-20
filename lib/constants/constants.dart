@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 const String APP_NAME = "Unimatch";
 const Color APP_PRIMARY_COLOR = Colors.pink;
 const Color APP_ACCENT_COLOR = Colors.pinkAccent;
-const String APP_VERSION_NAME = "v1.0.0";
+const String APP_VERSION_NAME = "v1.0.2";
 const int ANDROID_APP_VERSION_NUMBER = 1; // Google Play Version Number
 const int IOS_APP_VERSION_NUMBER = 1; // App Store Version Number
 //
@@ -109,6 +109,12 @@ const String USER_DEVICE_TOKEN = "usuario_device_token";
 const String USER_TOTAL_LIKES = "usuario_total_likes";
 const String USER_TOTAL_VISITS = "usuario_total_visitas";
 const String USER_TOTAL_DISLIKED = "usuario_total_disliked";
+// User Univip map - fields
+const String USER_UNIVIP = "usuario_univip";
+const String USER_UNIVIP_DATE = "usuario_univip_data_compra";
+const String USER_UNIVIP_TYPE = "usuario_univip_tipo";
+const String USER_UNIVIP_INFO = "usuario_univip_info_compra";
+
 // User Setting map - fields
 const String USER_MIN_AGE = "usuario_min_idade";
 const String USER_MAX_AGE = "usuario_max_idade";
