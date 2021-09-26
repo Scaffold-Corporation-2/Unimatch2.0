@@ -1,6 +1,6 @@
 # Unimatch
 
-### Primeiro aplicativo de integração universitária de Minas Gerais.
+Primeiro aplicativo de integração universitária de Minas Gerais.
 
 ## Projeto
 
