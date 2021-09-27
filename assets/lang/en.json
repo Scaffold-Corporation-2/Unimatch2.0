@@ -74,6 +74,7 @@
   "edit_profile": "Edit profile",
   "profile_updated_successfully": "Profile updated successfully",
   "restart_the_application_for_the_changes_to_tak_effect": "Restart the application for the changes to take effect",
+  "virtual_button_successfully_activated": "Virtual button successfully activated",
   "an_error_occurred_while_updating_your_profile": "An error occurred while updating your profile.\nPlease try again later!",
   "photo_will_be_deleted": "Photo will be deleted, and this action cannot be reversed!", 
 
@@ -166,6 +167,7 @@
   "users_who_liked_you": "Users who liked you",
   "match_your_profile_click_and_see": "you have a new match, click and see...",
   "liked_your_profile_click_and_see": "liked your profile, click and see...",
+  "super_liked_your_profile_click_and_see": "Super liked your profile, click and see...",
   "like_sent_to": "Like sent to:",
 
   "_ProfileVisitsScreen": "*** Profile Visits Screen Translations ***",
@@ -233,6 +235,7 @@
   "new": "New",
   "photo": "Photo",
   "dark": "Dark mode:",
+  "button": "Virtual button:",
   "UPDATE": "UPDATE",
 
   "_New_Version_1.0.2": "*** New version 1.0.2 Translations ***",

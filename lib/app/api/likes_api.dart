@@ -12,11 +12,13 @@ class LikesApi {
 
   /// Save liked user
   Future<void> _saveLike({
+    required bool superLiked,
     required String likedUserId,
     required String userDeviceToken,
     required String nMessage,
   }) async {
     _firestore.collection(C_LIKES).add({
+      SUPER_LIKE: superLiked,
       LIKED_USER_ID: likedUserId,
       LIKED_BY_USER_ID: UserModel().user.userId,
       TIMESTAMP: FieldValue.serverTimestamp()
@@ -45,7 +47,8 @@ class LikesApi {
 
   /// Like user profile
   Future<void> likeUser(
-      {required String likedUserId,
+      {bool superLiked = false,
+      required String likedUserId,
       required String userDeviceToken,
       required String nMessage,
       required Function(bool) onLikeResult}) async {
@@ -60,6 +63,7 @@ class LikesApi {
         onLikeResult(true);
         // Like user
         await _saveLike(
+            superLiked: superLiked,
             likedUserId: likedUserId,
             nMessage: nMessage,
             userDeviceToken: userDeviceToken);
@@ -71,6 +75,13 @@ class LikesApi {
     }).catchError((e) {
       print('likeUser() -> error: $e');
     });
+  }
+
+  Future<QuerySnapshot> getSuperLikes()async{
+    return _firestore
+        .collection(C_LIKES)
+        .where(LIKED_USER_ID, isEqualTo: UserModel().user.userId)
+        .where(SUPER_LIKE, isEqualTo: true).get();
   }
 
   /// Get users who liked current user profile

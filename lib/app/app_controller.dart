@@ -31,6 +31,35 @@ abstract class _AppController with Store{
     return localizedStrings![key] ==  null ? '' : localizedStrings![key];
   }
 
+  @observable
+  bool virtualButton = false;
+
+  @action
+  alterarVirtualButton()async{
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var response = sharedPreferences.get("virtualButton");
+    if(response != null){
+      sharedPreferences.setBool('virtualButton', response == true ? false : true);
+    }else{
+      sharedPreferences.setBool('virtualButton', false);
+    }
+    virtualButton = response == true ? false : true;
+    print("Dark Theme: $isDark");
+  }
+
+  @action
+  buscarVirtualButton() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var response = sharedPreferences.get('virtualButton');
+    if(response == null){
+      virtualButton = false;
+      sharedPreferences.setBool('virtualButton', false);
+    }
+    else if(response == true) virtualButton = true;
+
+    else virtualButton = false;
+  }
+
 
   @observable
   bool isDark = false;

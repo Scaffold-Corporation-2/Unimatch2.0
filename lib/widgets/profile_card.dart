@@ -19,7 +19,9 @@ class ProfileCard extends StatelessWidget {
   /// Swiper position
   final SwiperPosition? position;
 
-  ProfileCard({Key? key, this.page, this.position, required this.user})
+  final List<String> usersSuperLike;
+
+  ProfileCard({Key? key, this.page, this.position, required this.user, this.usersSuperLike = const []})
       : super(key: key);
 
   // Local variables
@@ -27,7 +29,7 @@ class ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Variables
+
     final bool requireVip =
         this.page == 'require_vip' && !UserModel().userIsVip;
     late ImageProvider userPhoto;
@@ -64,8 +66,8 @@ class ProfileCard extends StatelessWidget {
                 /// User profile image
                 image: DecorationImage(
                     /// Show VIP icon if user is not vip member
-                    image: userPhoto,
-                    fit: requireVip ? BoxFit.contain : BoxFit.cover),
+                    image: usersSuperLike.contains(user.userId) ? NetworkImage(user.userProfilePhoto) : userPhoto,
+                    fit: requireVip && !usersSuperLike.contains(user.userId)  ? BoxFit.contain : BoxFit.cover),
               ),
               child: Container(
                 /// BoxDecoration to make user info visible
@@ -73,7 +75,9 @@ class ProfileCard extends StatelessWidget {
                   gradient: LinearGradient(
                       begin: Alignment.bottomRight,
                       colors: [
-                        Theme.of(context).primaryColor,
+                        usersSuperLike.contains(user.userId)
+                            ? Colors.orangeAccent.shade400
+                            : Theme.of(context).primaryColor,
                         Colors.transparent
                       ]
                   ),

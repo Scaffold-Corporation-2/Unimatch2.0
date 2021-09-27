@@ -1,7 +1,7 @@
 import 'dart:math' as Math;
 import 'package:flutter/widgets.dart';
 
-enum SwiperPosition { None, Left, Right }
+enum SwiperPosition { None, Left, Right, SuperRight }
 enum StackFrom { None, Top, Left, Right, Bottom }
 
 class SwiperItem {
@@ -64,7 +64,8 @@ class SwipeStackState extends State<SwipeStack> with SingleTickerProviderStateMi
   Animation<double>? _animationX;
   Animation<double>? _animationY;
   Animation<double>? _animationAngle;
-  
+
+  bool _superLike = false;
   double _left = 0;
   double _top = 0;
   double _angle = 0;
@@ -112,7 +113,7 @@ class SwipeStackState extends State<SwipeStack> with SingleTickerProviderStateMi
           _angle = _animationAngle!.value;
 
         _progress = (100 / _baseContainerConstraints.maxWidth) * _left.abs();
-        _currentItemPosition = (_left.toInt() == 0) ? SwiperPosition.None : (_left < 0) ? SwiperPosition.Left : SwiperPosition.Right;
+        _currentItemPosition = (_left.toInt() == 0) ? SwiperPosition.None : (_left < 0) ? SwiperPosition.Left : _superLike ? SwiperPosition.SuperRight : SwiperPosition.Right;
 
         setState(() {});
       }
@@ -259,7 +260,7 @@ class SwipeStackState extends State<SwipeStack> with SingleTickerProviderStateMi
           _top += dragUpdateDetails.delta.dy;
 
           _progress = (100 / _baseContainerConstraints.maxWidth) * _left.abs();
-          _currentItemPosition = (_left.toInt() == 0) ? SwiperPosition.None : (_left < 0) ? SwiperPosition.Left : SwiperPosition.Right;
+          _currentItemPosition = (_left.toInt() == 0) ? SwiperPosition.None : (_left < 0) ? SwiperPosition.Left : _superLike ? SwiperPosition.SuperRight : SwiperPosition.Right;
           setState(() {});
         },
         onPanEnd: _onPandEnd
@@ -301,6 +302,18 @@ class SwipeStackState extends State<SwipeStack> with SingleTickerProviderStateMi
 
   void swipeRight() {
     if (widget.children.length > 0 && _animationController.status != AnimationStatus.forward) {
+      _animationType = 2;
+      _animationX = Tween<double>(begin: 0, end: _baseContainerConstraints.maxWidth).animate(_animationController);
+      _animationY = Tween<double>(begin: 0, end: (_baseContainerConstraints.maxHeight / 2) * -1).animate(_animationController);
+      if (widget.maxAngle > 0)
+        _animationAngle = Tween<double>(begin: 0, end: (_maxAngle * 0.7) * -1).animate(_animationController);
+      _animationController.forward();
+    }
+  }
+
+  void superSwipeRight() {
+    if (widget.children.length > 0 && _animationController.status != AnimationStatus.forward) {
+      setState(() => _superLike = true);
       _animationType = 2;
       _animationX = Tween<double>(begin: 0, end: _baseContainerConstraints.maxWidth).animate(_animationController);
       _animationY = Tween<double>(begin: 0, end: (_baseContainerConstraints.maxHeight / 2) * -1).animate(_animationController);

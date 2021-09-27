@@ -74,7 +74,6 @@ class _SettingsScreenState extends State<SettingsScreen> with TickerProviderStat
 
   @override
   void initState() {
-    _i18n.buscarTheme();
     super.initState();
     initUserSettings();
     showMeOption();
@@ -369,6 +368,61 @@ class _SettingsScreenState extends State<SettingsScreen> with TickerProviderStat
               ),
               SizedBox(height: 10),
 
+              Observer(
+                builder:(_) => Card(
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.dark_mode_rounded,
+                        color: Theme.of(context).primaryColor,
+                        size: 30,
+                      ),
+                      title: Text(_i18n.translate("button")!),
+                      trailing: InkWell(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () {
+                          _i18n.alterarVirtualButton();
+                          HapticFeedback.lightImpact();
+
+                          if(_i18n.virtualButton == false)
+                          successDialog(context,
+                              message: _i18n.translate("virtual_button_successfully_activated")!,
+                              positiveAction: () {Navigator.of(context).pop();});
+                        },
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.fastLinearToSlowEaseIn,
+                          height: _i18n.virtualButton ? 35 : 38,
+                          width: _i18n.virtualButton ? 55 : 65,
+                          decoration: BoxDecoration(
+                            color: _i18n.virtualButton ? Color(0xffB23F3F) : Color(0xffFF4E4E),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(_i18n.isDark ? 0 : 0.3),
+                                blurRadius: _i18n.virtualButton ? 0 : 10,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              _i18n.virtualButton ? 'OFF' : 'ON',
+                              style: TextStyle(
+                                color: _i18n.virtualButton
+                                    ? Colors.white.withOpacity(0.5)
+                                    : Colors.white.withOpacity(0.9),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 19,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                ),
+              ),
+              SizedBox(height: 10),
 
               Observer(
                 builder:(_) => Card(

@@ -76,6 +76,7 @@
   "edit_profile": "Editar Perfil",
   "profile_updated_successfully": "Perfil atualizado com sucesso",
   "restart_the_application_for_the_changes_to_tak_effect": "Reinicie o aplicativo para que as alterações sejam aplicadas",
+  "virtual_button_successfully_activated": "Botão virtual ativado com sucesso ",
   "an_error_occurred_while_updating_your_profile": "Ocorreu um erro ao atualizar o seu perfil. \nPor favor, tente novamente mais tarde!",
   "photo_will_be_deleted": "A foto será excluída e esta ação não pode ser revertida!",
 
@@ -168,6 +169,7 @@
   "users_who_liked_you": "Usuários que deram like em você",
   "match_your_profile_click_and_see": "Deu match com você, clique e veja ...",
   "liked_your_profile_click_and_see": "Deu like no seu perfil, clique e veja ...",
+  "super_liked_your_profile_click_and_see": "Deu Super like no seu perfil, clique e veja ...",
   "like_sent_to": "Like enviado para:",
 
   "_ProfileVisitsScreen": "* Profile Visits Screen Translations *",
@@ -235,6 +237,7 @@
   "new": "Novo",
   "photo": "Foto",
   "dark": "Dark mode:",
+  "button": "Botão virtual:",
   "UPDATE": "ATUALIZAR",
 
   "_New_Version_1.0.2": "* New version 1.0.2 Translations *",

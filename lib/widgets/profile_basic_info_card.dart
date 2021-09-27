@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:uni_match/app/models/user_model.dart';
+import 'package:uni_match/app/modules/home/view/menu/dialog_menu.dart';
 import 'package:uni_match/app/modules/profile/view/profile_screen.dart';
 import 'package:uni_match/widgets/cicle_button.dart';
 import 'package:uni_match/widgets/default_card_border.dart';
@@ -31,15 +32,22 @@ class ProfileBasicInfoCard extends StatelessWidget {
             /// Profile image
             Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(3.0),
-                  decoration: BoxDecoration(
-                      color: Colors.white, shape: BoxShape.circle),
-                  child: CircleAvatar(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    radius: 40,
-                    backgroundImage:
-                        NetworkImage(UserModel().user.userProfilePhoto),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ProfileScreen(
+                          user: UserModel().user, showButtons: false, myUser: true,)));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(3.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white, shape: BoxShape.circle),
+                    child: CircleAvatar(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      radius: 40,
+                      backgroundImage:
+                          NetworkImage(UserModel().user.userProfilePhoto),
+                    ),
                   ),
                 ),
 
@@ -93,16 +101,6 @@ class ProfileBasicInfoCard extends StatelessWidget {
                 cicleButton(
                   bgColor: Theme.of(context).accentColor,
                   padding: 13,
-                  icon: Icon(Icons.remove_red_eye, color: Colors.white, size: 30,),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ProfileScreen(
-                            user: UserModel().user, showButtons: false, myUser: true,)));
-                  },
-                ),
-                cicleButton(
-                  bgColor: Theme.of(context).accentColor,
-                  padding: 13,
                   icon: SvgIcon("assets/icons/settings_icon.svg",
                       color: Colors.white, width: 30, height: 30),
                   onTap: () {
@@ -116,6 +114,18 @@ class ProfileBasicInfoCard extends StatelessWidget {
                   icon:  Icon(Icons.edit, color: Colors.white, size: 30,),
                   onTap: () {
                     Modular.to.pushNamed('/profile/edit');
+                  },
+                ),
+
+                cicleButton(
+                  bgColor: Theme.of(context).accentColor,
+                  padding: 13,
+                  icon: Icon(Icons.workspaces_filled, color: Colors.white, size: 30,),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => DialogMenu(),
+                    );
                   },
                 ),
               ],

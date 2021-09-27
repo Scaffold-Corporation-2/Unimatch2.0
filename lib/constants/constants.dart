@@ -154,6 +154,7 @@ const N_READ = "n_lida";
 
 /// DATABASE FIELDS FOR Likes COLLECTION
 ///
+const String SUPER_LIKE= 'super_liked_usuario';
 const String LIKED_USER_ID = 'liked_usuario_id';
 const String LIKED_BY_USER_ID = 'liked_por_usuario_id';
 const String LIKE_TYPE = 'like_tipo';

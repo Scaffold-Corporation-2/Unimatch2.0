@@ -30,6 +30,7 @@ class _ProfileLikesScreenState extends State<ProfileLikesScreen> {
   List<DocumentSnapshot>? _likedMeUsers;
   late DocumentSnapshot _userLastDoc;
   bool _loadMore = true;
+  List<String> _usersSuperLike = [];
 
   /// Load more users
   void _loadMoreUsersListener() async {
@@ -68,9 +69,18 @@ class _ProfileLikesScreenState extends State<ProfileLikesScreen> {
     }
   }
 
+  _getUsersSuperLike()async{
+    QuerySnapshot response = await _likesApi.getSuperLikes();
+    for(var dados in response.docs){
+      Map map = dados.data() as Map;
+      _usersSuperLike.add(map[LIKED_BY_USER_ID]);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _getUsersSuperLike();
     _likesApi.getLikedMeUsers().then((users) {
       // Check result
       if (users.isNotEmpty) {
@@ -149,7 +159,7 @@ class _ProfileLikesScreenState extends State<ProfileLikesScreen> {
 
                   /// Show user card
                   return GestureDetector(
-                    child: ProfileCard(user: user, page: 'require_vip'),
+                    child: ProfileCard(user: user, page: 'require_vip', usersSuperLike: _usersSuperLike,),
                     onTap: () {
                       /// Check vip account
                       if (UserModel().userIsVip) {

@@ -39,6 +39,21 @@ mixin _$AppController on _AppController, Store {
     });
   }
 
+  final _$virtualButtonAtom = Atom(name: '_AppController.virtualButton');
+
+  @override
+  bool get virtualButton {
+    _$virtualButtonAtom.reportRead();
+    return super.virtualButton;
+  }
+
+  @override
+  set virtualButton(bool value) {
+    _$virtualButtonAtom.reportWrite(value, super.virtualButton, () {
+      super.virtualButton = value;
+    });
+  }
+
   final _$isDarkAtom = Atom(name: '_AppController.isDark');
 
   @override
@@ -59,6 +74,24 @@ mixin _$AppController on _AppController, Store {
   @override
   Future<dynamic> load() {
     return _$loadAsyncAction.run(() => super.load());
+  }
+
+  final _$alterarVirtualButtonAsyncAction =
+      AsyncAction('_AppController.alterarVirtualButton');
+
+  @override
+  Future alterarVirtualButton() {
+    return _$alterarVirtualButtonAsyncAction
+        .run(() => super.alterarVirtualButton());
+  }
+
+  final _$buscarVirtualButtonAsyncAction =
+      AsyncAction('_AppController.buscarVirtualButton');
+
+  @override
+  Future buscarVirtualButton() {
+    return _$buscarVirtualButtonAsyncAction
+        .run(() => super.buscarVirtualButton());
   }
 
   final _$buscarThemeAsyncAction = AsyncAction('_AppController.buscarTheme');
@@ -94,6 +127,7 @@ mixin _$AppController on _AppController, Store {
     return '''
 locale: ${locale},
 localizedStrings: ${localizedStrings},
+virtualButton: ${virtualButton},
 isDark: ${isDark}
     ''';
   }

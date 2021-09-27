@@ -209,15 +209,21 @@ class _DiscoverTabState extends State<DiscoverTab> {
                         dislikedUserId: _users![index][USER_ID],
                         onDislikeResult: (r) =>
                             debugPrint('onDislikeResult: $r'));
-
                     if(swipeNum == 0)setState(() {});
+
                     break;
 
                   case SwiperPosition.Right:
 
                   /// Swipe right and Like profile
                     _likeUser(context, clickedUserDoc: _users![index]);
+                    if(swipeNum == 0)setState(() {});
 
+                    break;
+                  case SwiperPosition.SuperRight:
+
+                  /// Super Swipe right and Like profile
+                    _likeUser(context, clickedUserDoc: _users![index], superLike: true);
                     if(swipeNum == 0)setState(() {});
                     break;
                 }
@@ -349,8 +355,23 @@ class _DiscoverTabState extends State<DiscoverTab> {
                 _swipeKey.currentState!.swipeLeft();
               }
             }),
+        SizedBox(width: 15),
 
-        SizedBox(width: 20),
+        cicleButton(
+            bgColor: Colors.white,
+            padding: 8,
+            icon: Icon(Icons.star, size: 25, color: Colors.deepOrange),
+            onTap: () {
+              /// Get card current index
+              final cardIndex = _swipeKey.currentState!.currentIndex;
+
+              /// Check card valid index
+              if (cardIndex != -1) {
+                /// Swipe right
+                _swipeKey.currentState!.superSwipeRight();
+              }
+            }),
+        SizedBox(width: 15),
 
         /// Swipe right and like user
         cicleButton(
@@ -407,7 +428,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
 
   /// Like user function
   Future<void> _likeUser(BuildContext context,
-      {required DocumentSnapshot clickedUserDoc}) async {
+      {required DocumentSnapshot clickedUserDoc, bool superLike = false}) async {
     /// Check match first
     await _matchesApi.checkMatch(
         userId: clickedUserDoc[USER_ID],
@@ -437,9 +458,12 @@ class _DiscoverTabState extends State<DiscoverTab> {
           else{
             /// like profile
             await _likesApi.likeUser(
+                superLiked: superLike,
                 likedUserId: clickedUserDoc[USER_ID],
                 userDeviceToken: clickedUserDoc[USER_DEVICE_TOKEN],
-                nMessage: "${_i18n.translate("liked_your_profile_click_and_see")}",
+                nMessage: "${superLike
+                    ? _i18n.translate("super_liked_your_profile_click_and_see")
+                    : _i18n.translate("liked_your_profile_click_and_see")}",
                 onLikeResult: (result) {
                   print('likeResult: $result');
                 });

@@ -115,6 +115,21 @@ mixin _$LoginStore on _LoginStore, Store {
     });
   }
 
+  final _$interestsListAtom = Atom(name: '_LoginStore.interestsList');
+
+  @override
+  ObservableList<dynamic> get interestsList {
+    _$interestsListAtom.reportRead();
+    return super.interestsList;
+  }
+
+  @override
+  set interestsList(ObservableList<dynamic> value) {
+    _$interestsListAtom.reportWrite(value, super.interestsList, () {
+      super.interestsList = value;
+    });
+  }
+
   final _$birthdayAtom = Atom(name: '_LoginStore.birthday');
 
   @override
@@ -236,6 +251,17 @@ mixin _$LoginStore on _LoginStore, Store {
   }
 
   @override
+  dynamic addListInterests(List<dynamic> lista) {
+    final _$actionInfo = _$_LoginStoreActionController.startAction(
+        name: '_LoginStore.addListInterests');
+    try {
+      return super.addListInterests(lista);
+    } finally {
+      _$_LoginStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic nameBirthday() {
     final _$actionInfo = _$_LoginStoreActionController.startAction(
         name: '_LoginStore.nameBirthday');
@@ -322,6 +348,7 @@ agreeTerms: ${agreeTerms},
 selectedGender: ${selectedGender},
 selectedOrientation: ${selectedOrientation},
 firstTime: ${firstTime},
+interestsList: ${interestsList},
 birthday: ${birthday},
 imageFile: ${imageFile},
 initList: ${initList},
