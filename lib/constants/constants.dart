@@ -64,6 +64,7 @@ const String IOS_APP_CURRENT_VERSION = "ios_app_current_version";
 const String ANDROID_PACKAGE_NAME = "android_package_name";
 const String IOS_APP_ID = "ios_app_id";
 const String APP_EMAIL = "app_email";
+const String URL_FORM = "url_form";
 const String PRIVACY_POLICY_URL = "privacy_policy_url";
 const String TERMS_OF_SERVICE_URL = "terms_of_service_url";
 const String FIREBASE_SERVER_KEY = "firebase_server_key";
