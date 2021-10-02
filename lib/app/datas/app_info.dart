@@ -14,6 +14,7 @@ class AppInfo {
   final String privacyPolicyUrl;
   final String termsOfServicesUrl;
   final String firebaseServerKey;
+  final String urlForms;
   final List<String> subscriptionIds;
   final double freeAccountMaxDistance;
   final double vipAccountMaxDistance;
@@ -36,6 +37,7 @@ class AppInfo {
       required this.vipAccountSwipes,
       required this.partiesMaxDistance,
       required this.lifeStyleMaxDistance,
+      required this.urlForms,
       });
 
   /// factory AppInfo object
@@ -49,6 +51,7 @@ class AppInfo {
         privacyPolicyUrl: doc[PRIVACY_POLICY_URL] ?? '',
         termsOfServicesUrl: doc[TERMS_OF_SERVICE_URL] ?? '',
         firebaseServerKey: doc[FIREBASE_SERVER_KEY] ?? '',
+        urlForms: doc[URL_FORM] ?? '',
         subscriptionIds: List<String>.from(doc[STORE_SUBSCRIPTION_IDS] ?? []),
         freeAccountMaxDistance: doc[FREE_ACCOUNT_MAX_DISTANCE] == null
             ? 100

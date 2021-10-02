@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uni_match/app/models/app_model.dart';
 import 'package:uni_match/app/modules/login/widgets/custom_animated_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -9,8 +10,7 @@ class HowToSignUpScreen extends StatelessWidget {
   const HowToSignUpScreen({Key? key}) : super(key: key);
 
   Future<void> openUrl() async {
-    const url =
-        "https://docs.google.com/forms/d/1VC-zGmikCJEGK3Xxm3MWvgCXlgr6uTrP8Eml2wXco_A/viewform?edit_requested=true";
+    String url = AppModel().appInfo.urlForms;
     if (await canLaunch(url)) {
       await launch(url);
     } else {
