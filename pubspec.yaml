@@ -45,11 +45,11 @@ dependencies:
 
 
     # FIREBASE Packages Section
-  firebase_core: ^1.6.0
-  firebase_auth: ^3.1.1
-  cloud_firestore: ^2.5.2
-  firebase_messaging: ^10.0.7
-  firebase_storage: ^10.0.3
+  firebase_core: ^1.7.0
+  firebase_auth: ^3.1.2
+  cloud_firestore: ^2.5.3
+  firebase_messaging: ^10.0.8
+  firebase_storage: ^10.0.4
 
     # GOOGLE Packages Section
   google_mobile_ads: ^0.12.1+1
@@ -113,7 +113,7 @@ dependencies:
   flutter_spinkit: ^5.1.0
 
     #Biblioteca de tipos de Formatters
-  brasil_fields: ^1.1.4
+  brasil_fields: ^1.2.0
 
     #Biblioteca para story instagram
   story: ^0.5.1
@@ -166,7 +166,7 @@ dependencies:
   intl: ^0.17.0
 
   #Biblioteca para verificar conexão
-  connectivity_plus: ^1.1.0
+  connectivity_plus: ^1.2.0
 
   #Biblioteca para input de data
   flutter_cupertino_datetime_picker: ^2.0.1
@@ -176,6 +176,8 @@ dependencies:
 
     #Biblioteca para acessar web
   webview_flutter: ^2.0.13
+
+  update_app: ^0.1.7
 
 dev_dependencies:
   #Biblioteca para splash_screen nativo
@@ -192,6 +194,11 @@ dev_dependencies:
     sdk: flutter
   mobx_codegen: ^2.0.2
   build_runner: ^2.1.2
+
+#  uni_study:
+#    git:
+#      url: https://github.com/gabrielpatricksouza/uni_study.git
+#      ref: v1.0.0
 
 flutter:
   uses-material-design: true
