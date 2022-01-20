@@ -8,8 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:uni_match/app/modules/login/store/login_store.dart';
 import 'package:uni_match/app/modules/login/widgets/custom_animated_button.dart';
 import 'package:uni_match/app/app_controller.dart';
-import 'package:uni_match/app/modules/login/widgets/custom_text_field.dart';
-import 'package:uni_match/app/modules/login/widgets/custom_text_field_password.dart';
+import 'package:uni_match/widgets/custom_text_field.dart';
+import 'package:uni_match/widgets/custom_text_field_password.dart';
 import 'package:uni_match/dialogs/progress_dialog.dart';
 import 'package:uni_match/widgets/app_logo.dart';
 import 'package:uni_match/widgets/show_dialog_undo_match.dart';
@@ -199,8 +199,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                             CustomAnimatedButton(
                                               onTap: () async {
                                                 if (EmailValidator.validate(_emailRecover.text)) {
-                                                  if (await _loginStore
-                                                      .passwordRecover(_emailRecover.text)) {
+                                                  if (await _loginStore.passwordRecover(_emailRecover.text)) {
                                                     _email.text = _emailRecover.text;
                                                     _emailRecover.clear();
                                                     Modular.to.pop();

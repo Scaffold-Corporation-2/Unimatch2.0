@@ -33,7 +33,7 @@ class UserModel{
   /// Other variables
   ///
   late Usuario user;
-  bool userIsVip = false;
+  bool userIsVip = true;
   bool isLoading = false;
   String activeVipId = '';
 
@@ -84,6 +84,18 @@ class UserModel{
   Future<void> updateUserData({required String userId, required Map<String, dynamic> data}) async {
     // Update user data
     _firestore.collection(C_USERS).doc(userId).update(data);
+  }
+
+  /// New Interested
+  Future<void> newInterested ({required String emailId, required Map<String, dynamic> data}) async {
+    // Update user data
+    _firestore.collection(C_INTERESTED).doc(emailId).set(data);
+  }
+
+  /// Update Interested
+  Future<void> updateInterested ({required String emailId, required Map<String, dynamic> data}) async {
+    // Update user data
+    _firestore.collection(C_INTERESTED).doc(emailId).update(data);
   }
 
   /// Update user device token and

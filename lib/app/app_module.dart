@@ -7,6 +7,7 @@ import 'modules/home/modulo/home_module.dart';
 import 'modules/login/modulo/login_module.dart';
 import 'modules/auth/modulo/auth_module.dart';
 import 'package:uni_match/app/app_controller.dart';
+import 'modules/registration/modulo/registration_module.dart';
 
 class AppModule extends Module {
   @override
@@ -23,6 +24,7 @@ class AppModule extends Module {
     ModuleRoute('/chat', module: ChatModule()),
     ModuleRoute('/party', module: PartyModule()),
     ModuleRoute('/lifeStyle', module: LifeModule()),
+    ModuleRoute('/registration', module: RegistrationModule()),
   ];
 
 }

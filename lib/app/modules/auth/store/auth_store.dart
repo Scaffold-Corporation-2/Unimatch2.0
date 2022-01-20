@@ -18,8 +18,7 @@ abstract class _AuthStore with Store{
     appController.load();
     int storeVersion;
 
-    final DocumentSnapshot appInfo =
-    await _firestore.collection(C_APP_INFO).doc('settings').get();
+    final DocumentSnapshot appInfo = await _firestore.collection(C_APP_INFO).doc('settings').get();
     // Update AppInfo object
     AppModel().setAppInfo(appInfo.data()! as Map);
     // Check Platform

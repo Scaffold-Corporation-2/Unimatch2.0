@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hintText;
-  final Icon icon;
+  final Icon? icon;
   final bool password;
   final Function? onTapPassword;
   final bool obscureText;
@@ -12,7 +12,7 @@ class CustomTextField extends StatelessWidget {
   const CustomTextField(
       {Key? key,
         required this.hintText,
-        required this.icon,
+        this.icon,
         required this.textInputType,
         required this.controller,
         this.password = false,
