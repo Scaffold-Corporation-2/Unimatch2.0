@@ -19,7 +19,7 @@ const String IOS_MAPS_API_KEY = "AIzaSyBlcVLVVlre07LtTyTeC_qv6OQt2k5ANUU";
 // For Android Platform
 const String ANDROID_INTERSTITIAL_ID = "ca-app-pub-2162183208526463/1129939918"; //ca-app-pub-3940256099942544/1033173712
 // For IOS Platform
-const String IOS_INTERSTITIAL_ID = "ca-app-pub-2236562881766006/4868383683";
+const String IOS_INTERSTITIAL_ID = "ca-app-pub-2162183208526463~7799801108";
 
 /// List of Supported Locales
 /// Add your new supported Locale to the array list.
